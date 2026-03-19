@@ -7,12 +7,9 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
-body {
-  font-family: 'Futura', 'Century Gothic', 'Trebuchet MS', sans-serif;
-  color: #1a1a1a;
-}
+body { font-family: 'Futura', 'Century Gothic', 'Trebuchet MS', sans-serif; color: #1a1a1a; }
 button { outline: none; border: none; background: none; padding: 0; font-family: inherit; cursor: pointer; color: inherit; }
-a { text-decoration: none; color: inherit; }
+input { font-family: inherit; outline: none; border: none; background: none; }
 
 /* ── Screens ── */
 .screen { display: none; min-height: 100vh; }
@@ -21,588 +18,344 @@ a { text-decoration: none; color: inherit; }
 
 /* ── Back button ── */
 .back-btn {
-  position: fixed;
-  bottom: 32px;
-  right: 32px;
-  z-index: 9999;
-  background: #1a1a1a;
-  color: #fff;
+  position: fixed; bottom: 32px; right: 32px; z-index: 9999;
+  background: #1a1a1a; color: #fff;
   font-family: 'Futura', 'Century Gothic', 'Trebuchet MS', sans-serif;
-  font-size: 9px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding: 11px 20px;
-  cursor: pointer;
-  border: none;
-  outline: none;
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 11px 20px; cursor: pointer;
 }
 .back-btn:hover { background: #333; }
-
 
 /* ══════════════════════════════════════════
    HUB
 ══════════════════════════════════════════ */
 #hub {
-  background: #f7f6f3;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 80px 40px;
+  background: #F8F7F6; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: 100vh; padding: 80px 40px;
 }
-.hub-logo {
-  font-size: 26px;
-  letter-spacing: 0.2em;
-  font-weight: 400;
-  margin-bottom: 12px;
-}
-.hub-tagline {
-  font-size: 9px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #999;
-  margin-bottom: 80px;
-}
-.hub-cards {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  max-width: 900px;
-  width: 100%;
-}
-.hub-card {
-  flex: 1;
-  border: 1px solid #dddbd7;
-  background: #fff;
-  padding: 40px 32px 36px;
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
+.hub-logo { font-size: 26px; letter-spacing: 0.2em; font-weight: 400; margin-bottom: 12px; }
+.hub-tagline { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: #999; margin-bottom: 80px; }
+.hub-cards { display: flex; gap: 20px; justify-content: center; max-width: 900px; width: 100%; }
+.hub-card { flex: 1; border: 1px solid #dddbd7; background: #fff; padding: 40px 32px 36px; cursor: pointer; transition: border-color 0.2s; }
 .hub-card:hover { border-color: #1a1a1a; }
-.hub-card-num {
-  font-size: 9px;
-  letter-spacing: 0.14em;
-  color: #bbb;
-  margin-bottom: 18px;
-  text-transform: uppercase;
+.hub-card-num { font-size: 9px; letter-spacing: 0.14em; color: #bbb; margin-bottom: 18px; text-transform: uppercase; }
+.hub-card-title { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 400; margin-bottom: 12px; }
+.hub-card-desc { font-size: 11px; letter-spacing: 0.03em; color: #888; line-height: 1.7; }
+
+/* ══════════════════════════════════════════
+   SHARED OVERLAYS (account, basket, search)
+══════════════════════════════════════════ */
+
+/* Side panel (account / basket) */
+.side-panel { position: fixed; inset: 0; z-index: 500; display: none; }
+.side-panel.open { display: block; }
+.sp-dim { position: absolute; inset: 0; background: rgba(185,183,179,0.55); }
+.sp-content {
+  position: absolute; right: 0; top: 0; bottom: 0;
+  width: 390px; background: #fff; overflow-y: auto;
 }
-.hub-card-title {
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-weight: 400;
-  margin-bottom: 12px;
-}
-.hub-card-desc {
-  font-size: 11px;
-  letter-spacing: 0.03em;
-  color: #888;
-  line-height: 1.7;
+.sp-close {
+  position: absolute; top: 22px; right: 28px;
+  font-size: 20px; cursor: pointer; z-index: 10;
+  font-weight: 300; line-height: 1;
 }
 
+/* Account panel */
+.sp-inner { padding: 80px 44px 44px; }
+.sp-title { font-size: 24px; letter-spacing: 0.01em; font-weight: 400; margin-bottom: 10px; }
+.sp-sub { font-size: 10.5px; letter-spacing: 0.03em; color: #666; line-height: 1.65; margin-bottom: 36px; }
+.sp-email {
+  width: 100%; height: 52px; background: #F8F7F6;
+  text-align: center; font-size: 10.5px; letter-spacing: 0.06em; color: #aaa;
+  padding: 0 16px; margin-bottom: 8px; border: none;
+}
+.sp-continue {
+  width: 100%; height: 52px; background: #1a1a1a; color: #fff;
+  font-family: inherit; font-size: 9.5px; letter-spacing: 0.14em;
+  text-transform: uppercase; cursor: pointer; margin-bottom: 32px;
+}
+.sp-link { display: block; font-size: 10.5px; letter-spacing: 0.04em; padding: 10px 0; color: #1a1a1a; }
+
+/* Basket panel */
+.basket-title { font-size: 24px; letter-spacing: 0.01em; font-weight: 400; margin-bottom: 8px; }
+.basket-sub { font-size: 10.5px; letter-spacing: 0.03em; color: #888; margin-bottom: 40px; }
+.basket-cta {
+  width: 100%; height: 52px; background: #1a1a1a; color: #fff;
+  font-family: inherit; font-size: 9.5px; letter-spacing: 0.14em;
+  text-transform: uppercase; cursor: pointer; margin-bottom: 44px;
+}
+.basket-love { font-size: 10px; letter-spacing: 0.04em; color: #888; margin-bottom: 14px; }
+.basket-imgs { display: flex; gap: 8px; margin-bottom: 44px; }
+.basket-img { flex: 1; background: #F8F7F6; aspect-ratio: 3/4; }
+.basket-help { font-size: 10.5px; letter-spacing: 0.04em; color: #888; }
+
+/* Search overlay */
+.search-overlay {
+  position: fixed; inset: 0; background: #fff;
+  z-index: 600; display: none; padding: 44px 36px 36px; overflow-y: auto;
+}
+.search-overlay.open { display: block; }
+.so-close { position: absolute; top: 22px; right: 28px; font-size: 20px; cursor: pointer; font-weight: 300; }
+.so-input-wrap { border-bottom: 1px solid #bbb; margin-bottom: 56px; max-width: 740px; padding-bottom: 6px; }
+.so-input {
+  font-family: 'Futura', 'Century Gothic', 'Trebuchet MS', sans-serif;
+  font-size: 44px; letter-spacing: -0.01em; color: #ccc; width: 100%; font-weight: 400;
+}
+.so-input::placeholder { color: #ccc; }
+.so-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.so-cell { background: #F8F7F6; aspect-ratio: 3/4; }
 
 /* ══════════════════════════════════════════
    OPTION 1 — ANCHORED DROPDOWN
 ══════════════════════════════════════════ */
-#opt1 { background: #edece9; }
+#opt1 { background: #F8F7F6; position: relative; }
 
-/* Nav bar */
+.o1-nav-wrap { position: relative; z-index: 200; }
+
 .o1-nav {
-  position: relative;
-  background: #fff;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 28px;
-  z-index: 200;
+  background: #fff; height: 64px;
+  display: flex; align-items: center;
+  border-bottom: 1px solid #e6e4e0;
+  padding: 0 32px;
 }
-.o1-left, .o1-right {
-  display: flex;
-  align-items: center;
-  gap: 26px;
+.o1-nav-l { display: flex; gap: 28px; }
+.o1-ni {
+  font-size: 10px; letter-spacing: 0.05em; cursor: pointer;
+  padding-bottom: 3px; border-bottom: 1px solid transparent;
+  user-select: none;
 }
-.o1-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
+.o1-ni.active { border-bottom-color: #1a1a1a; }
 .o1-logo {
-  font-size: 21px;
-  letter-spacing: 0.22em;
-  font-weight: 400;
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-size: 19px; letter-spacing: 0.18em; font-weight: 400;
 }
-.o1-item {
-  font-size: 9.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.o1-item.active {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
+.o1-nav-r { margin-left: auto; display: flex; align-items: center; gap: 18px; }
+.o1-search-wrap { display: flex; align-items: center; border-bottom: 1px solid #999; padding-bottom: 2px; }
+.o1-search-inp { font-size: 9.5px; letter-spacing: 0.07em; color: #999; width: 118px; }
+.o1-search-inp::placeholder { color: #999; }
 
-/* Dropdown wrapper */
+/* Icon buttons */
+.o1-icon-btn { cursor: pointer; display: flex; align-items: center; justify-content: center; background: none; border: none; padding: 0; }
+.o1-search-btn { cursor: pointer; display: flex; align-items: center; background: none; border: none; padding: 0; }
+
+/* Dropdowns */
 .o1-dd-wrap {
-  position: absolute;
-  top: 60px;
-  left: 0;
-  right: 0;
-  z-index: 199;
+  position: absolute; top: 64px; left: 0; right: 0;
+  background: #fff; border-bottom: 1px solid #e6e4e0;
   display: none;
 }
 .o1-dd-wrap.open { display: block; }
+.o1-dd { display: none; padding: 28px 32px 40px; align-items: flex-start; }
+.o1-dd.active { display: flex; }
 
-/* Dropdown panel — absolute layout so image centers under logo */
-.o1-dd {
-  background: #fff;
-  border-top: 1px solid #e8e7e4;
-  padding: 36px 28px 44px;
-  display: none;
-  position: relative;
-  min-height: 480px;
-}
-.o1-dd.visible { display: block; }
+.o1-see-all { font-size: 10px; letter-spacing: 0.05em; min-width: 76px; cursor: pointer; }
+.o1-sub-col { display: flex; flex-direction: column; gap: 20px; min-width: 160px; }
+.o1-sub-col2 { display: flex; flex-direction: column; gap: 20px; min-width: 180px; margin-left: 56px; }
+.o1-sub-item { font-size: 10.5px; letter-spacing: 0.03em; cursor: pointer; }
+.o1-sub-item:hover { text-decoration: underline; text-underline-offset: 3px; }
+.o1-dd-photo { position: relative; margin-left: auto; width: 240px; height: 300px; flex-shrink: 0; overflow: hidden; }
+.o1-dd-photo.wide { width: 480px; }
+.o1-dd-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.o1-dd-photo .o1-hover-img { opacity: 0; transition: opacity 0.4s ease; }
+.o1-dd-photo .o1-hover-img.active { opacity: 1; }
 
-/* Col 1 — heading, absolutely left */
-.o1-col1 {
-  position: absolute;
-  left: 28px;
-  top: 36px;
-  width: 150px;
-}
-.o1-heading {
-  font-size: 15px;
-  letter-spacing: 0.08em;
-  font-weight: 400;
-  text-transform: uppercase;
-  line-height: 1.35;
-}
-.o1-see-all {
-  font-size: 15px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-top: 4px;
-  display: block;
-  font-weight: 400;
-}
-.o1-coll-name {
-  font-size: 13px;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  font-weight: 400;
-  margin-top: 14px;
-  display: block;
-  line-height: 1.3;
-}
+.o1-body { min-height: calc(100vh - 64px); background: #F8F7F6; }
 
-/* Col 2 — sub links, absolutely left */
-.o1-col2 {
-  position: absolute;
-  left: 210px;
-  top: 36px;
-  width: 200px;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-.o1-link {
-  font-size: 9.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.o1-link.mt { margin-top: 8px; }
+/* ══════════════════════════════════════════
+   OPTION 1 — INNER PAGES
+══════════════════════════════════════════ */
+.o1-sub { display: none; }
+.o1-sub.active { display: block; }
 
-/* Col 3 — image, centered under logo */
-.o1-col3 {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 36px;
+/* Shared inner-page nav */
+.o1-inner-nav {
+  background: #fff; height: 64px; display: flex; align-items: center;
+  border-bottom: 1px solid #e6e4e0; padding: 0 32px;
+  position: sticky; top: 0; z-index: 100;
 }
-.o1-img {
-  background: #e3e2de;
-  width: 420px;
-  height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.o1-inner-nav-l { display: flex; gap: 28px; }
+.o1-inner-ni { font-size: 10px; letter-spacing: 0.05em; cursor: pointer; }
+.o1-inner-logo {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-size: 19px; letter-spacing: 0.18em; font-weight: 400;
 }
-.o1-img span {
-  font-size: 9.5px;
-  color: #aaa;
-  letter-spacing: 0.06em;
-}
+.o1-inner-nav-r { margin-left: auto; display: flex; align-items: center; gap: 18px; }
 
-/* Col 4 — feature text, right of image */
-.o1-col4 {
-  position: absolute;
-  left: calc(50% + 240px);
-  top: 36px;
-  bottom: 44px;
-  width: 260px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding-bottom: 2px;
+/* Filter bar */
+.o1-filter-bar {
+  background: #fff; border-bottom: 1px solid #e6e4e0;
+  display: flex; align-items: center; padding: 0 32px; height: 44px; gap: 0;
 }
-.o1-feat-text {
-  font-size: 10.5px;
-  letter-spacing: 0.03em;
-  line-height: 1.7;
-  margin-bottom: 10px;
+.o1-ftab {
+  font-size: 10px; letter-spacing: 0.05em; cursor: pointer;
+  padding: 0 16px 0 0; white-space: nowrap; color: #1a1a1a;
+  border-bottom: 1px solid transparent; height: 44px; display: flex; align-items: center;
 }
-.o1-feat-link {
-  font-size: 9.5px;
-  letter-spacing: 0.07em;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
+.o1-ftab:first-child { padding-left: 0; }
+.o1-ftab.active { border-bottom: 1.5px solid #1a1a1a; }
+.o1-filter-sort { margin-left: auto; font-size: 10px; letter-spacing: 0.05em; cursor: pointer; display: flex; align-items: center; gap: 4px; color: #1a1a1a; }
 
-/* Our World — absolute positioned, consistent with other dropdowns */
-.o1-dd.world-layout {
-  display: none;
-  position: relative;
-  min-height: 420px;
-}
-.o1-dd.world-layout.visible {
-  display: block;
-}
-.o1-world-img-wrap {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 36px;
-}
-.o1-world-img {
-  background: #e3e2de;
-  width: 340px;
-  height: 340px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.o1-world-img span { font-size: 9.5px; color: #aaa; letter-spacing: 0.06em; }
-.o1-world-caption-left {
-  position: absolute;
-  right: calc(50% + 210px);
-  bottom: 44px;
-  width: 260px;
-  text-align: right;
-}
-.o1-world-caption {
-  font-size: 10.5px;
-  letter-spacing: 0.03em;
-  line-height: 1.7;
-  margin-bottom: 10px;
-}
-.o1-world-link {
-  font-size: 9.5px;
-  letter-spacing: 0.07em;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.o1-world-links-right {
-  position: absolute;
-  left: calc(50% + 300px);
-  top: 36px;
-  display: flex;
-  flex-direction: column;
-  gap: 13px;
-}
-.o1-world-item {
-  font-size: 15px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 400;
-}
-.o1-world-item.gap { margin-top: 10px; }
+/* Breadcrumb */
+.o1-breadcrumb { font-size: 9px; letter-spacing: 0.04em; padding: 14px 32px; color: #888; background: #fff; border-bottom: 1px solid #e6e4e0; }
+.o1-breadcrumb span { cursor: pointer; text-decoration: underline; }
+.o1-breadcrumb span:hover { color: #1a1a1a; }
+.o1-breadcrumb-sep { margin: 0 6px; }
 
-/* Page body */
-.o1-body {
-  background: #edece9;
-  min-height: calc(100vh - 60px);
-}
+/* Product grids */
+.o1-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 3px; }
+.o1-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; padding: 3px; }
+.o1-tile { background: #F8F7F6; aspect-ratio: 3/4; cursor: pointer; }
+.o1-tile-tall { background: #F8F7F6; aspect-ratio: 2/3; cursor: pointer; }
+.o1-tile-wide { background: #F8F7F6; aspect-ratio: 2/3; grid-row: span 2; cursor: pointer; }
 
+/* Collections All page */
+.o1-col-all-wrap { display: flex; min-height: calc(100vh - 64px); }
+.o1-col-sidebar { width: 300px; flex-shrink: 0; padding: 32px; background: #fff; }
+.o1-col-list-item { font-size: 10px; letter-spacing: 0.04em; padding: 7px 0; cursor: pointer; }
+.o1-col-list-item:hover { text-decoration: underline; }
+.o1-col-list-item.italic { font-style: italic; text-decoration: underline; }
+.o1-col-divider { border: none; border-top: 1px solid #e6e4e0; margin: 12px 0; }
+.o1-col-main { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 3px; padding: 3px; }
+.o1-col-img { background: #F8F7F6; }
+
+/* Trailblazer page */
+.o1-trailblazer-hero { text-align: center; padding: 80px 32px 40px; }
+.o1-trailblazer-season { font-size: 12px; letter-spacing: 0.06em; }
+.o1-trailblazer-title { font-size: 28px; letter-spacing: 0.12em; font-weight: 700; margin-top: 4px; }
+.o1-trailblazer-img { background: #F8F7F6; height: 500px; margin: 0 3px 3px; }
+
+/* PDP */
+.o1-pdp-wrap { display: flex; min-height: calc(100vh - 64px); background: #F8F7F6; }
+.o1-pdp-sidebar { width: 280px; flex-shrink: 0; padding: 32px; }
+.o1-pdp-close { font-size: 9px; letter-spacing: 0.1em; cursor: pointer; margin-bottom: 40px; display: block; }
+.o1-pdp-close:hover { text-decoration: underline; }
+.o1-pdp-name { font-size: 14px; letter-spacing: 0.03em; margin-bottom: 8px; }
+.o1-pdp-price { font-size: 12px; color: #888; margin-bottom: 20px; }
+.o1-pdp-desc { font-size: 10px; letter-spacing: 0.02em; line-height: 1.7; color: #555; }
+.o1-pdp-main { flex: 1; display: flex; gap: 3px; padding: 3px; }
+.o1-pdp-hero { flex: 1; background: #F8F7F6; }
+.o1-pdp-thumbs-col { width: 140px; display: flex; flex-direction: column; gap: 3px; }
+.o1-pdp-thumb { background: #F8F7F6; height: 130px; }
+
+/* Sub-page show/hide for opt2 & opt3 */
+.o2-sub { display: none; }
+.o2-sub.active { display: block; }
+.o3-sub { display: none; }
+.o3-sub.active { display: block; }
+
+/* Z.IMMERSE editorial page */
+.o3-zim-block { text-align: center; padding: 60px 32px 32px; background: #fff; }
+.o3-zim-block + .o3-zim-block { padding-top: 48px; }
+.o3-zim-season { font-size: 12px; letter-spacing: 0.06em; }
+.o3-zim-title { font-size: 28px; letter-spacing: 0.12em; font-weight: 700; margin-top: 4px; }
+.o3-zim-img { background: #F8F7F6; height: 440px; margin: 0 3px 3px; }
 
 /* ══════════════════════════════════════════
    OPTION 2 — MEGA MENU
 ══════════════════════════════════════════ */
-#opt2 { background: #fdf9f5; }
+#opt2 { background: #F8F7F6; position: relative; }
 
+.o2-nav-wrap { position: relative; z-index: 200; }
 .o2-nav {
-  background: #fdf9f5;
-  height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 28px;
-  position: relative;
+  background: #fff; height: 64px;
+  display: flex; align-items: center;
+  border-bottom: 1px solid #e6e4e0; padding: 0 32px;
 }
-.o2-nav-left, .o2-nav-right {
-  display: flex;
-  align-items: center;
-  gap: 22px;
+.o2-nav-l { display: flex; gap: 28px; }
+.o2-ni {
+  font-size: 10px; letter-spacing: 0.05em; cursor: pointer;
+  padding-bottom: 3px; border-bottom: 1px solid transparent;
 }
-.o2-nav-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
+.o2-ni.active { border-bottom-color: #1a1a1a; }
 .o2-logo {
-  font-size: 20px;
-  letter-spacing: 0.22em;
-  font-weight: 400;
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-size: 19px; letter-spacing: 0.18em; font-weight: 400;
 }
-.o2-item {
-  font-size: 9.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
+.o2-nav-r { margin-left: auto; display: flex; align-items: center; gap: 28px; }
+.o2-nav-btn { font-size: 10px; letter-spacing: 0.05em; cursor: pointer; }
 
-/* Overlay */
-.o2-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 500;
-  flex-direction: row;
+.o2-dd-wrap {
+  position: absolute; top: 64px; left: 0; right: 0;
+  background: #fff; border-bottom: 1px solid #e6e4e0; display: none;
 }
-.o2-overlay.open { display: flex; }
+.o2-dd-wrap.open { display: block; }
+.o2-dd { display: none; padding: 32px 32px 44px; align-items: flex-start; }
+.o2-dd.active { display: flex; gap: 0; }
 
-/* Left content panel */
-.o2-panel-left {
-  width: 540px;
-  min-width: 540px;
-  background: #faf8f5;
-  padding: 24px 40px 40px;
-  display: flex;
-  flex-direction: column;
-}
-/* Middle + right gray panels */
-.o2-panel-mid {
-  flex: 1;
-  background: #edecea;
-}
-.o2-panel-right {
-  width: 340px;
-  min-width: 340px;
-  background: #e5e3df;
-}
+/* Women — 4 col mega */
+.o2-mega-cols { display: flex; gap: 52px; flex: 1; }
+.o2-mega-col { display: flex; flex-direction: column; }
+.o2-mega-head { font-size: 10px; letter-spacing: 0.04em; font-style: italic; color: #888; margin-bottom: 20px; cursor: pointer; }
+.o2-mega-item { font-size: 10.5px; letter-spacing: 0.03em; color: #1a1a1a; margin-bottom: 18px; cursor: pointer; }
+.o2-mega-item:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-.o2-close {
-  font-size: 9.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-bottom: 56px;
-  display: block;
-  text-align: left;
+/* Collections — large list */
+.o2-coll-list { flex: 1; margin-right: 40px; }
+.o2-coll-item {
+  font-size: 20px; letter-spacing: 0.01em; font-weight: 400;
+  padding: 14px 0; border-bottom: 1px solid #d5d3cf; cursor: pointer;
 }
+.o2-coll-item:first-child { border-top: 1px solid #d5d3cf; }
+.o2-coll-item:hover { font-style: italic; }
 
-.o2-search-wrap { margin-bottom: 44px; }
-.o2-search-label {
-  font-size: 10.5px;
-  letter-spacing: 0.06em;
-  color: #1a1a1a;
-  display: block;
-  margin-bottom: 7px;
-}
-.o2-search-underline {
-  width: 200px;
-  height: 1px;
-  background: #1a1a1a;
-}
+/* Kids */
+.o2-kids-wrap { display: flex; align-items: flex-start; flex: 1; }
+.o2-kids-see { font-size: 10px; letter-spacing: 0.04em; font-style: italic; color: #888; min-width: 70px; }
+.o2-kids-col { display: flex; flex-direction: column; gap: 18px; margin-left: 80px; }
+.o2-kids-item { font-size: 10.5px; letter-spacing: 0.03em; font-weight: 500; cursor: pointer; }
+.o2-kids-item:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-/* Menu body: cats + subs side by side */
-.o2-menu-body {
-  display: flex;
-  gap: 60px;
-}
-.o2-cats {
-  display: flex;
-  flex-direction: column;
-  gap: 13px;
-  min-width: 120px;
-}
-.o2-cat {
-  font-size: 12.5px;
-  letter-spacing: 0.05em;
-  text-align: left;
-  cursor: pointer;
-  font-weight: 400;
-}
-.o2-cat.active {
-  font-style: italic;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.o2-subs {
-  padding-top: 0;
-}
-.o2-sub-panel {
-  display: none;
-  flex-direction: column;
-  gap: 20px;
-}
-.o2-sub-panel.active { display: flex; }
-.o2-sub-link {
-  font-size: 9.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
+.o2-dd-photo { position: relative; margin-left: auto; width: 240px; height: 300px; flex-shrink: 0; overflow: hidden; }
+.o2-dd-photo.tall { width: 340px; height: 300px; }
+.o2-dd-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+.o2-dd-photo .o2-hover-img { opacity: 0; transition: opacity 0.4s ease; }
+.o2-dd-photo .o2-hover-img.active { opacity: 1; }
 
+.o2-body { min-height: calc(100vh - 64px); background: #F8F7F6; }
 
 /* ══════════════════════════════════════════
-   OPTION 3 — SHOP & DISCOVER
+   OPTION 3 — NEW / WOMEN / KIDS / ACCESSORIES
 ══════════════════════════════════════════ */
-#opt3 { background: #faf8f4; }
+#opt3 { background: #F8F7F6; position: relative; }
 
-/* Nav */
+.o3-nav-wrap { position: relative; z-index: 200; }
 .o3-nav {
-  background: #faf8f4;
-  height: 46px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 26px;
-  position: relative;
+  background: #F8F7F6; height: 64px;
+  display: flex; align-items: center;
+  position: relative; padding: 0 32px;
 }
-.o3-nav-left, .o3-nav-right {
-  display: flex;
-  align-items: center;
-  gap: 22px;
+.o3-nav-l { display: flex; gap: 28px; }
+.o3-ni {
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer; padding-bottom: 3px;
+  border-bottom: 2px solid transparent;
 }
-.o3-nav-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
+.o3-ni.active { border-bottom-color: #1a1a1a; }
 .o3-logo {
-  font-size: 17px;
-  letter-spacing: 0.22em;
-  font-weight: 400;
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-size: 19px; letter-spacing: 0.18em; font-weight: 400;
 }
-.o3-item {
-  font-size: 9.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-/* Tab underline — the short thick line shown in design */
-.o3-tab {
-  font-size: 9.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  position: relative;
-  padding-bottom: 14px;
-  margin-bottom: -14px;
-}
-.o3-tab::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: #1a1a1a;
-  opacity: 0;
-  transition: opacity 0.15s;
-}
-.o3-tab.active::after { opacity: 1; }
+.o3-nav-r { margin-left: auto; display: flex; align-items: center; gap: 24px; }
+.o3-nav-btn { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; }
+.o3-q { font-size: 15px; cursor: pointer; font-weight: 300; }
 
-/* Panel area */
-.o3-panels {
-  display: none;
-  height: calc(100vh - 46px);
+/* Dropdowns */
+.o3-dd-wrap {
+  position: absolute; top: 64px; left: 0; right: 0;
+  background: #F8F7F6; display: none;
 }
-.o3-panels.open { display: flex; }
+.o3-dd-wrap.open { display: block; }
+.o3-dd { display: none; padding: 28px 32px 44px; }
+.o3-dd.active { display: flex; align-items: flex-start; }
+.o3-dd-new { min-height: 60px; }
 
-/* Left white panel */
-.o3-left {
-  width: 460px;
-  min-width: 460px;
-  background: #fff;
-  border-right: 1px solid #e8e7e3;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 48px 0 32px;
-}
-.o3-cats-list {
-  display: flex;
-  flex-direction: column;
-}
-.o3-cat-btn {
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  text-align: left;
-  padding: 9px 36px;
-  background: none;
-  border: none;
-  outline: none;
-  font-family: inherit;
-  color: #1a1a1a;
-  cursor: pointer;
-  font-weight: 400;
-}
-.o3-cat-btn.active {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.o3-left-footer {
-  padding: 0 36px;
-  border-top: 1px solid #e8e7e3;
-  padding-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-.o3-footer-link {
-  font-size: 9.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
+.o3-see-all { font-size: 10px; letter-spacing: 0.04em; font-style: italic; color: #888; min-width: 115px; }
+.o3-sub-col { display: flex; flex-direction: column; gap: 18px; margin-left: 36px; }
+.o3-sub-item { font-size: 10.5px; letter-spacing: 0.03em; font-weight: 500; cursor: pointer; }
+.o3-sub-item:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-/* Sub panel */
-.o3-sub {
-  width: 300px;
-  min-width: 300px;
-  background: #fff;
-  border-right: 1px solid #e8e7e3;
-  padding: 48px 36px;
-  display: none;
-  flex-direction: column;
-  gap: 12px;
-}
-.o3-sub.open { display: flex; }
-.o3-sub-link {
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.o3-sub-gap { height: 10px; }
-
-/* Gray panels */
-.o3-mid {
-  flex: 1;
-  background: #eeede9;
-}
-.o3-right {
-  width: 300px;
-  min-width: 300px;
-  background: #e5e3df;
-}
-
-/* Body when closed */
-.o3-body {
-  background: #faf8f4;
-  min-height: calc(100vh - 46px);
-}
+.o3-body { min-height: calc(100vh - 64px); background: #F8F7F6; }
 </style>
 </head>
 <body>
@@ -612,22 +365,22 @@ a { text-decoration: none; color: inherit; }
 ══════════════════════════════════════════ -->
 <div id="hub" class="screen active">
   <div class="hub-logo">ZIMMERMANN</div>
-  <div class="hub-tagline">Navigation Directions — 02</div>
+  <p class="hub-tagline">Navigation Directions — 02</p>
   <div class="hub-cards">
     <div class="hub-card" onclick="show('opt1')">
-      <div class="hub-card-num">Option 01</div>
+      <div class="hub-card-num">01</div>
       <div class="hub-card-title">Anchored Dropdown</div>
-      <div class="hub-card-desc">Horizontal nav with hover-triggered dropdowns anchored per category.</div>
+      <p class="hub-card-desc">Horizontal nav bar with hover-triggered dropdowns anchored below each item.</p>
     </div>
     <div class="hub-card" onclick="show('opt2')">
-      <div class="hub-card-num">Option 02</div>
+      <div class="hub-card-num">02</div>
       <div class="hub-card-title">Mega Menu</div>
-      <div class="hub-card-desc">Full-screen overlay triggered by MENU with two-level category navigation.</div>
+      <p class="hub-card-desc">Multi-column mega dropdown with full category expansion on hover.</p>
     </div>
     <div class="hub-card" onclick="show('opt3')">
-      <div class="hub-card-num">Option 03</div>
-      <div class="hub-card-title">Shop &amp; Discover</div>
-      <div class="hub-card-desc">Split nav tabs opening a multi-panel drawer with category sub-navigation.</div>
+      <div class="hub-card-num">03</div>
+      <div class="hub-card-title">Condensed Nav</div>
+      <p class="hub-card-desc">Minimal uppercase nav with clean two-column dropdowns and side panels.</p>
     </div>
   </div>
 </div>
@@ -638,204 +391,351 @@ a { text-decoration: none; color: inherit; }
 ══════════════════════════════════════════ -->
 <div id="opt1" class="screen">
 
-  <div class="o1-nav" id="o1nav">
-    <div class="o1-left">
-      <span class="o1-item" onmouseenter="openDD('new')" onmouseleave="schedClose()" id="ni-new">NEW</span>
-      <span class="o1-item" onmouseenter="openDD('rtw')" onmouseleave="schedClose()" id="ni-rtw">READY TO WEAR</span>
-      <span class="o1-item" onmouseenter="openDD('swim')" onmouseleave="schedClose()" id="ni-swim">SWIM &amp; RESORT</span>
-      <span class="o1-item" onmouseenter="openDD('acc')" onmouseleave="schedClose()" id="ni-acc">ACCESSORIES</span>
-      <span class="o1-item" onmouseenter="openDD('kids')" onmouseleave="schedClose()" id="ni-kids">KIDS</span>
-      <span class="o1-item" onmouseenter="openDD('coll')" onmouseleave="schedClose()" id="ni-coll">COLLECTIONS</span>
-    </div>
-    <div class="o1-center"><span class="o1-logo">ZIMMERMANN</span></div>
-    <div class="o1-right">
-      <span class="o1-item" onmouseenter="openDD('world')" onmouseleave="schedClose()" id="ni-world">OUR WORLD</span>
-      <span class="o1-item">SEARCH</span>
-      <span class="o1-item">ACCOUNT</span>
-      <span class="o1-item">SHOPPING BAG (0)</span>
-    </div>
-
-    <!-- Dropdown container -->
-    <div class="o1-dd-wrap" id="o1ddwrap" onmouseenter="cancelClose()" onmouseleave="schedClose()">
-
-      <!-- NEW -->
-      <div class="o1-dd" id="dd-new">
-        <div class="o1-col1">
-          <div class="o1-heading">ALL NEW</div>
-        </div>
-        <div class="o1-col2">
-          <span class="o1-link">DRESSES</span>
-          <span class="o1-link">SWIM &amp; RESORT</span>
-          <span class="o1-link">BAGS</span>
-          <span class="o1-link">SHOES</span>
-          <span class="o1-link">TOPS</span>
-          <span class="o1-link">BOTTOMS</span>
-          <span class="o1-link">SKIRTS</span>
-          <span class="o1-link">TAILORING</span>
-          <span class="o1-link">DENIM</span>
-          <span class="o1-link">KNITWEAR</span>
-          <span class="o1-link">JACKETS &amp; COATS</span>
-          <span class="o1-link">JUMPSUITS &amp; PLAYSUITS</span>
-          <span class="o1-link">KIDS</span>
-          <span class="o1-link mt">GIFTS</span>
-        </div>
-        <div class="o1-col3"><div class="o1-img"><span>[ Featured campaign, a collection or story ]</span></div></div>
-        <div class="o1-col4">
-          <p class="o1-feat-text">Sun-warmed prints, considered cuts, and colours<br>made to be worn somewhere beautiful.</p>
-          <span class="o1-feat-link">Discover Spring 2026</span>
-        </div>
+  <div class="o1-nav-wrap">
+    <nav class="o1-nav">
+      <div class="o1-nav-l">
+        <span class="o1-ni" id="o1-ni-rtw"
+          onmouseenter="o1Open('rtw',this)" onmouseleave="o1Sched()">Ready to wear</span>
+        <span class="o1-ni" id="o1-ni-acc"
+          onmouseenter="o1Open('acc',this)" onmouseleave="o1Sched()">Accessories</span>
+        <span class="o1-ni" id="o1-ni-coll"
+          onmouseenter="o1Open('coll',this)" onmouseleave="o1Sched()">Collections</span>
+        <span class="o1-ni" id="o1-ni-kids"
+          onmouseenter="o1Open('kids',this)" onmouseleave="o1Sched()">Kids</span>
       </div>
+      <span class="o1-logo">ZIMMERMANN</span>
+      <div class="o1-nav-r">
+        <!-- Search text SVG -->
+        <button class="o1-search-btn" onclick="openSearch()">
+          <svg width="161" height="20" viewBox="0 0 161 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.40625 5.30078L5.29883 5.95703C5.0918 5.59766 4.89453 5.36328 4.70703 5.25391C4.51172 5.12891 4.25977 5.06641 3.95117 5.06641C3.57227 5.06641 3.25781 5.17383 3.00781 5.38867C2.75781 5.59961 2.63281 5.86523 2.63281 6.18555C2.63281 6.62695 2.96094 6.98242 3.61719 7.25195L4.51953 7.62109C5.25391 7.91797 5.79102 8.28125 6.13086 8.71094C6.4707 9.13672 6.64062 9.66016 6.64062 10.2812C6.64062 11.1133 6.36328 11.8008 5.80859 12.3438C5.25 12.8906 4.55664 13.1641 3.72852 13.1641C2.94336 13.1641 2.29492 12.9316 1.7832 12.4668C1.2793 12.002 0.964844 11.3477 0.839844 10.5039L2.22266 10.1992C2.28516 10.7305 2.39453 11.0977 2.55078 11.3008C2.83203 11.6914 3.24219 11.8867 3.78125 11.8867C4.20703 11.8867 4.56055 11.7441 4.8418 11.459C5.12305 11.1738 5.26367 10.8125 5.26367 10.375C5.26367 10.1992 5.23828 10.0391 5.1875 9.89453C5.14062 9.74609 5.06445 9.61133 4.95898 9.49023C4.85742 9.36523 4.72461 9.25 4.56055 9.14453C4.39648 9.03516 4.20117 8.93164 3.97461 8.83398L3.10156 8.4707C1.86328 7.94727 1.24414 7.18164 1.24414 6.17383C1.24414 5.49414 1.50391 4.92578 2.02344 4.46875C2.54297 4.00781 3.18945 3.77734 3.96289 3.77734C5.00586 3.77734 5.82031 4.28516 6.40625 5.30078ZM13.2324 10.457H9.14258C9.17773 10.9258 9.33008 11.2988 9.59961 11.5762C9.86914 11.8496 10.2148 11.9863 10.6367 11.9863C10.9648 11.9863 11.2363 11.9082 11.4512 11.752C11.6621 11.5957 11.9023 11.3066 12.1719 10.8848L13.2852 11.5059C13.1133 11.7988 12.9316 12.0508 12.7402 12.2617C12.5488 12.4688 12.3438 12.6406 12.125 12.7773C11.9062 12.9102 11.6699 13.0078 11.416 13.0703C11.1621 13.1328 10.8867 13.1641 10.5898 13.1641C9.73828 13.1641 9.05469 12.8906 8.53906 12.3438C8.02344 11.793 7.76562 11.0625 7.76562 10.1523C7.76562 9.25 8.01562 8.51953 8.51562 7.96094C9.01953 7.41016 9.6875 7.13477 10.5195 7.13477C11.3594 7.13477 12.0234 7.40234 12.5117 7.9375C12.9961 8.46875 13.2383 9.20508 13.2383 10.1465L13.2324 10.457ZM11.8789 9.37891C11.6953 8.67578 11.252 8.32422 10.5488 8.32422C10.3887 8.32422 10.2383 8.34961 10.0977 8.40039C9.95703 8.44727 9.82812 8.51758 9.71094 8.61133C9.59766 8.70117 9.5 8.81055 9.41797 8.93945C9.33594 9.06836 9.27344 9.21484 9.23047 9.37891H11.8789ZM18.8867 7.29297H20.2109V13H18.8867V12.4023C18.3438 12.9102 17.7598 13.1641 17.1348 13.1641C16.3457 13.1641 15.6934 12.8789 15.1777 12.3086C14.666 11.7266 14.4102 11 14.4102 10.1289C14.4102 9.27344 14.666 8.56055 15.1777 7.99023C15.6895 7.41992 16.3301 7.13477 17.0996 7.13477C17.7637 7.13477 18.3594 7.4082 18.8867 7.95508V7.29297ZM15.7578 10.1289C15.7578 10.6758 15.9043 11.1211 16.1973 11.4648C16.498 11.8125 16.877 11.9863 17.334 11.9863C17.8223 11.9863 18.2168 11.8184 18.5176 11.4824C18.8184 11.1348 18.9688 10.6934 18.9688 10.1582C18.9688 9.62305 18.8184 9.18164 18.5176 8.83398C18.2168 8.49414 17.8262 8.32422 17.3457 8.32422C16.8926 8.32422 16.5137 8.49609 16.209 8.83984C15.9082 9.1875 15.7578 9.61719 15.7578 10.1289ZM21.875 7.29297H23.1934V7.80273C23.4355 7.54883 23.6504 7.375 23.8379 7.28125C24.0293 7.18359 24.2559 7.13477 24.5176 7.13477C24.8652 7.13477 25.2285 7.24805 25.6074 7.47461L25.0039 8.68164C24.7539 8.50195 24.5098 8.41211 24.2715 8.41211C23.5527 8.41211 23.1934 8.95508 23.1934 10.041V13H21.875V7.29297ZM30.6992 7.53906V9.29102C30.3984 8.92383 30.1289 8.67188 29.8906 8.53516C29.6562 8.39453 29.3809 8.32422 29.0645 8.32422C28.5684 8.32422 28.1562 8.49805 27.8281 8.8457C27.5 9.19336 27.3359 9.62891 27.3359 10.1523C27.3359 10.6875 27.4941 11.127 27.8105 11.4707C28.1309 11.8145 28.5391 11.9863 29.0352 11.9863C29.3516 11.9863 29.6309 11.918 29.873 11.7812C30.1074 11.6484 30.3828 11.3906 30.6992 11.0078V12.748C30.1641 13.0254 29.6289 13.1641 29.0938 13.1641C28.2109 13.1641 27.4727 12.8789 26.8789 12.3086C26.2852 11.7344 25.9883 11.0215 25.9883 10.1699C25.9883 9.31836 26.2891 8.59961 26.8906 8.01367C27.4922 7.42773 28.2305 7.13477 29.1055 7.13477C29.668 7.13477 30.1992 7.26953 30.6992 7.53906ZM32.293 3.10352H33.6113V7.76758C34.0801 7.3457 34.5977 7.13477 35.1641 7.13477C35.8086 7.13477 36.3242 7.34375 36.7109 7.76172C37.0391 8.125 37.2031 8.70508 37.2031 9.50195V13H35.8848V9.625C35.8848 9.16797 35.8027 8.83789 35.6387 8.63477C35.4785 8.42773 35.2188 8.32422 34.8594 8.32422C34.3984 8.32422 34.0742 8.4668 33.8867 8.75195C33.7031 9.04102 33.6113 9.53711 33.6113 10.2402V13H32.293V3.10352Z" fill="black"/><line y1="19.2539" x2="160.41" y2="19.2539" stroke="black"/></svg>
+        </button>
+        <!-- Monogram icon -->
+        <button class="o1-icon-btn" onclick="openAccount()">
+          <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26.6156 23.248C30.2053 17.7977 28.697 10.4695 23.2467 6.8798C17.7965 3.29014 10.4682 4.79843 6.87856 10.2487C3.2889 15.6989 4.79719 23.0272 10.2474 26.6168C15.6977 30.2065 23.0259 28.6982 26.6156 23.248Z" fill="white" stroke="black" stroke-width="0.7"/><path d="M24.5417 21.8828C27.3767 17.5783 26.1855 11.7905 21.881 8.95546C17.5765 6.1204 11.7887 7.31163 8.95365 11.6161C6.11858 15.9207 7.30981 21.7084 11.6143 24.5435C15.9188 27.3786 21.7066 26.1873 24.5417 21.8828Z" fill="white" stroke="black" stroke-width="0.7"/><path d="M22.3918 20.4654C24.4438 17.3499 23.5816 13.161 20.4662 11.1091C17.3507 9.05717 13.1617 9.91933 11.1098 13.0348C9.05793 16.1502 9.9201 20.3392 13.0355 22.3911C16.151 24.443 20.3399 23.5808 22.3918 20.4654Z" fill="white" stroke="black" stroke-width="0.7"/><path d="M7.78516 24.5572L17.3176 10.084" stroke="black" stroke-width="0.7"/><path d="M10.832 23.9311L19.543 10.7051" stroke="black" stroke-width="0.7"/><path d="M14.1758 22.8507L22.9226 9.57031" stroke="black" stroke-width="0.7"/><path d="M16.3008 23.5752L25.6869 9.32422" stroke="black" stroke-width="0.7"/><path d="M15.3136 13.7641L8.39062 24.2754L9.6394 25.0979L16.5624 14.5866L15.3136 13.7641Z" fill="white"/><path d="M21.115 8.96253L14.0898 19.6289L15.345 20.4556L22.3701 9.78919L21.115 8.96253Z" fill="white"/><path d="M23.4798 9.37739L16.4141 20.1055L17.6336 20.9087L24.6994 10.1806L23.4798 9.37739Z" fill="white"/></svg>
+        </button>
+        <!-- Save/Bookmark icon -->
+        <button class="o1-icon-btn" onclick="openAccount()">
+          <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.055 0.547037L0.506987 0.501953L0.5 14.6163L5.77748 11.1819L11.1055 14.5604L11.055 0.547037Z" stroke="black"/></svg>
+        </button>
+        <!-- Bag icon -->
+        <button class="o1-icon-btn" onclick="openBasket()">
+          <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.12109 14.719L0.621094 5.7502C5.54147 2.85741 12.8479 4.21537 16.1743 5.32939L12.3907 14.7184L4.12109 14.719Z" stroke="black"/><path d="M11.916 4.01855C11.916 2.07531 10.3407 0.5 8.39746 0.5C6.45422 0.5 4.87891 2.07531 4.87891 4.01855" stroke="black"/></svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Dropdowns -->
+    <div class="o1-dd-wrap" id="o1-dd-wrap"
+      onmouseenter="o1Cancel()" onmouseleave="o1Sched()">
 
       <!-- READY TO WEAR -->
-      <div class="o1-dd" id="dd-rtw">
-        <div class="o1-col1">
-          <div class="o1-heading">NEW</div>
-          <span class="o1-see-all">SEE ALL</span>
+      <div class="o1-dd" id="o1-dd-rtw">
+        <span class="o1-see-all" onclick="o1Nav('o1-rtw-all')">See all</span>
+        <div class="o1-sub-col">
+          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-dresses')">Dresses</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Swim &amp; Resort</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Tops</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Bottoms</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Skirts</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Tailoring</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Denim</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Knitwear</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Jackets &amp; Coats</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Jumpsuits &amp; Playsuits</span>
         </div>
-        <div class="o1-col2">
-          <span class="o1-link">DRESSES</span>
-          <span class="o1-link">SWIM &amp; RESORT</span>
-          <span class="o1-link">BAGS</span>
-          <span class="o1-link">SHOES</span>
-          <span class="o1-link">TOPS</span>
-          <span class="o1-link">BOTTOMS</span>
-          <span class="o1-link">TAILORING</span>
-          <span class="o1-link">DENIM</span>
-          <span class="o1-link">SKIRTS</span>
-          <span class="o1-link">KNITWEAR</span>
-          <span class="o1-link">JACKETS &amp; COATS</span>
-          <span class="o1-link">JUMPSUITS &amp; PLAYSUITS</span>
-          <span class="o1-link">KIDS</span>
-          <span class="o1-link mt">GIFTS</span>
-        </div>
-        <div class="o1-col3"><div class="o1-img"><span>[ Featured campaign, a collection or story ]</span></div></div>
-        <div class="o1-col4">
-          <p class="o1-feat-text">Sun-warmed prints, considered cuts, and colours<br>made to be worn somewhere beautiful.</p>
-          <span class="o1-feat-link">Discover Spring 2026</span>
-        </div>
-      </div>
-
-      <!-- SWIM & RESORT -->
-      <div class="o1-dd" id="dd-swim">
-        <div class="o1-col1">
-          <div class="o1-heading">NEW</div>
-          <span class="o1-see-all">SEE ALL</span>
-        </div>
-        <div class="o1-col2">
-          <span class="o1-link">DRESSES &amp; COVERUPS</span>
-          <span class="o1-link">SWIMWEAR</span>
-          <span class="o1-link">ACCESSORIES</span>
-          <span class="o1-link">SKIRTS</span>
-          <span class="o1-link">DENIM</span>
-          <span class="o1-link">TOPS</span>
-          <span class="o1-link">BOTTOMS</span>
-          <span class="o1-link">TOWELS &amp; PAREOS</span>
-          <span class="o1-link">JUMPSUITS &amp; PLAYSUITS</span>
-          <span class="o1-link">BOARD SHORTS</span>
-          <span class="o1-link">KIDS</span>
-          <span class="o1-link mt">GIFTS</span>
-          <span class="o1-link">STYLE GUIDE</span>
-        </div>
-        <div class="o1-col3"><div class="o1-img"><span>[ Featured campaign, a collection or story ]</span></div></div>
-        <div class="o1-col4">
-          <p class="o1-feat-text">Sun-warmed prints, considered cuts, and colours<br>made to be worn somewhere beautiful.</p>
-          <span class="o1-feat-link">Discover Swim &amp; Resort 2026</span>
-        </div>
+        <div class="o1-dd-photo"><img src="readytowear.png" alt="Ready to Wear"></div>
       </div>
 
       <!-- ACCESSORIES -->
-      <div class="o1-dd" id="dd-acc">
-        <div class="o1-col1">
-          <div class="o1-heading">NEW</div>
-          <span class="o1-see-all">SEE ALL</span>
+      <div class="o1-dd" id="o1-dd-acc">
+        <span class="o1-see-all" onclick="o1Nav('o1-acc-all')">See all</span>
+        <div class="o1-sub-col">
+          <span class="o1-sub-item" onclick="o1Nav('o1-acc-bags')">Bags</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-acc-shoes')">Shoes</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-acc-all')">Jewellery</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-acc-all')">Belts</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-acc-all')">Sunglasses</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-acc-all')">Scarves</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-acc-all')">Hats</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-acc-all')">Towels &amp; Pareos</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-acc-all')">Hair Accessories</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-acc-all')">Bag Charms</span>
         </div>
-        <div class="o1-col2">
-          <span class="o1-link">BAGS</span>
-          <span class="o1-link">SHOES</span>
-          <span class="o1-link">JEWELLERY</span>
-          <span class="o1-link">BELTS</span>
-          <span class="o1-link">SUNGLASSES</span>
-          <span class="o1-link">SCARVES</span>
-          <span class="o1-link">HATS</span>
-          <span class="o1-link">TOWELS &amp; PAREOS</span>
-          <span class="o1-link">HAIR ACCESSORIES</span>
-          <span class="o1-link">BAG CHARMS</span>
-          <span class="o1-link mt">GIFTS</span>
+        <div class="o1-dd-photo"><img src="accessories.png" alt="Accessories"></div>
+      </div>
+
+      <!-- COLLECTIONS -->
+      <div class="o1-dd" id="o1-dd-coll">
+        <span class="o1-see-all" onclick="o1Nav('o1-col-all')">See all</span>
+        <div class="o1-sub-col">
+          <span class="o1-sub-item" onclick="o1Nav('o1-col-trailblazer')">Fall 2026, Trailblazer</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')"
+            onmouseenter="o1SwapImg('kindred')">Spring 2026, Kindred Spirit</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')"
+            onmouseenter="o1SwapImg('summerswim')">Summer Swim 2026</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')">Resort Swim 2026</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')">Cruise 2026</span>
         </div>
-        <div class="o1-col3"><div class="o1-img"><span>[ Featured campaign, a collection or story ]</span></div></div>
-        <div class="o1-col4">
-          <p class="o1-feat-text">Every detail, considered.</p>
-          <span class="o1-feat-link">Discover Accessories</span>
+        <div class="o1-sub-col2">
+          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')">Runway</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')">The New Denim</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')">Volume in Motion</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')">Sculpted Silhouettes</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')">Modern Utility</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')">Archive</span>
+        </div>
+        <div class="o1-dd-photo wide" id="o1-coll-photo">
+          <img src="collections.png" alt="Collections">
+          <img src="Option%202%20-%20Mega%20Menu/2nd_item_kinderedspirit.jpg" alt="Kindred Spirit" class="o1-hover-img" data-hover="kindred">
+          <img src="Option%202%20-%20Mega%20Menu/option3-summerswim2026.jpg" alt="Summer Swim" class="o1-hover-img" data-hover="summerswim">
         </div>
       </div>
 
       <!-- KIDS -->
-      <div class="o1-dd" id="dd-kids">
-        <div class="o1-col1">
-          <div class="o1-heading">NEW</div>
-          <span class="o1-see-all">SEE ALL</span>
+      <div class="o1-dd" id="o1-dd-kids">
+        <span class="o1-see-all" onclick="o1Nav('o1-kids-all')">See all</span>
+        <div class="o1-sub-col">
+          <span class="o1-sub-item" onclick="o1Nav('o1-kids-all')">Dresses</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-kids-all')">Swim &amp; Resort</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-kids-all')">Tops</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-kids-all')">Bottoms</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-kids-all')">Skirts</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-kids-all')">Denim</span>
+          <span class="o1-sub-item" onclick="o1Nav('o1-kids-all')">Hats</span>
         </div>
-        <div class="o1-col2">
-          <span class="o1-link">DRESSES</span>
-          <span class="o1-link">SWIM &amp; RESORT</span>
-          <span class="o1-link">TOPS</span>
-          <span class="o1-link">BOTTOMS</span>
-          <span class="o1-link">DENIM</span>
-          <span class="o1-link">SKIRTS</span>
-          <span class="o1-link">HATS</span>
-          <span class="o1-link mt">GIFTS</span>
-        </div>
-        <div class="o1-col3"><div class="o1-img"><span>[ Featured campaign, a collection or story ]</span></div></div>
-        <div class="o1-col4">
-          <p class="o1-feat-text">Little prints, big joy.</p>
-          <span class="o1-feat-link">Discover Kids</span>
-        </div>
+        <div class="o1-dd-photo wide"><img src="kids.png" alt="Kids"></div>
       </div>
 
-      <!-- COLLECTIONS -->
-      <div class="o1-dd" id="dd-coll">
-        <div class="o1-col1">
-          <div class="o1-heading">SEE ALL</div>
-          <span class="o1-coll-name">FALL 2026,<br>TRAILBLAZER</span>
-          <span class="o1-coll-name">SUMMER SWIM 2026</span>
-          <span class="o1-coll-name">RESORT SWIM 2026</span>
-          <span class="o1-coll-name">SPRING 2026,<br>KINDRED SPIRIT</span>
-          <span class="o1-coll-name">CRUISE 2026</span>
-        </div>
-        <div class="o1-col2">
-          <span class="o1-link">SCULPTED SILHOUETTES</span>
-          <span class="o1-link">VOLUME IN MOTION</span>
-          <span class="o1-link">ARCHIVE</span>
-        </div>
-        <div class="o1-col3"><div class="o1-img"><span>[ Featured collection ]</span></div></div>
-        <div class="o1-col4">
-          <p class="o1-feat-text">Some places never leave you.</p>
-          <span class="o1-feat-link">Discover Spring 2026, Kindred Spirit</span>
+    </div><!-- /o1-dd-wrap -->
+  </div><!-- /o1-nav-wrap -->
+
+  <!-- ── HOME ── -->
+  <div id="o1-home" class="o1-sub active">
+    <div class="o1-body"></div>
+  </div>
+
+  <!-- ── RTW ALL ── -->
+  <div id="o1-rtw-all" class="o1-sub">
+    <div class="o1-filter-bar">
+      <span class="o1-ftab active" onclick="o1Nav('o1-rtw-all')">All RTW</span>
+      <span class="o1-ftab" onclick="o1Nav('o1-rtw-dresses')">Dresses</span>
+      <span class="o1-ftab">Swim &amp; Resort</span>
+      <span class="o1-ftab">Tops</span>
+      <span class="o1-ftab">Bottoms</span>
+      <span class="o1-ftab">Skirts</span>
+      <span class="o1-ftab">Tailoring</span>
+      <span class="o1-ftab">Denim</span>
+      <span class="o1-ftab">Knitwear</span>
+      <span class="o1-ftab">Jackets &amp; Coats</span>
+      <span class="o1-ftab">Jumpsuits &amp; Playsuits</span>
+      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
+    </div>
+    <div class="o1-grid-3">
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+    </div>
+  </div>
+
+  <!-- ── ACCESSORIES ALL ── -->
+  <div id="o1-acc-all" class="o1-sub">
+    <div class="o1-filter-bar">
+      <span class="o1-ftab active">All Accessories</span>
+      <span class="o1-ftab" onclick="o1Nav('o1-acc-bags')">Bags</span>
+      <span class="o1-ftab" onclick="o1Nav('o1-acc-shoes')">Shoes</span>
+      <span class="o1-ftab">Jewellery</span>
+      <span class="o1-ftab">Belts</span>
+      <span class="o1-ftab">Sunglasses</span>
+      <span class="o1-ftab">Scarves</span>
+      <span class="o1-ftab">Hats</span>
+      <span class="o1-ftab">Towels &amp; Pareos</span>
+      <span class="o1-ftab">Hair Accessories</span>
+      <span class="o1-ftab">Bag Charms</span>
+      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
+    </div>
+    <div class="o1-grid-3">
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+    </div>
+  </div>
+
+  <!-- ── COLLECTIONS ALL ── -->
+  <div id="o1-col-all" class="o1-sub">
+    <div class="o1-col-all-wrap">
+      <div class="o1-col-sidebar">
+        <div class="o1-col-list-item italic">All Collections</div>
+        <div class="o1-col-list-item" onclick="o1Nav('o1-col-trailblazer')">Fall 2026, Trailblazer</div>
+        <div class="o1-col-list-item">Sprint 2026, Kindred Spirit</div>
+        <div class="o1-col-list-item">Summer Swim 2026</div>
+        <div class="o1-col-list-item">Resort Swim 2026</div>
+        <div class="o1-col-list-item">Cruise 2026</div>
+        <hr class="o1-col-divider">
+        <div class="o1-col-list-item">Explore Runway</div>
+        <div class="o1-col-list-item">The New Denim</div>
+        <div class="o1-col-list-item">Volume in Motion</div>
+        <div class="o1-col-list-item">Sculpted Silhouettes</div>
+        <div class="o1-col-list-item">Modern Utility</div>
+        <div class="o1-col-list-item">Archive</div>
+      </div>
+      <div class="o1-col-main">
+        <div class="o1-col-img" style="aspect-ratio:3/4"></div>
+        <div class="o1-col-img" style="aspect-ratio:3/4"></div>
+        <div class="o1-col-img" style="aspect-ratio:3/4"></div>
+        <div class="o1-col-img" style="aspect-ratio:3/4"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── KIDS ALL ── -->
+  <div id="o1-kids-all" class="o1-sub">
+    <div class="o1-filter-bar">
+      <span class="o1-ftab active">All Kids</span>
+      <span class="o1-ftab">Dresses</span>
+      <span class="o1-ftab">Swimwear</span>
+      <span class="o1-ftab">Tops</span>
+      <span class="o1-ftab">Bottoms</span>
+      <span class="o1-ftab">Skirts</span>
+      <span class="o1-ftab">Denim</span>
+      <span class="o1-ftab">Hats</span>
+      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
+    </div>
+    <div class="o1-grid-3">
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+    </div>
+  </div>
+
+  <!-- ── RTW DRESSES ── -->
+  <div id="o1-rtw-dresses" class="o1-sub">
+    <div class="o1-breadcrumb">
+      <span onclick="o1Nav('o1-rtw-all')">All RTW</span>
+      <span class="o1-breadcrumb-sep">/</span>
+      Dresses
+    </div>
+    <div class="o1-filter-bar">
+      <span class="o1-ftab active">All Dresses</span>
+      <span class="o1-ftab" onclick="o1Nav('o1-rtw-mini')">Mini Dresses</span>
+      <span class="o1-ftab">Midi Dresses</span>
+      <span class="o1-ftab">Maxi Dresses</span>
+      <span class="o1-ftab">Wrap Dresses</span>
+      <span class="o1-ftab">Evening Dresses</span>
+      <span class="o1-ftab">Day Dresses</span>
+      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
+    </div>
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:3px;padding:3px">
+      <div class="o1-tile" style="grid-row:span 2"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div>
+    </div>
+  </div>
+
+  <!-- ── RTW MINI DRESSES ── -->
+  <div id="o1-rtw-mini" class="o1-sub">
+    <div class="o1-breadcrumb">
+      <span onclick="o1Nav('o1-rtw-all')">All RTW</span>
+      <span class="o1-breadcrumb-sep">/</span>
+      <span onclick="o1Nav('o1-rtw-dresses')">Dresses</span>
+    </div>
+    <div class="o1-filter-bar">
+      <span class="o1-ftab" onclick="o1Nav('o1-rtw-dresses')">All Dresses</span>
+      <span class="o1-ftab active">Mini Dresses</span>
+      <span class="o1-ftab">Midi Dresses</span>
+      <span class="o1-ftab">Maxi Dresses</span>
+      <span class="o1-ftab">Wrap Dresses</span>
+      <span class="o1-ftab">Evening Dresses</span>
+      <span class="o1-ftab">Day Dresses</span>
+      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
+    </div>
+    <div class="o1-grid-4">
+      <div class="o1-tile" onclick="o1Nav('o1-pdp')"></div>
+      <div class="o1-tile" onclick="o1Nav('o1-pdp')"></div>
+      <div class="o1-tile" onclick="o1Nav('o1-pdp')"></div>
+      <div class="o1-tile" onclick="o1Nav('o1-pdp')"></div>
+      <div class="o1-tile" onclick="o1Nav('o1-pdp')"></div>
+      <div class="o1-tile" onclick="o1Nav('o1-pdp')"></div>
+      <div class="o1-tile" onclick="o1Nav('o1-pdp')"></div>
+      <div class="o1-tile" onclick="o1Nav('o1-pdp')"></div>
+    </div>
+  </div>
+
+  <!-- ── ACCESSORIES BAGS ── -->
+  <div id="o1-acc-bags" class="o1-sub">
+    <div class="o1-breadcrumb">
+      <span onclick="o1Nav('o1-acc-all')">Accessories</span>
+      <span class="o1-breadcrumb-sep">/</span>
+      Bags
+    </div>
+    <div class="o1-filter-bar">
+      <span class="o1-ftab active">All Bags</span>
+      <span class="o1-ftab">Baskets &amp; Summer Bags</span>
+      <span class="o1-ftab">Shoulder Bags</span>
+      <span class="o1-ftab">Crossbody &amp; Top Handle Bags</span>
+      <span class="o1-ftab">Clutches</span>
+      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
+    </div>
+    <div class="o1-grid-4">
+      <div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div>
+    </div>
+  </div>
+
+  <!-- ── ACCESSORIES SHOES ── -->
+  <div id="o1-acc-shoes" class="o1-sub">
+    <div class="o1-breadcrumb">
+      <span onclick="o1Nav('o1-acc-all')">Accessories</span>
+      <span class="o1-breadcrumb-sep">/</span>
+      Shoes
+    </div>
+    <div class="o1-filter-bar">
+      <span class="o1-ftab active">All Shoes</span>
+      <span class="o1-ftab">Sandals &amp; Espadrilles</span>
+      <span class="o1-ftab">Pumps &amp; Mules</span>
+      <span class="o1-ftab">Flats &amp; Sneakers</span>
+      <span class="o1-ftab">Boots</span>
+      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
+    </div>
+    <div class="o1-grid-4">
+      <div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div>
+    </div>
+  </div>
+
+  <!-- ── COLLECTIONS TRAILBLAZER ── -->
+  <div id="o1-col-trailblazer" class="o1-sub" style="background:#fff">
+    <div class="o1-trailblazer-hero">
+      <div class="o1-trailblazer-season">Fall 2026</div>
+      <div class="o1-trailblazer-title">TRAILBLAZER</div>
+    </div>
+    <div class="o1-trailblazer-img"></div>
+    <div style="background:#F8F7F6;height:300px;margin:3px 3px 0"></div>
+  </div>
+
+  <!-- ── PDP ── -->
+  <div id="o1-pdp" class="o1-sub">
+    <div class="o1-pdp-wrap">
+      <div class="o1-pdp-sidebar">
+        <span class="o1-pdp-close" onclick="o1Nav('o1-rtw-mini')">CLOSE</span>
+        <div class="o1-pdp-name">Alchemy Ruffle Mini Dress</div>
+        <div class="o1-pdp-price">$2,200</div>
+        <div class="o1-pdp-desc">The Alchemy Ruffle Mini Dress in Blue Poppy from our Spring 2026 Collection, Kindred Spirit. A silk mini dress featuring a straight neckline, flared silhouette and tiered frills throughout.</div>
+      </div>
+      <div class="o1-pdp-main">
+        <div class="o1-pdp-hero"></div>
+        <div class="o1-pdp-thumbs-col">
+          <div class="o1-pdp-thumb"></div>
+          <div class="o1-pdp-thumb"></div>
+          <div class="o1-pdp-thumb"></div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- OUR WORLD -->
-      <div class="o1-dd world-layout" id="dd-world">
-        <div class="o1-world-img-wrap">
-          <div class="o1-world-img"><span>[ Featured collection ]</span></div>
-        </div>
-        <div class="o1-world-caption-left">
-          <p class="o1-world-caption">Born in Sydney, worn everywhere beautiful, Zimmermann designs for women who live joyfully — drawn to colour, to craft, and to clothes that feel as good as they look.</p>
-          <span class="o1-world-link">More about Our Story</span>
-        </div>
-        <div class="o1-world-links-right">
-          <span class="o1-world-item">OUR STORY</span>
-          <span class="o1-world-item">BOUTIQUES</span>
-          <span class="o1-world-item">MOMENTS</span>
-          <span class="o1-world-item gap">SUSTAINABILITY</span>
-          <span class="o1-world-item">CAREERS</span>
-        </div>
-      </div>
-
-    </div><!-- /dd-wrap -->
-  </div><!-- /nav -->
-
-  <div class="o1-body"></div>
   <button class="back-btn" onclick="show('hub')">← All Options</button>
 </div>
 
@@ -845,107 +745,242 @@ a { text-decoration: none; color: inherit; }
 ══════════════════════════════════════════ -->
 <div id="opt2" class="screen">
 
-  <div class="o2-nav">
-    <div class="o2-nav-left">
-      <span class="o2-item" onclick="openMega()">MENU</span>
-      <span class="o2-item">SEARCH</span>
-      <span class="o2-item">LOGIN</span>
+  <div class="o2-nav-wrap">
+    <nav class="o2-nav">
+      <div class="o2-nav-l">
+        <span class="o2-ni" id="o2-ni-women"
+          onmouseenter="o2Open('women',this)" onmouseleave="o2Sched()">Women</span>
+        <span class="o2-ni" id="o2-ni-kids"
+          onmouseenter="o2Open('kids',this)" onmouseleave="o2Sched()">Kids</span>
+        <span class="o2-ni" id="o2-ni-coll"
+          onmouseenter="o2Open('coll',this)" onmouseleave="o2Sched()">Collections</span>
+      </div>
+      <span class="o2-logo">ZIMMERMANN</span>
+      <div class="o2-nav-r">
+        <button class="o2-nav-btn" onclick="openSearch()">Search</button>
+        <button class="o2-nav-btn" onclick="openAccount()">Login</button>
+        <button class="o2-nav-btn" onclick="openBasket()">Shopping Bag (0)</button>
+      </div>
+    </nav>
+
+    <!-- Dropdowns -->
+    <div class="o2-dd-wrap" id="o2-dd-wrap"
+      onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
+
+      <!-- WOMEN -->
+      <div class="o2-dd" id="o2-dd-women">
+        <div class="o2-mega-cols">
+          <div class="o2-mega-col">
+            <span class="o2-mega-head" onclick="o2Nav('o2-women-all')">All Ready To Wear</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-rtw-dresses')">Dresses</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Tops</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Shorts &amp; Pants</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Tailoring</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Denim</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Skirts</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Knitwear</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Jackets &amp; Coats</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Jumpsuits &amp; Playsuits</span>
+          </div>
+          <div class="o2-mega-col">
+            <span class="o2-mega-head" onclick="o2Nav('o2-women-all')">All Bags</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Basket</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Summer Bags</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Shoulder Bags</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Crossbody</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Handle Bags</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Clutches</span>
+          </div>
+          <div class="o2-mega-col">
+            <span class="o2-mega-head" onclick="o2Nav('o2-women-all')">All Accessories</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Shoes</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Jewellery</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Belts</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Sunglasses</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Scarves</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Hats</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Towels &amp; Pareos</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Hair Accessories</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Bag Charms</span>
+          </div>
+          <div class="o2-mega-col">
+            <span class="o2-mega-head" onclick="o2Nav('o2-women-all')">All Swim &amp; Resort</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Bikinis</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">One Pieces</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Separates</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Towels &amp; Pareos</span>
+            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Boardshorts</span>
+          </div>
+        </div>
+        <div class="o2-dd-photo"><img src="readytowear.png" alt="Women"></div>
+      </div>
+
+      <!-- KIDS -->
+      <div class="o2-dd" id="o2-dd-kids">
+        <div class="o2-kids-wrap">
+          <span class="o2-kids-see" onclick="o2Nav('o2-kids-all')">See All</span>
+          <div class="o2-kids-col">
+            <span class="o2-kids-item" onclick="o2Nav('o2-kids-all')">Dresses</span>
+            <span class="o2-kids-item" onclick="o2Nav('o2-kids-all')">Swimwear</span>
+            <span class="o2-kids-item" onclick="o2Nav('o2-kids-all')">Tops</span>
+            <span class="o2-kids-item" onclick="o2Nav('o2-kids-all')">Bottoms</span>
+            <span class="o2-kids-item" onclick="o2Nav('o2-kids-all')">Denim</span>
+            <span class="o2-kids-item" onclick="o2Nav('o2-kids-all')">Skirts</span>
+            <span class="o2-kids-item" onclick="o2Nav('o2-kids-all')">Hats</span>
+          </div>
+        </div>
+        <div class="o2-dd-photo tall"><img src="kids.png" alt="Kids"></div>
+      </div>
+
+      <!-- COLLECTIONS -->
+      <div class="o2-dd" id="o2-dd-coll">
+        <div class="o2-coll-list">
+          <div class="o2-coll-item" onclick="o2Nav('o2-col-trailblazer')">Fall 2026, Trailblazer</div>
+          <div class="o2-coll-item" onmouseenter="o2SwapImg('kindred')">Sprint 2026, Kindred Spirit</div>
+          <div class="o2-coll-item" onmouseenter="o2SwapImg('summerswim')">Summer Swim 2026</div>
+          <div class="o2-coll-item" onmouseenter="o2SwapImg(null)">Resort Swim 2026</div>
+          <div class="o2-coll-item" onmouseenter="o2SwapImg(null)">Cruise 2026</div>
+          <div class="o2-coll-item" onmouseenter="o2SwapImg(null)">Runway</div>
+          <div class="o2-coll-item" onmouseenter="o2SwapImg(null)">The New Denim</div>
+          <div class="o2-coll-item" onmouseenter="o2SwapImg(null)">Archive</div>
+        </div>
+        <div class="o2-dd-photo tall" id="o2-coll-photo">
+          <img src="collections.png" alt="Collections">
+          <img src="Option%202%20-%20Mega%20Menu/2nd_item_kinderedspirit.jpg" alt="Kindred Spirit" class="o2-hover-img" data-hover="kindred">
+          <img src="Option%202%20-%20Mega%20Menu/option3-summerswim2026.jpg" alt="Summer Swim" class="o2-hover-img" data-hover="summerswim">
+        </div>
+      </div>
+
+    </div><!-- /o2-dd-wrap -->
+  </div><!-- /o2-nav-wrap -->
+
+  <!-- ── HOME ── -->
+  <div id="o2-home" class="o2-sub active">
+    <div class="o2-body"></div>
+  </div>
+
+  <!-- ── WOMEN ALL RTW ── -->
+  <div id="o2-women-all" class="o2-sub">
+    <div class="o1-filter-bar">
+      <span class="o1-ftab active" onclick="o2Nav('o2-women-all')">All Ready To Wear</span>
+      <span class="o1-ftab" onclick="o2Nav('o2-rtw-dresses')">Dresses</span>
+      <span class="o1-ftab">Swim &amp; Resort</span>
+      <span class="o1-ftab">Tops</span>
+      <span class="o1-ftab">Bottoms</span>
+      <span class="o1-ftab">Skirts</span>
+      <span class="o1-ftab">Tailoring</span>
+      <span class="o1-ftab">Denim</span>
+      <span class="o1-ftab">Knitwear</span>
+      <span class="o1-ftab">Jackets &amp; Coats</span>
+      <span class="o1-ftab">Jumpsuits &amp; Playsuits</span>
+      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
     </div>
-    <div class="o2-nav-center"><span class="o2-logo">ZIMMERMANN</span></div>
-    <div class="o2-nav-right">
-      <span class="o2-item">WISHLIST</span>
-      <span class="o2-item">SHOPPING BAG (0)</span>
+    <div class="o1-grid-3">
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
     </div>
   </div>
 
-  <!-- Overlay -->
-  <div class="o2-overlay" id="o2overlay">
-    <div class="o2-panel-left">
-      <button class="o2-close" onclick="closeMega()">CLOSE</button>
+  <!-- ── RTW DRESSES ── -->
+  <div id="o2-rtw-dresses" class="o2-sub">
+    <div class="o1-breadcrumb">
+      <span onclick="o2Nav('o2-women-all')">Ready To Wear</span>
+    </div>
+    <div class="o1-filter-bar">
+      <span class="o1-ftab active">All Dresses</span>
+      <span class="o1-ftab" onclick="o2Nav('o2-rtw-mini')">Mini Dresses</span>
+      <span class="o1-ftab">Midi Dresses</span>
+      <span class="o1-ftab">Maxi Dresses</span>
+      <span class="o1-ftab">Wrap Dresses</span>
+      <span class="o1-ftab">Evening Dresses</span>
+      <span class="o1-ftab">Day Dresses</span>
+      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
+    </div>
+    <div class="o1-grid-3">
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+    </div>
+  </div>
 
-      <div class="o2-search-wrap">
-        <span class="o2-search-label">Search</span>
-        <div class="o2-search-underline"></div>
+  <!-- ── RTW MINI DRESSES ── -->
+  <div id="o2-rtw-mini" class="o2-sub">
+    <div class="o1-breadcrumb">
+      <span onclick="o2Nav('o2-women-all')">Ready To Wear</span>
+      <span class="o1-breadcrumb-sep">/</span>
+      <span onclick="o2Nav('o2-rtw-dresses')">Dresses</span>
+    </div>
+    <div class="o1-filter-bar">
+      <span class="o1-ftab" onclick="o2Nav('o2-rtw-dresses')">All Dresses</span>
+      <span class="o1-ftab active">Mini Dresses</span>
+      <span class="o1-ftab">Midi Dresses</span>
+      <span class="o1-ftab">Maxi Dresses</span>
+      <span class="o1-ftab">Wrap Dresses</span>
+      <span class="o1-ftab">Evening Dresses</span>
+      <span class="o1-ftab">Day Dresses</span>
+      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
+    </div>
+    <div class="o1-grid-4">
+      <div class="o1-tile" onclick="o2Nav('o2-pdp')"></div>
+      <div class="o1-tile" onclick="o2Nav('o2-pdp')"></div>
+      <div class="o1-tile" onclick="o2Nav('o2-pdp')"></div>
+      <div class="o1-tile" onclick="o2Nav('o2-pdp')"></div>
+      <div class="o1-tile" onclick="o2Nav('o2-pdp')"></div>
+      <div class="o1-tile" onclick="o2Nav('o2-pdp')"></div>
+      <div class="o1-tile" onclick="o2Nav('o2-pdp')"></div>
+      <div class="o1-tile" onclick="o2Nav('o2-pdp')"></div>
+    </div>
+  </div>
+
+  <!-- ── KIDS ALL ── -->
+  <div id="o2-kids-all" class="o2-sub">
+    <div class="o1-filter-bar">
+      <span class="o1-ftab active">All Kids</span>
+      <span class="o1-ftab">Dresses</span>
+      <span class="o1-ftab">Swimwear</span>
+      <span class="o1-ftab">Tops</span>
+      <span class="o1-ftab">Bottoms</span>
+      <span class="o1-ftab">Skirts</span>
+      <span class="o1-ftab">Denim</span>
+      <span class="o1-ftab">Hats</span>
+      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
+    </div>
+    <div class="o1-grid-3">
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+    </div>
+  </div>
+
+  <!-- ── COLLECTIONS TRAILBLAZER ── -->
+  <div id="o2-col-trailblazer" class="o2-sub" style="background:#fff">
+    <div class="o1-trailblazer-hero">
+      <div class="o1-trailblazer-season">Fall 2026</div>
+      <div class="o1-trailblazer-title">TRAILBLAZER</div>
+    </div>
+    <div class="o1-trailblazer-img"></div>
+    <div style="background:#F8F7F6;height:300px;margin:3px 3px 0"></div>
+  </div>
+
+  <!-- ── PDP ── -->
+  <div id="o2-pdp" class="o2-sub">
+    <div class="o1-pdp-wrap">
+      <div class="o1-pdp-sidebar">
+        <span class="o1-pdp-close" onclick="o2Nav('o2-rtw-mini')">CLOSE</span>
+        <div class="o1-pdp-name">Alchemy Ruffle Mini Dress</div>
+        <div class="o1-pdp-price">$2,200</div>
+        <div class="o1-pdp-desc">The Alchemy Ruffle Mini Dress in Blue Poppy from our Spring 2026 Collection, Kindred Spirit. A silk mini dress featuring a straight neckline, flared silhouette and tiered frills throughout.</div>
       </div>
-
-      <div class="o2-menu-body">
-        <div class="o2-cats">
-          <button class="o2-cat" onclick="pickCat('featured')">Featured</button>
-          <button class="o2-cat" onclick="pickCat('women')">Women</button>
-          <button class="o2-cat" onclick="pickCat('bags')">Bags</button>
-          <button class="o2-cat" onclick="pickCat('accessories')">Accessories</button>
-          <button class="o2-cat" onclick="pickCat('kids')">Kids</button>
-          <button class="o2-cat" onclick="pickCat('discover')">Discover</button>
-        </div>
-
-        <div class="o2-subs">
-          <div class="o2-sub-panel" id="sp-featured">
-            <span class="o2-sub-link">PARIS FASHION WEEK</span>
-            <span class="o2-sub-link">THE EDIT / THE NEW DENIM</span>
-            <span class="o2-sub-link">RTW SPRING 2026</span>
-            <span class="o2-sub-link">VOLUME IN MOTION</span>
-            <span class="o2-sub-link">NEW / READY TO WEAR</span>
-            <span class="o2-sub-link">NEW IN / SWIM &amp; RESORT</span>
-          </div>
-          <div class="o2-sub-panel" id="sp-women">
-            <span class="o2-sub-link">NEW</span>
-            <span class="o2-sub-link">ALL</span>
-            <span class="o2-sub-link">DRESSES</span>
-            <span class="o2-sub-link">SWIM &amp; RESORT</span>
-            <span class="o2-sub-link">TOPS</span>
-            <span class="o2-sub-link">BOTTOMS</span>
-            <span class="o2-sub-link">SKIRTS</span>
-            <span class="o2-sub-link">TAILORING</span>
-            <span class="o2-sub-link">DENIM</span>
-            <span class="o2-sub-link">KNITWEAR</span>
-            <span class="o2-sub-link">JACKETS &amp; COATS</span>
-            <span class="o2-sub-link">JUMPSUITS &amp; PLAYSUITS</span>
-          </div>
-          <div class="o2-sub-panel" id="sp-bags">
-            <span class="o2-sub-link">NEW</span>
-            <span class="o2-sub-link">ALL</span>
-            <span class="o2-sub-link">BASKETS &amp; SUMMER BAGS</span>
-            <span class="o2-sub-link">SHOULDER BAGS</span>
-            <span class="o2-sub-link">CROSSBODY &amp; TOP HANDLE BAGS</span>
-            <span class="o2-sub-link">CLUTCHES</span>
-          </div>
-          <div class="o2-sub-panel" id="sp-accessories">
-            <span class="o2-sub-link">NEW</span>
-            <span class="o2-sub-link">ALL</span>
-            <span class="o2-sub-link">BAGS</span>
-            <span class="o2-sub-link">SHOES</span>
-            <span class="o2-sub-link">JEWELLERY</span>
-            <span class="o2-sub-link">BELTS</span>
-            <span class="o2-sub-link">SUNGLASSES</span>
-            <span class="o2-sub-link">SCARVES</span>
-            <span class="o2-sub-link">HATS</span>
-            <span class="o2-sub-link">TOWELS &amp; PAREOS</span>
-            <span class="o2-sub-link">HAIR ACCESSORIES</span>
-            <span class="o2-sub-link">BAG CHARMS</span>
-          </div>
-          <div class="o2-sub-panel" id="sp-kids">
-            <span class="o2-sub-link">NEW</span>
-            <span class="o2-sub-link">ALL</span>
-            <span class="o2-sub-link">DRESSES</span>
-            <span class="o2-sub-link">TOPS</span>
-            <span class="o2-sub-link">BOTTOMS</span>
-            <span class="o2-sub-link">PLAYSUITS</span>
-            <span class="o2-sub-link">SWIMWEAR</span>
-            <span class="o2-sub-link">DENIM</span>
-            <span class="o2-sub-link">HATS</span>
-          </div>
-          <div class="o2-sub-panel" id="sp-discover">
-            <span class="o2-sub-link">COLLECTIONS</span>
-            <span class="o2-sub-link">OUR STORY</span>
-            <span class="o2-sub-link">MOMENTS</span>
-            <span class="o2-sub-link">BOUTIQUES</span>
-            <span class="o2-sub-link">SUSTAINABILITY</span>
-          </div>
+      <div class="o1-pdp-main">
+        <div class="o1-pdp-hero"></div>
+        <div class="o1-pdp-thumbs-col">
+          <div class="o1-pdp-thumb"></div>
+          <div class="o1-pdp-thumb"></div>
+          <div class="o1-pdp-thumb"></div>
         </div>
       </div>
     </div>
-    <div class="o2-panel-mid"></div>
-    <div class="o2-panel-right"></div>
   </div>
 
   <button class="back-btn" onclick="show('hub')">← All Options</button>
@@ -953,170 +988,402 @@ a { text-decoration: none; color: inherit; }
 
 
 <!-- ══════════════════════════════════════════
-     OPTION 3 — SHOP & DISCOVER
+     OPTION 3 — CONDENSED NAV
 ══════════════════════════════════════════ -->
 <div id="opt3" class="screen">
 
-  <div class="o3-nav">
-    <div class="o3-nav-left">
-      <span class="o3-tab" id="o3-shop-tab" onclick="openTab('shop')">SHOP</span>
-      <span class="o3-tab" id="o3-disc-tab" onclick="openTab('discover')">DISCOVER</span>
+  <div class="o3-nav-wrap">
+    <nav class="o3-nav">
+      <div class="o3-nav-l">
+        <span class="o3-ni" id="o3-ni-new"
+          onclick="o3Nav('o3-new-all')">NEW</span>
+        <span class="o3-ni" id="o3-ni-women"
+          onmouseenter="o3Open('women',this)" onmouseleave="o3Sched()">WOMEN</span>
+        <span class="o3-ni" id="o3-ni-kids"
+          onmouseenter="o3Open('kids',this)" onmouseleave="o3Sched()">KIDS</span>
+        <span class="o3-ni" id="o3-ni-acc"
+          onmouseenter="o3Open('acc',this)" onmouseleave="o3Sched()">ACCESSORIES</span>
+      </div>
+      <span class="o3-logo">ZIMMERMANN</span>
+      <div class="o3-nav-r">
+        <button class="o3-nav-btn" onclick="o3Nav('o3-zimmerse')">Z.IMMERSE</button>
+        <button class="o3-q" onclick="openSearch()"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.4222 10.4899L12.5602 12.5582M11.8707 7.04279C11.8707 9.70811 9.71006 11.8688 7.04474 11.8688C4.37942 11.8688 2.21875 9.70811 2.21875 7.04279C2.21875 4.37747 4.37942 2.2168 7.04474 2.2168C9.71006 2.2168 11.8707 4.37747 11.8707 7.04279Z" stroke="black" stroke-width="1.23112" stroke-linecap="round"/></svg></button>
+        <button class="o3-nav-btn" onclick="openAccount()">LOGIN</button>
+        <button class="o3-nav-btn" onclick="openBasket()">BAG (0)</button>
+      </div>
+    </nav>
+
+    <!-- Dropdowns -->
+    <div class="o3-dd-wrap" id="o3-dd-wrap"
+      onmouseenter="o3Cancel()" onmouseleave="o3Sched()">
+
+      <!-- NEW — minimal -->
+      <div class="o3-dd o3-dd-new" id="o3-dd-new">
+        <span class="o3-see-all" onclick="o3Nav('o3-new-all')">All New</span>
+        <div class="o3-sub-col">
+          <span class="o3-sub-item" onclick="o3Nav('o3-new-rtw')">Clothing</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-new-all')">Shoes</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-new-all')">Bags</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-new-all')">Kids</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-new-all')">Accessories</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-new-all')">Swim &amp; Resort</span>
+        </div>
+      </div>
+
+      <!-- WOMEN -->
+      <div class="o3-dd" id="o3-dd-women">
+        <span class="o3-see-all" onclick="o3Nav('o3-women-all')">All Ready To Wear</span>
+        <div class="o3-sub-col">
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Dresses</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Swim &amp; Resort</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Tops</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Bottoms</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Skirts</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Tailoring</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Denim</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Knitwear</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Jackets &amp; Coats</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Jumpsuits &amp; Playsuits</span>
+        </div>
+      </div>
+
+      <!-- KIDS -->
+      <div class="o3-dd" id="o3-dd-kids">
+        <span class="o3-see-all" onclick="o3Nav('o3-kids-all')">All Kids</span>
+        <div class="o3-sub-col">
+          <span class="o3-sub-item" onclick="o3Nav('o3-kids-all')">Dresses</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-kids-all')">Swimwear</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-kids-all')">Tops</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-kids-all')">Bottoms</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-kids-all')">Skirts</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-kids-all')">Denim</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-kids-all')">Hats</span>
+        </div>
+      </div>
+
+      <!-- ACCESSORIES -->
+      <div class="o3-dd" id="o3-dd-acc">
+        <span class="o3-see-all" onclick="o3Nav('o3-women-all')">All Accessories</span>
+        <div class="o3-sub-col">
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Bags</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Shoes</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Jewellery</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Belts</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Sunglasses</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Scarves</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Hats</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Towels &amp; Pareos</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Hair Accessories</span>
+          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Bag Charms</span>
+        </div>
+      </div>
+
+    </div><!-- /o3-dd-wrap -->
+  </div><!-- /o3-nav-wrap -->
+
+  <!-- ── HOME ── -->
+  <div id="o3-home" class="o3-sub active">
+    <div class="o3-body"></div>
+  </div>
+
+  <!-- ── WOMEN ALL RTW ── -->
+  <div id="o3-women-all" class="o3-sub">
+    <div class="o1-filter-bar" style="background:#F8F7F6">
+      <span class="o1-ftab active">All Ready To Wear</span>
+      <span class="o1-ftab">Dresses</span>
+      <span class="o1-ftab">Swim &amp; Resort</span>
+      <span class="o1-ftab">Tops</span>
+      <span class="o1-ftab">Bottoms</span>
+      <span class="o1-ftab">Skirts</span>
+      <span class="o1-ftab">Tailoring</span>
+      <span class="o1-ftab">Denim</span>
+      <span class="o1-ftab">Knitwear</span>
+      <span class="o1-ftab">Jackets &amp; Coats</span>
+      <span class="o1-ftab">Jumpsuits &amp; Playsuits</span>
+      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
     </div>
-    <div class="o3-nav-center"><span class="o3-logo">ZIMMERMANN</span></div>
-    <div class="o3-nav-right">
-      <span class="o3-item">SEARCH</span>
-      <span class="o3-item">LOGIN</span>
-      <span class="o3-item">BAG (0)</span>
+    <div class="o1-grid-3">
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
     </div>
   </div>
 
-  <div class="o3-panels" id="o3panels">
-    <div class="o3-left">
-      <div class="o3-cats-list" id="o3cats"></div>
-      <div class="o3-left-footer" id="o3footer"></div>
+  <!-- ── NEW ALL ── -->
+  <div id="o3-new-all" class="o3-sub">
+    <div class="o1-filter-bar" style="background:#F8F7F6">
+      <span class="o1-ftab active">All New</span>
+      <span class="o1-ftab" onclick="o3Nav('o3-new-rtw')">Clothing</span>
+      <span class="o1-ftab">Shoes</span>
+      <span class="o1-ftab">Bags</span>
+      <span class="o1-ftab">Kids</span>
+      <span class="o1-ftab">Accessories</span>
+      <span class="o1-ftab">Swim &amp; Resort</span>
+      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
     </div>
-    <div class="o3-sub" id="o3sub"></div>
-    <div class="o3-mid"></div>
-    <div class="o3-right"></div>
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:3px;padding:3px">
+      <div class="o1-tile" style="grid-row:span 2"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div>
+    </div>
   </div>
 
-  <div class="o3-body" id="o3body"></div>
+  <!-- ── NEW CLOTHING (RTW) ── -->
+  <div id="o3-new-rtw" class="o3-sub">
+    <div class="o1-filter-bar" style="background:#F8F7F6">
+      <span class="o1-ftab" onclick="o3Nav('o3-new-all')">All New</span>
+      <span class="o1-ftab active">Clothing</span>
+      <span class="o1-ftab">Shoes</span>
+      <span class="o1-ftab">Bags</span>
+      <span class="o1-ftab">Kids</span>
+      <span class="o1-ftab">Accessories</span>
+      <span class="o1-ftab">Swim &amp; Resort</span>
+      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
+    </div>
+    <div class="o1-grid-3">
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+    </div>
+  </div>
+
+  <!-- ── KIDS ALL ── -->
+  <div id="o3-kids-all" class="o3-sub">
+    <div class="o1-filter-bar" style="background:#F8F7F6">
+      <span class="o1-ftab active">All Kids</span>
+      <span class="o1-ftab">Dresses</span>
+      <span class="o1-ftab">Swimwear</span>
+      <span class="o1-ftab">Tops</span>
+      <span class="o1-ftab">Bottoms</span>
+      <span class="o1-ftab">Skirts</span>
+      <span class="o1-ftab">Denim</span>
+      <span class="o1-ftab">Hats</span>
+      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
+    </div>
+    <div class="o1-grid-3">
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
+    </div>
+  </div>
+
+  <!-- ── Z.IMMERSE ── -->
+  <div id="o3-zimmerse" class="o3-sub" style="background:#fff">
+    <div class="o3-zim-block">
+      <div class="o3-zim-season">Fall 2026</div>
+      <div class="o3-zim-title">TRAILBLAZER</div>
+    </div>
+    <div class="o3-zim-img"></div>
+    <div class="o3-zim-block">
+      <div class="o3-zim-season">Summer 2026</div>
+      <div class="o3-zim-title">RESORT SWIM</div>
+    </div>
+    <div class="o3-zim-img"></div>
+  </div>
 
   <button class="back-btn" onclick="show('hub')">← All Options</button>
 </div>
 
 
 <!-- ══════════════════════════════════════════
-     JAVASCRIPT
+     SHARED OVERLAYS
 ══════════════════════════════════════════ -->
+
+<!-- Account Panel -->
+<div class="side-panel" id="account-panel">
+  <div class="sp-dim" onclick="closeAccount()"></div>
+  <div class="sp-content">
+    <button class="sp-close" onclick="closeAccount()">×</button>
+    <div class="sp-inner">
+      <div class="sp-title">Welcome</div>
+      <p class="sp-sub">Join to unlock exclusive access, benefits and services.</p>
+      <input class="sp-email" placeholder="Email">
+      <button class="sp-continue">Continue</button>
+      <span class="sp-link">Wishlist</span>
+      <span class="sp-link">Benefits &amp; services</span>
+      <span class="sp-link">Track order</span>
+    </div>
+  </div>
+</div>
+
+<!-- Basket Panel -->
+<div class="side-panel" id="basket-panel">
+  <div class="sp-dim" onclick="closeBasket()"></div>
+  <div class="sp-content">
+    <button class="sp-close" onclick="closeBasket()">×</button>
+    <div class="sp-inner">
+      <div class="basket-title">Basket is empty!</div>
+      <p class="basket-sub">No Items in your bag</p>
+      <button class="basket-cta">See whats new</button>
+      <p class="basket-love">We think you'd love these</p>
+      <div class="basket-imgs">
+        <div class="basket-img"></div>
+        <div class="basket-img"></div>
+        <div class="basket-img"></div>
+      </div>
+      <p class="basket-help">Need help?</p>
+    </div>
+  </div>
+</div>
+
+<!-- Search Overlay -->
+<div class="search-overlay" id="search-overlay">
+  <button class="so-close" onclick="closeSearch()">×</button>
+  <div class="so-input-wrap">
+    <input class="so-input" placeholder="What are you looking for?">
+  </div>
+  <div class="so-grid">
+    <div class="so-cell"></div><div class="so-cell"></div>
+    <div class="so-cell"></div><div class="so-cell"></div>
+    <div class="so-cell"></div><div class="so-cell"></div>
+    <div class="so-cell"></div><div class="so-cell"></div>
+  </div>
+</div>
+
+
 <script>
-// ── Screen routing ─────────────────────────
+// ── Screen routing ──────────────────────────────
 function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  closeDD();
-  closeMega();
-  closeTab();
-}
-
-// ── Option 1: hover dropdown ───────────────
-let o1Timer = null;
-
-function openDD(key) {
-  cancelClose();
-  document.querySelectorAll('.o1-dd').forEach(d => d.classList.remove('visible'));
-  document.querySelectorAll('.o1-item').forEach(i => i.classList.remove('active'));
-  const dd = document.getElementById('dd-' + key);
-  const ni = document.getElementById('ni-' + key);
-  if (dd) dd.classList.add('visible');
-  if (ni) ni.classList.add('active');
-  document.getElementById('o1ddwrap').classList.add('open');
-}
-function closeDD() {
-  const wrap = document.getElementById('o1ddwrap');
-  if (wrap) wrap.classList.remove('open');
-  document.querySelectorAll('.o1-dd').forEach(d => d.classList.remove('visible'));
-  document.querySelectorAll('.o1-item').forEach(i => i.classList.remove('active'));
-}
-function schedClose() { o1Timer = setTimeout(closeDD, 120); }
-function cancelClose() { clearTimeout(o1Timer); }
-
-// ── Option 2: mega menu ────────────────────
-function openMega() {
-  document.getElementById('o2overlay').classList.add('open');
-  document.querySelectorAll('.o2-cat').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.o2-sub-panel').forEach(p => p.classList.remove('active'));
-}
-function closeMega() {
-  document.getElementById('o2overlay').classList.remove('open');
-}
-function pickCat(cat) {
-  document.querySelectorAll('.o2-cat').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.o2-sub-panel').forEach(p => p.classList.remove('active'));
-  event.currentTarget.classList.add('active');
-  const panel = document.getElementById('sp-' + cat);
-  if (panel) panel.classList.add('active');
-}
-
-// ── Option 3: shop & discover ──────────────
-const shopCats = ['NEW', 'READY TO WEAR', 'RESORT & SWIM', 'DRESSES', 'BAGS', 'ACCESSORIES', 'KIDS'];
-const discCats = ['COLLECTIONS', 'OUR STORY', 'MOMENTS', 'BOUTIQUES & ART', 'SUSTAINABILITY', 'CAREERS'];
-const shopSubs = {
-  'NEW':           ['VIEW ALL', 'DRESSES', 'READY TO WEAR', 'SWIM & RESORT', 'BAGS', 'SHOES', 'ACCESSORIES', 'KIDS'],
-  'READY TO WEAR': ['VIEW ALL', 'DRESSES', 'TOPS', 'SHORTS & PANTS', 'TAILORING', 'DENIM', 'SKIRTS', 'KNITWEAR', 'JACKETS & COATS', 'JUMPSUITS & PLAYSUITS', 'SWIMWEAR', 'SHOES', 'ACCESSORIES'],
-  'RESORT & SWIM': ['VIEW ALL', 'DRESSES & COVERUPS', 'SWIMWEAR', 'ACCESSORIES', 'SKIRTS', 'DENIM', 'TOPS', 'BOTTOMS', 'TOWELS & PAREOS', 'JUMPSUITS & PLAYSUITS', 'BOARD SHORTS', null, 'STYLE GUIDE'],
-  'DRESSES':       ['VIEW ALL', 'DRESSES & COVERUPS', 'SWIMWEAR', 'ACCESSORIES', 'SKIRTS', 'DENIM', 'TOPS', 'BOTTOMS', 'TOWELS & PAREOS', 'JUMPSUITS & PLAYSUITS', 'BOARD SHORTS', null, 'STYLE GUIDE'],
-  'BAGS':          ['VIEW ALL', 'BASKET & SUMMER BAGS', 'SHOULDER BAGS', 'CROSS BODY & HANDLE BAGS', 'CLUTCHES'],
-  'ACCESSORIES':   ['VIEW ALL', 'JEWELLERY', 'SHOES', 'BELTS', 'SUNGLASSES', 'SCARVES', 'HATS', 'TOWELS & PAREOS', 'HAIR ACCESSORIES', 'BAG CHARMS'],
-  'KIDS':          ['VIEW ALL', 'DRESSES', 'TOPS', 'PLAYSUITS', 'BOTTOMS', 'SWIMWEAR', 'DENIM', 'HATS'],
-};
-
-function openTab(tab) {
-  document.getElementById('o3-shop-tab').classList.toggle('active', tab === 'shop');
-  document.getElementById('o3-disc-tab').classList.toggle('active', tab === 'discover');
-  document.getElementById('o3panels').classList.add('open');
-  document.getElementById('o3body').style.display = 'none';
-  document.getElementById('o3sub').classList.remove('open');
-
-  const cats = tab === 'shop' ? shopCats : discCats;
-  const catsEl = document.getElementById('o3cats');
-  catsEl.innerHTML = '';
-  cats.forEach(cat => {
-    const btn = document.createElement('button');
-    btn.className = 'o3-cat-btn';
-    btn.textContent = cat;
-    btn.onclick = function() { openSub(cat, btn); };
-    catsEl.appendChild(btn);
-  });
-
-  const footer = document.getElementById('o3footer');
-  footer.innerHTML = '<span class="o3-footer-link">WISHLIST</span><span class="o3-footer-link">GIFTS</span>';
-}
-
-function openSub(cat, btn) {
-  document.querySelectorAll('.o3-cat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const subs = shopSubs[cat];
-  if (!subs) { document.getElementById('o3sub').classList.remove('open'); return; }
-  const subEl = document.getElementById('o3sub');
-  subEl.innerHTML = '';
-  subs.forEach(item => {
-    if (item === null) {
-      const gap = document.createElement('div');
-      gap.className = 'o3-sub-gap';
-      subEl.appendChild(gap);
-    } else {
-      const link = document.createElement('span');
-      link.className = 'o3-sub-link';
-      link.textContent = item;
-      subEl.appendChild(link);
-    }
-  });
-  subEl.classList.add('open');
-}
-
-function closeTab() {
-  const st = document.getElementById('o3-shop-tab');
-  const dt = document.getElementById('o3-disc-tab');
-  if (st) st.classList.remove('active');
-  if (dt) dt.classList.remove('active');
-  const panels = document.getElementById('o3panels');
-  if (panels) panels.classList.remove('open');
-  const sub = document.getElementById('o3sub');
-  if (sub) sub.classList.remove('open');
-  const body = document.getElementById('o3body');
-  if (body) body.style.display = '';
-}
-
-// Close opt3 panel on outside click
-document.addEventListener('click', function(e) {
-  const screen = document.getElementById('opt3');
-  if (!screen || !screen.classList.contains('active')) return;
-  const nav = screen.querySelector('.o3-nav');
-  const panels = document.getElementById('o3panels');
-  if (panels && panels.classList.contains('open')) {
-    if (!nav.contains(e.target) && !panels.contains(e.target)) closeTab();
+  // Reset sub-pages to home when switching options
+  if (id === 'opt1') {
+    document.querySelectorAll('#opt1 .o1-sub').forEach(s => s.classList.remove('active'));
+    document.getElementById('o1-home').classList.add('active');
   }
+  if (id === 'opt2') {
+    document.querySelectorAll('#opt2 .o2-sub').forEach(s => s.classList.remove('active'));
+    document.getElementById('o2-home').classList.add('active');
+  }
+  if (id === 'opt3') {
+    document.querySelectorAll('#opt3 .o3-sub').forEach(s => s.classList.remove('active'));
+    document.getElementById('o3-home').classList.add('active');
+  }
+  o1CloseAll(); o2CloseAll(); o3CloseAll();
+}
+
+// ── Option 1 hover dropdowns ────────────────────
+let o1Timer = null;
+// Collections dropdown hover image swap
+function o1SwapImg(key) {
+  const photo = document.getElementById('o1-coll-photo');
+  if (!photo) return;
+  photo.querySelectorAll('.o1-hover-img').forEach(img => img.classList.remove('active'));
+  if (key) {
+    const target = photo.querySelector('[data-hover="' + key + '"]');
+    if (target) target.classList.add('active');
+  }
+}
+
+// Sub-page navigation within opt1
+function o1Nav(id) {
+  o1CloseAll();
+  document.querySelectorAll('#opt1 .o1-sub').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function o2Nav(id) {
+  o2CloseAll();
+  document.querySelectorAll('#opt2 .o2-sub').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function o3Nav(id) {
+  o3CloseAll();
+  document.querySelectorAll('#opt3 .o3-sub').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+let o1Current = null;
+
+function o1Open(key, el) {
+  clearTimeout(o1Timer);
+  // deactivate all nav items
+  document.querySelectorAll('.o1-ni').forEach(n => n.classList.remove('active'));
+  // hide all dropdowns
+  document.querySelectorAll('#opt1 .o1-dd').forEach(d => d.classList.remove('active'));
+  // activate this item
+  el.classList.add('active');
+  // show dropdown
+  const dd = document.getElementById('o1-dd-' + key);
+  if (dd) dd.classList.add('active');
+  document.getElementById('o1-dd-wrap').classList.add('open');
+  o1Current = key;
+}
+function o1Sched() {
+  o1Timer = setTimeout(o1CloseAll, 140);
+}
+function o1Cancel() { clearTimeout(o1Timer); }
+function o1CloseAll() {
+  document.querySelectorAll('.o1-ni').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('#opt1 .o1-dd').forEach(d => d.classList.remove('active'));
+  document.getElementById('o1-dd-wrap').classList.remove('open');
+  o1Current = null;
+  o1SwapImg(null);
+}
+
+// ── Option 2 hover dropdowns ────────────────────
+let o2Timer = null;
+
+function o2Open(key, el) {
+  clearTimeout(o2Timer);
+  document.querySelectorAll('.o2-ni').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('#opt2 .o2-dd').forEach(d => d.classList.remove('active'));
+  el.classList.add('active');
+  const dd = document.getElementById('o2-dd-' + key);
+  if (dd) dd.classList.add('active');
+  document.getElementById('o2-dd-wrap').classList.add('open');
+}
+function o2Sched() { o2Timer = setTimeout(o2CloseAll, 140); }
+function o2Cancel() { clearTimeout(o2Timer); }
+function o2CloseAll() {
+  document.querySelectorAll('.o2-ni').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('#opt2 .o2-dd').forEach(d => d.classList.remove('active'));
+  document.getElementById('o2-dd-wrap').classList.remove('open');
+  o2SwapImg(null);
+}
+function o2SwapImg(key) {
+  const photo = document.getElementById('o2-coll-photo');
+  if (!photo) return;
+  photo.querySelectorAll('.o2-hover-img').forEach(img => img.classList.remove('active'));
+  if (key) {
+    const target = photo.querySelector('[data-hover="' + key + '"]');
+    if (target) target.classList.add('active');
+  }
+}
+
+// ── Option 3 hover dropdowns ────────────────────
+let o3Timer = null;
+
+function o3Open(key, el) {
+  clearTimeout(o3Timer);
+  document.querySelectorAll('.o3-ni').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('#opt3 .o3-dd').forEach(d => d.classList.remove('active'));
+  el.classList.add('active');
+  const dd = document.getElementById('o3-dd-' + key);
+  if (dd) dd.classList.add('active');
+  document.getElementById('o3-dd-wrap').classList.add('open');
+}
+function o3Sched() { o3Timer = setTimeout(o3CloseAll, 140); }
+function o3Cancel() { clearTimeout(o3Timer); }
+function o3CloseAll() {
+  document.querySelectorAll('.o3-ni').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('#opt3 .o3-dd').forEach(d => d.classList.remove('active'));
+  document.getElementById('o3-dd-wrap').classList.remove('open');
+}
+
+// ── Shared overlays ──────────────────────────────
+function openAccount() { document.getElementById('account-panel').classList.add('open'); }
+function closeAccount() { document.getElementById('account-panel').classList.remove('open'); }
+function openBasket()  { document.getElementById('basket-panel').classList.add('open'); }
+function closeBasket() { document.getElementById('basket-panel').classList.remove('open'); }
+function openSearch()  { document.getElementById('search-overlay').classList.add('open'); }
+function closeSearch() { document.getElementById('search-overlay').classList.remove('open'); }
+
+// Close overlays on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeAccount(); closeBasket(); closeSearch(); }
 });
 </script>
 </body>
