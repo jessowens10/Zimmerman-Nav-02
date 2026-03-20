@@ -16,15 +16,17 @@ input { font-family: inherit; outline: none; border: none; background: none; }
 .screen.active { display: block; }
 #hub.active { display: block; }
 
-/* ── Back button ── */
-.back-btn {
-  position: fixed; bottom: 32px; right: 32px; z-index: 9999;
-  background: #1a1a1a; color: #fff;
+/* ── Back bar ── */
+.back-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+  height: 38px; background: #1a1a1a; color: #fff;
+  display: none; align-items: center; justify-content: center;
   font-family: 'Futura', 'Century Gothic', 'Trebuchet MS', sans-serif;
   font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
-  padding: 11px 20px; cursor: pointer;
+  cursor: pointer;
 }
-.back-btn:hover { background: #333; }
+.back-bar.visible { display: flex; }
+.back-bar:hover { background: #333; }
 
 /* ══════════════════════════════════════════
    HUB
@@ -139,7 +141,7 @@ input { font-family: inherit; outline: none; border: none; background: none; }
 /* ══════════════════════════════════════════
    OPTION 1 — ANCHORED DROPDOWN
 ══════════════════════════════════════════ */
-#opt1 { background: #F8F7F6; position: relative; }
+#opt1 { background: #F8F7F6; position: relative; padding-top: 38px; }
 
 .o1-nav-wrap { position: relative; z-index: 200; }
 
@@ -202,7 +204,7 @@ input { font-family: inherit; outline: none; border: none; background: none; }
 .o1-inner-nav {
   background: #fff; height: 64px; display: flex; align-items: center;
   border-bottom: 1px solid #e6e4e0; padding: 0 32px;
-  position: sticky; top: 0; z-index: 100;
+  position: sticky; top: 38px; z-index: 100;
 }
 .o1-inner-nav-l { display: flex; gap: 28px; }
 .o1-inner-ni { font-size: 10px; letter-spacing: 0.05em; cursor: pointer; }
@@ -284,7 +286,7 @@ input { font-family: inherit; outline: none; border: none; background: none; }
 /* ══════════════════════════════════════════
    OPTION 2 — MEGA MENU
 ══════════════════════════════════════════ */
-#opt2 { background: #F8F7F6; position: relative; }
+#opt2 { background: #F8F7F6; position: relative; padding-top: 38px; }
 
 .o2-nav-wrap { position: relative; z-index: 200; }
 .o2-nav {
@@ -347,7 +349,7 @@ input { font-family: inherit; outline: none; border: none; background: none; }
 /* ══════════════════════════════════════════
    OPTION 3 — NEW / WOMEN / KIDS / ACCESSORIES
 ══════════════════════════════════════════ */
-#opt3 { background: #F8F7F6; position: relative; }
+#opt3 { background: #F8F7F6; position: relative; padding-top: 38px; }
 
 .o3-nav-wrap { position: relative; z-index: 200; }
 .o3-nav {
@@ -389,6 +391,7 @@ input { font-family: inherit; outline: none; border: none; background: none; }
 </style>
 </head>
 <body>
+<div class="back-bar" id="back-bar" onclick="show('hub')">← Back to All</div>
 
 <!-- ══════════════════════════════════════════
      HUB
@@ -847,7 +850,6 @@ input { font-family: inherit; outline: none; border: none; background: none; }
     </div>
   </div>
 
-  <button class="back-btn" onclick="show('hub')">← All Options</button>
 </div>
 
 
@@ -1094,7 +1096,6 @@ input { font-family: inherit; outline: none; border: none; background: none; }
     </div>
   </div>
 
-  <button class="back-btn" onclick="show('hub')">← All Options</button>
 </div>
 
 
@@ -1292,7 +1293,6 @@ input { font-family: inherit; outline: none; border: none; background: none; }
     <div class="o3-zim-img"></div>
   </div>
 
-  <button class="back-btn" onclick="show('hub')">← All Options</button>
 </div>
 
 
@@ -1366,6 +1366,7 @@ function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
+  document.getElementById('back-bar').classList.toggle('visible', id !== 'hub');
   // Reset sub-pages to home when switching options
   if (id === 'opt1') {
     document.querySelectorAll('#opt1 .o1-sub').forEach(s => s.classList.remove('active'));
