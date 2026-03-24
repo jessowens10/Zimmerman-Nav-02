@@ -193,7 +193,7 @@
     .o1-photo.eq3 { width: 240px; height: 395px; }
 
     /* Edits: two equal halves */
-    .o1-photo.half { flex: 1; height: 255px; }
+    .o1-photo.half { flex: 1; height: 295px; }
 
     /* Option 1 body */
     .o1-body { background: #F8F7F6; padding: 80px 48px; min-height: 60vh; }
@@ -362,9 +362,7 @@
     .o2-brand { font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; }
 
     /* ========== PAGE SCREENS ========== */
-    .page-screen { padding-top: 102px; min-height: 100vh; background: #fff; }
-    /* Shift image up so screenshot's baked-in nav hides behind our fixed prototype nav */
-    .page-screen img { width: 100%; height: auto; display: block; margin-top: -120px; }
+    .page-screen { padding-top: 102px; height: 100vh; overflow: hidden; background: #fff; }
 
     /* Sub-filter nav on listing pages */
     .page-sub-nav {
@@ -383,8 +381,11 @@
     .psnav-item.psnav-active { text-decoration: underline; text-underline-offset: 4px; }
     .psnav-item:hover { text-decoration: underline; }
 
-    /* Push listing images up so screenshot's nav+filter are hidden behind overlays */
-    .page-listing img { margin-top: -190px; }
+    /* Page content area */
+    .o2-page-body {
+      height: calc(100vh - 102px - 48px);
+      background: #F8F7F6;
+    }
   </style>
 </head>
 <body>
@@ -504,7 +505,7 @@
     <div class="o1-dd-left">
       <a class="o1-dd-cat" onclick="show('page-edits-trailblazer')">Fall 2026 Trailblazer</a>
       <a class="o1-dd-cat" onclick="show('page-shop-rtw')">Spring RTW 2026</a>
-      <div class="o1-dd-gap"></div>
+      <div style="height: 32px;"></div>
       <a class="o1-dd-cat">Volume In Motion</a>
       <a class="o1-dd-cat">Cruise RTW 2026</a>
       <a class="o1-dd-cat">Swim 2026</a>
@@ -512,11 +513,11 @@
     </div>
     <div class="o1-dd-photos">
       <div class="o1-photo half">
-        <img src="Option 2/route 2 images/collections-2.png" alt="Spring RTW 2026">
+        <img src="Option 2/route 2 images/collections-2.png" alt="Spring RTW 2026" style="object-position: center top;">
         <span class="o1-photo-lbl">Spring RTW 2026 &#9658;</span>
       </div>
       <div class="o1-photo half">
-        <img src="zimmermann.com/collections.png" alt="Fall 2026 Trailblazer">
+        <img src="zimmermann.com/collections.png" alt="Fall 2026 Trailblazer" style="object-position: center top;">
         <span class="o1-photo-lbl">Fall 2026 Trailblazer &#9658;</span>
       </div>
     </div>
@@ -539,7 +540,7 @@
     </div>
     <div class="o1-dd-photos">
       <div class="o1-photo sm">
-        <img src="zimmermann.com/Outstory-image.png" alt="Our story">
+        <img src="zimmermann.com/Outstory-image.png" alt="Our story" style="object-position: top center;">
         <span class="o1-photo-lbl">Our story &#9658;</span>
       </div>
       <div class="o1-photo lg">
@@ -781,7 +782,7 @@
      OPTION 2 — Route 2: Expanded
      ============================================================ -->
 <div id="opt2" class="screen page-screen">
-  <img src="Option 2/zimmermann.com.png" alt="Zimmermann">
+  <div class="o2-page-body"></div>
 </div>
 
 <!-- ============================================================
@@ -803,7 +804,7 @@
 <!-- ============================================================
      PAGE SCREENS — shared by both options
      ============================================================ -->
-<div id="page-new-all" class="screen page-screen page-listing">
+<div id="page-new-all" class="screen page-screen">
   <div class="page-sub-nav">
     <a class="psnav-item psnav-active">All New</a>
     <a class="psnav-item" onclick="show('page-shop-dresses')">Dresses</a>
@@ -814,14 +815,14 @@
     <a class="psnav-item">Bags</a>
     <a class="psnav-item">Shoes</a>
   </div>
-  <img src="zimmermann.com/new/new-in/All.png" alt="New In">
+  <div class="o2-page-body"></div>
 </div>
 
 <div id="page-new-trailblazer" class="screen page-screen">
-  <img src="zimmermann.com/new/fall-2026-trailblazer.png" alt="Fall 2026 Trailblazer">
+  <div class="o2-page-body"></div>
 </div>
 
-<div id="page-shop-rtw" class="screen page-screen page-listing">
+<div id="page-shop-rtw" class="screen page-screen">
   <div class="page-sub-nav">
     <a class="psnav-item psnav-active" onclick="show('page-shop-rtw')">All RTW</a>
     <a class="psnav-item" onclick="show('page-shop-dresses')">Dresses</a>
@@ -835,10 +836,10 @@
     <a class="psnav-item">Jackets &amp; Coats</a>
     <a class="psnav-item">Jumpsuits &amp; Playsuits</a>
   </div>
-  <img src="zimmermann.com/shop/ready-to-wear/All.png" alt="Ready to Wear">
+  <div class="o2-page-body"></div>
 </div>
 
-<div id="page-shop-dresses" class="screen page-screen page-listing">
+<div id="page-shop-dresses" class="screen page-screen">
   <div class="page-sub-nav">
     <a class="psnav-item" onclick="show('page-shop-rtw')">All RTW</a>
     <a class="psnav-item psnav-active" onclick="show('page-shop-dresses')">Dresses</a>
@@ -852,10 +853,10 @@
     <a class="psnav-item">Jackets &amp; Coats</a>
     <a class="psnav-item">Jumpsuits &amp; Playsuits</a>
   </div>
-  <img src="zimmermann.com/shop/dresses/All.png" alt="Dresses">
+  <div class="o2-page-body"></div>
 </div>
 
-<div id="page-shop-swim" class="screen page-screen page-listing">
+<div id="page-shop-swim" class="screen page-screen">
   <div class="page-sub-nav">
     <a class="psnav-item" onclick="show('page-shop-rtw')">All RTW</a>
     <a class="psnav-item" onclick="show('page-shop-dresses')">Dresses</a>
@@ -869,46 +870,18 @@
     <a class="psnav-item">Jackets &amp; Coats</a>
     <a class="psnav-item">Jumpsuits &amp; Playsuits</a>
   </div>
-  <img src="zimmermann.com/shop/swim-and-resort/All.png" alt="Swim and Resort">
+  <div class="o2-page-body"></div>
 </div>
 
 <div id="page-edits-trailblazer" class="screen page-screen">
-  <img src="zimmermann.com/edits/fall-2026-trailblazer.png" alt="Edits Fall 2026 Trailblazer">
+  <div class="o2-page-body"></div>
 </div>
 
 <!-- ============================================================
-     ROUTE 2 PAGE SCREENS
-     ============================================================ -->
-<div id="page-o2-featured" class="screen page-screen o2-placeholder-page">
-  <div class="o2-placeholder-logo">ZIMMERMANN</div>
-  <div class="o2-placeholder-body"></div>
-</div>
-
-<div id="page-o2-collections" class="screen page-screen o2-placeholder-page">
-  <div class="o2-placeholder-logo">ZIMMERMANN</div>
-  <div class="o2-placeholder-body"></div>
-</div>
-
-<div id="page-o2-clothing" class="screen page-screen o2-placeholder-page">
-  <div class="o2-placeholder-logo">ZIMMERMANN</div>
-  <div class="o2-placeholder-body"></div>
-</div>
-
-<div id="page-o2-accessories" class="screen page-screen o2-placeholder-page">
-  <div class="o2-placeholder-logo">ZIMMERMANN</div>
-  <div class="o2-placeholder-body"></div>
-</div>
-
-<div id="page-o2-discover" class="screen page-screen o2-placeholder-page">
-  <div class="o2-placeholder-logo">ZIMMERMANN</div>
-  <div class="o2-placeholder-body"></div>
-</div>
-
-<!-- ============================================================
-     OPTION 2 SUB-PAGE SCREENS
+     ROUTE 2 PAGE SCREENS — clean, no screenshot images
      ============================================================ -->
 
-<div id="page-o2-featured-all" class="screen page-screen page-listing">
+<div id="page-o2-featured-all" class="screen page-screen">
   <div class="page-sub-nav">
     <a class="psnav-item psnav-active">All New</a>
     <a class="psnav-item" onclick="show('page-o2-clothing-dresses')">Dresses</a>
@@ -916,14 +889,14 @@
     <a class="psnav-item" onclick="show('page-o2-accessories-shoes')">Shoes</a>
     <a class="psnav-item" onclick="show('page-o2-accessories-all')">Accessories</a>
   </div>
-  <img src="Option 2/Route2-NEW copy/featured-all-new-in.png" alt="All New In">
+  <div class="o2-page-body"></div>
 </div>
 
 <div id="page-o2-featured-trailblazer" class="screen page-screen">
-  <img src="Option 2/Route2-NEW copy/featured-fall-2026-trailblazer.png" alt="Fall 2026 Trailblazer">
+  <div class="o2-page-body"></div>
 </div>
 
-<div id="page-o2-collections-rtw" class="screen page-screen page-listing">
+<div id="page-o2-collections-rtw" class="screen page-screen">
   <div class="page-sub-nav">
     <a class="psnav-item psnav-active">All RTW</a>
     <a class="psnav-item" onclick="show('page-o2-clothing-dresses')">Dresses</a>
@@ -936,20 +909,20 @@
     <a class="psnav-item">Jackets &amp; Coats</a>
     <a class="psnav-item">Jumpsuits &amp; Playsuits</a>
   </div>
-  <img src="Option 2/Route2-NEW copy/collection:ready-to-wear.png" alt="Ready to Wear">
+  <div class="o2-page-body"></div>
 </div>
 
-<div id="page-o2-collections-swim" class="screen page-screen page-listing">
+<div id="page-o2-collections-swim" class="screen page-screen">
   <div class="page-sub-nav">
     <a class="psnav-item psnav-active">All</a>
     <a class="psnav-item">Swimwear</a>
     <a class="psnav-item">Cover-Ups</a>
     <a class="psnav-item">Resort Wear</a>
   </div>
-  <img src="Option 2/Route2-NEW copy/collection:resort-and-swim-All.png" alt="Resort and Swim">
+  <div class="o2-page-body"></div>
 </div>
 
-<div id="page-o2-clothing-dresses" class="screen page-screen page-listing">
+<div id="page-o2-clothing-dresses" class="screen page-screen">
   <div class="page-sub-nav">
     <a class="psnav-item psnav-active">All Dresses</a>
     <a class="psnav-item" onclick="show('page-o2-clothing-mini-dresses')">Mini Dresses</a>
@@ -958,10 +931,10 @@
     <a class="psnav-item">Slip Dresses</a>
     <a class="psnav-item">Party</a>
   </div>
-  <img src="Option 2/Route2-NEW copy/clothing:dresses:All.png" alt="All Dresses">
+  <div class="o2-page-body"></div>
 </div>
 
-<div id="page-o2-clothing-mini-dresses" class="screen page-screen page-listing">
+<div id="page-o2-clothing-mini-dresses" class="screen page-screen">
   <div class="page-sub-nav">
     <a class="psnav-item" onclick="show('page-o2-clothing-dresses')">All Dresses</a>
     <a class="psnav-item psnav-active">Mini Dresses</a>
@@ -970,14 +943,14 @@
     <a class="psnav-item">Slip Dresses</a>
     <a class="psnav-item">Party</a>
   </div>
-  <img src="Option 2/Route2-NEW copy/clothing:dresses:mini-dresses.png" alt="Mini Dresses" onclick="show('page-o2-product-mini-dress')" style="cursor:pointer;">
+  <div class="o2-page-body"></div>
 </div>
 
 <div id="page-o2-product-mini-dress" class="screen page-screen">
-  <img src="Option 2/Route2-NEW copy/clothing:dresses:mini-dresses:alchemy-ruffle-mini-dress-blue-poppy.png" alt="Alchemy Ruffle Mini Dress">
+  <div class="o2-page-body"></div>
 </div>
 
-<div id="page-o2-accessories-all" class="screen page-screen page-listing">
+<div id="page-o2-accessories-all" class="screen page-screen">
   <div class="page-sub-nav">
     <a class="psnav-item psnav-active">All</a>
     <a class="psnav-item">Bags</a>
@@ -987,10 +960,10 @@
     <a class="psnav-item">Sunglasses</a>
     <a class="psnav-item">Hats</a>
   </div>
-  <img src="Option 2/Route2-NEW copy/accessories:all.png" alt="All Accessories">
+  <div class="o2-page-body"></div>
 </div>
 
-<div id="page-o2-accessories-shoes" class="screen page-screen page-listing">
+<div id="page-o2-accessories-shoes" class="screen page-screen">
   <div class="page-sub-nav">
     <a class="psnav-item" onclick="show('page-o2-accessories-all')">All</a>
     <a class="psnav-item">Bags</a>
@@ -1000,7 +973,11 @@
     <a class="psnav-item">Sunglasses</a>
     <a class="psnav-item">Hats</a>
   </div>
-  <img src="Option 2/Route2-NEW copy/accessories:all:shoes.png" alt="Shoes">
+  <div class="o2-page-body"></div>
+</div>
+
+<div id="page-o2-discover" class="screen page-screen">
+  <div class="o2-page-body"></div>
 </div>
 
 <script>
