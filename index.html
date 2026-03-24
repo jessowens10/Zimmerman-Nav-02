@@ -27,6 +27,13 @@
     }
     .back-bar.visible { display: flex; }
 
+    /* ========== GLOBAL NAV WRAPPERS ========== */
+    .global-nav {
+      position: fixed; top: 38px; left: 0; right: 0; z-index: 100;
+      display: none;
+    }
+    .global-nav.visible { display: block; }
+
     /* ========================================================
        HUB
        ======================================================== */
@@ -94,10 +101,10 @@
     /* ========================================================
        OPTION 1 — Route 1: Anchored
        ======================================================== */
-    #opt1 { padding-top: 38px; min-height: 100vh; background: #fff; }
+    #opt1 { padding-top: 102px; min-height: 100vh; background: #fff; }
 
     .o1-nav {
-      position: sticky; top: 38px; z-index: 100;
+      width: 100%;
       background: #fff;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 48px;
@@ -234,10 +241,10 @@
     /* ========================================================
        OPTION 2 — Route 2: Expanded
        ======================================================== */
-    #opt2 { padding-top: 38px; min-height: 100vh; background: #F8F7F6; }
+    #opt2 { padding-top: 102px; min-height: 100vh; background: #F8F7F6; }
 
     .o2-nav {
-      position: sticky; top: 38px; z-index: 100;
+      width: 100%;
       background: #fff;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 48px;
@@ -316,7 +323,7 @@
     .o2-dd-photos { flex: 1; display: flex; gap: 10px; justify-content: flex-end; }
 
     /* Photo base */
-    .o2-photo { position: relative; overflow: hidden; flex-shrink: 0; }
+    .o2-photo { position: relative; overflow: hidden; flex-shrink: 0; cursor: pointer; }
     .o2-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .o2-photo-lbl {
       position: absolute; bottom: 12px; left: 14px;
@@ -332,18 +339,401 @@
     /* Clothing + Accessories: three equal */
     .o2-photo.eq3 { width: 218px; height: 290px; }
 
-    /* Inspiration: one wide */
+    /* Discover: one wide */
     .o2-photo.wide { width: 530px; height: 310px; }
+
+    /* Italic sub-label inside dropdowns (e.g. "The Edits") */
+    .o2-dd-sublabel {
+      font-size: 11px; font-weight: 300; font-style: italic;
+      color: #aaa; letter-spacing: 0.01em; margin-bottom: 6px;
+    }
 
     /* Option 2 body */
     .o2-body { padding: 80px 48px; }
     .o2-brand { font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; }
+
+    /* ========== PAGE SCREENS ========== */
+    .page-screen { padding-top: 102px; min-height: 100vh; background: #fff; }
+    /* Shift image up so screenshot's baked-in nav hides behind our fixed prototype nav */
+    .page-screen img { width: 100%; height: auto; display: block; margin-top: -120px; }
+
+    /* Sub-filter nav on listing pages */
+    .page-sub-nav {
+      width: 100%; height: 48px;
+      background: #fff; border-bottom: 1px solid #dedad5;
+      display: flex; align-items: center; gap: 28px;
+      padding: 0 48px;
+      position: relative; z-index: 10;
+      overflow-x: auto;
+    }
+    .page-sub-nav::-webkit-scrollbar { display: none; }
+    .psnav-item {
+      font-size: 12px; font-weight: 300; letter-spacing: 0.01em;
+      color: #1a1a1a; cursor: pointer; white-space: nowrap; flex-shrink: 0;
+    }
+    .psnav-item.psnav-active { text-decoration: underline; text-underline-offset: 4px; }
+    .psnav-item:hover { text-decoration: underline; }
+
+    /* Push listing images up so screenshot's nav+filter are hidden behind overlays */
+    .page-listing img { margin-top: -190px; }
   </style>
 </head>
 <body>
 
 <!-- BACK BAR -->
 <div class="back-bar" id="back-bar" onclick="show('hub')">← Back to All</div>
+
+<!-- ============================================================
+     GLOBAL NAV — OPTION 1
+     ============================================================ -->
+<div id="nav-o1" class="global-nav">
+  <nav class="o1-nav">
+    <div class="o1-nav-left">
+      <span class="o1-nav-icon">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.4222 10.4899L12.5602 12.5582M11.8707 7.04279C11.8707 9.70811 9.71006 11.8688 7.04474 11.8688C4.37942 11.8688 2.21875 9.70811 2.21875 7.04279C2.21875 4.37747 4.37942 2.2168 7.04474 2.2168C9.71006 2.2168 11.8707 4.37747 11.8707 7.04279Z" stroke="black" stroke-width="1.23112" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="o1-nav-item" id="o1-ni-new"
+            onmouseenter="o1Open('new')" onmouseleave="o1Sched()" onclick="o1Toggle('new')">New</span>
+      <span class="o1-nav-item" id="o1-ni-shop"
+            onmouseenter="o1Open('shop')" onmouseleave="o1Sched()" onclick="o1Toggle('shop')">Shop</span>
+      <span class="o1-nav-item" id="o1-ni-edits"
+            onmouseenter="o1Open('edits')" onmouseleave="o1Sched()" onclick="o1Toggle('edits')">Edits</span>
+      <span class="o1-nav-item" id="o1-ni-zimmerse"
+            onmouseenter="o1Open('zimmerse')" onmouseleave="o1Sched()" onclick="o1Toggle('zimmerse')">Z.immerse</span>
+    </div>
+    <div class="o1-nav-right">
+      <span class="o1-nav-icon">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M3.61524 0L4.01368 3.42676L2.36231 5.07812C3.3023 6.932 4.81673 8.43989 6.66407 9.37988L8.3086 7.73535L11.749 8.13379V11.7305C5.10381 12.1091 -0.360045 6.64522 0.0185628 0H3.61524Z" fill="black"/>
+        </svg>
+      </span>
+      <span class="o1-nav-text">JESSICA</span>
+      <span class="o1-nav-icon">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11.875 1.875V13.125L7.5 11.25L3.125 13.125V1.875H11.875ZM4.375 3.125V11.25L7.5 9.8877L10.625 11.25V3.125H4.375Z" fill="black"/>
+        </svg>
+      </span>
+      <span class="o1-nav-icon">
+        <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M9.12798 3.8392L9.09549 5.05737V5.08985L8.8681 12.139H10.9958L10.5411 3.8392H9.12798ZM9.09549 2.58854V3.23823H11.0933L11.6131 12.7238H0.210938L0.730692 3.23823H2.25747V2.58854C2.25747 0.801879 4.12534 -0.3026 5.66836 0.428305C7.22762 -0.3026 9.09549 0.801879 9.09549 2.58854ZM8.51077 5.08985V3.8392H7.04896V5.08985H6.44799V3.8392H4.88873V5.08985H4.28776V3.8392H2.8422V5.08985H2.24123V3.8392H1.26669L0.811904 12.139H8.25089L8.51077 5.08985ZM8.49453 3.25447V2.60478C8.49453 1.43533 7.39005 0.590729 6.28557 0.850606C6.7566 1.27291 7.04896 1.90636 7.04896 2.58854V3.23823H8.49453V3.25447ZM5.6846 1.11048C5.21358 1.43533 4.90497 1.98757 4.90497 2.58854V3.23823H6.46424V2.58854C6.46424 1.98757 6.15563 1.43533 5.6846 1.11048ZM4.30401 3.25447V2.60478C4.30401 1.9226 4.59637 1.28915 5.06739 0.850606C3.96292 0.574486 2.85844 1.43533 2.85844 2.58854V3.23823H4.30401V3.25447Z" fill="black" stroke="black" stroke-width="0.4"/>
+        </svg>
+      </span>
+    </div>
+  </nav>
+</div>
+
+<!-- OPTION 1 DROPDOWNS -->
+<!-- NEW -->
+<div class="o1-dd" id="o1-dd-new"
+     onmouseenter="o1Cancel()" onmouseleave="o1Sched()">
+  <div class="o1-dd-inner">
+    <div class="o1-dd-left">
+      <a class="o1-dd-cat" onclick="show('page-new-trailblazer')">Fall 2026 Trailblazer</a>
+      <a class="o1-dd-cat" onclick="show('page-new-all')">New In</a>
+      <a class="o1-dd-cat" onclick="show('page-shop-dresses')">Dresses</a>
+      <a class="o1-dd-cat">Bags</a>
+      <a class="o1-dd-cat">Shoes</a>
+    </div>
+    <div class="o1-dd-photos">
+      <div class="o1-photo sm">
+        <img src="zimmermann.com/new/new-in/newbag.png" alt="Bags">
+        <span class="o1-photo-lbl">Bags &#9658;</span>
+      </div>
+      <div class="o1-photo lg">
+        <img src="zimmermann.com/new/new-in/new_ldies.png" alt="Fall 2026 Trailblazer">
+        <span class="o1-photo-lbl">Fall 2026 Trailblazer &#9658;</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SHOP -->
+<div class="o1-dd" id="o1-dd-shop"
+     onmouseenter="o1Cancel()" onmouseleave="o1Sched()">
+  <div class="o1-dd-inner">
+    <div class="o1-dd-left">
+      <a class="o1-dd-cat" onclick="show('page-shop-rtw')">Ready to Wear</a>
+      <a class="o1-dd-cat" onclick="show('page-shop-swim')">Swim &amp; Resort</a>
+      <div class="o1-dd-gap"></div>
+      <a class="o1-dd-cat" onclick="show('page-shop-dresses')">Dresses</a>
+      <a class="o1-dd-cat">Accessories</a>
+      <a class="o1-dd-cat">Tops</a>
+      <a class="o1-dd-cat">Bottoms</a>
+      <a class="o1-dd-cat">Skirts</a>
+      <a class="o1-dd-cat">Tailoring</a>
+      <a class="o1-dd-cat">Denim</a>
+      <a class="o1-dd-cat">Knitwear</a>
+      <a class="o1-dd-cat">Jackets &amp; Coats</a>
+      <a class="o1-dd-cat">Jumpsuits &amp; Playsuits</a>
+      <a class="o1-dd-cat" onclick="show('page-shop-swim')">Swimwear</a>
+      <a class="o1-dd-cat">Kids</a>
+    </div>
+    <div class="o1-dd-photos">
+      <div class="o1-photo eq3">
+        <img src="accessories.png" alt="Jewellery">
+        <span class="o1-photo-lbl">Jewellery &#9658;</span>
+      </div>
+      <div class="o1-photo eq3">
+        <img src="zimmermann.com/Mask group.png" alt="Bags">
+        <span class="o1-photo-lbl">Bags &#9658;</span>
+      </div>
+      <div class="o1-photo eq3">
+        <img src="zimmermann.com/Mask group-1.png" alt="Swim and Resort">
+        <span class="o1-photo-lbl">Swim &amp; Resort &#9658;</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDITS -->
+<div class="o1-dd" id="o1-dd-edits"
+     onmouseenter="o1Cancel()" onmouseleave="o1Sched()">
+  <div class="o1-dd-inner">
+    <div class="o1-dd-left">
+      <a class="o1-dd-cat" onclick="show('page-edits-trailblazer')">Fall 2026 Trailblazer</a>
+      <a class="o1-dd-cat" onclick="show('page-shop-rtw')">Spring RTW 2026</a>
+      <div class="o1-dd-gap"></div>
+      <a class="o1-dd-cat">Volume In Motion</a>
+      <a class="o1-dd-cat">Cruise RTW 2026</a>
+      <a class="o1-dd-cat">Swim 2026</a>
+      <a class="o1-dd-cat">Liquid Silhouettes</a>
+    </div>
+    <div class="o1-dd-photos">
+      <div class="o1-photo half">
+        <img src="Option 2/route 2 images/collections-2.png" alt="Spring RTW 2026">
+        <span class="o1-photo-lbl">Spring RTW 2026 &#9658;</span>
+      </div>
+      <div class="o1-photo half">
+        <img src="zimmermann.com/collections.png" alt="Fall 2026 Trailblazer">
+        <span class="o1-photo-lbl">Fall 2026 Trailblazer &#9658;</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Z.IMMERSE -->
+<div class="o1-dd" id="o1-dd-zimmerse"
+     onmouseenter="o1Cancel()" onmouseleave="o1Sched()">
+  <div class="o1-dd-inner">
+    <div class="o1-dd-left">
+      <a class="o1-dd-cat" onclick="show('o1-our-story')" style="cursor:pointer;">Our story</a>
+      <a class="o1-dd-cat">Moments</a>
+      <div class="o1-dd-gap"></div>
+      <a class="o1-dd-cat">Our boutiques</a>
+      <a class="o1-dd-cat">Z.Gallery</a>
+      <a class="o1-dd-cat">Sustainability</a>
+      <a class="o1-dd-cat">Collaboration</a>
+      <a class="o1-dd-cat">Zimm Archive</a>
+    </div>
+    <div class="o1-dd-photos">
+      <div class="o1-photo sm">
+        <img src="zimmermann.com/Outstory-image.png" alt="Our story">
+        <span class="o1-photo-lbl">Our story &#9658;</span>
+      </div>
+      <div class="o1-photo lg">
+        <img src="zimmermann.com/collections-1.png" alt="Our boutiques">
+        <span class="o1-photo-lbl">Our boutiques &#9658;</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     GLOBAL NAV — OPTION 2
+     ============================================================ -->
+<div id="nav-o2" class="global-nav">
+  <nav class="o2-nav">
+    <div class="o2-nav-left">
+      <span class="o2-nav-icon">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.4222 10.4899L12.5602 12.5582M11.8707 7.04279C11.8707 9.70811 9.71006 11.8688 7.04474 11.8688C4.37942 11.8688 2.21875 9.70811 2.21875 7.04279C2.21875 4.37747 4.37942 2.2168 7.04474 2.2168C9.71006 2.2168 11.8707 4.37747 11.8707 7.04279Z" stroke="black" stroke-width="1.23112" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="o2-nav-item" id="o2-ni-featured"
+            onmouseenter="o2Open('featured')" onmouseleave="o2Sched()" onclick="o2Toggle('featured')">Featured</span>
+      <span class="o2-nav-item" id="o2-ni-collections"
+            onmouseenter="o2Open('collections')" onmouseleave="o2Sched()" onclick="o2Toggle('collections')">Collections</span>
+      <span class="o2-nav-item" id="o2-ni-clothing"
+            onmouseenter="o2Open('clothing')" onmouseleave="o2Sched()" onclick="o2Toggle('clothing')">Clothing</span>
+      <span class="o2-nav-item" id="o2-ni-accessories"
+            onmouseenter="o2Open('accessories')" onmouseleave="o2Sched()" onclick="o2Toggle('accessories')">Accessories</span>
+      <span class="o2-nav-item" id="o2-ni-discover"
+            onmouseenter="o2Open('discover')" onmouseleave="o2Sched()" onclick="o2Toggle('discover')">Discover</span>
+    </div>
+    <div class="o2-nav-right">
+      <span class="o2-nav-icon">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M3.61524 0L4.01368 3.42676L2.36231 5.07812C3.3023 6.932 4.81673 8.43989 6.66407 9.37988L8.3086 7.73535L11.749 8.13379V11.7305C5.10381 12.1091 -0.360045 6.64522 0.0185628 0H3.61524Z" fill="black"/>
+        </svg>
+      </span>
+      <span class="o2-nav-text">JESSICA</span>
+      <span class="o2-nav-icon">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11.875 1.875V13.125L7.5 11.25L3.125 13.125V1.875H11.875ZM4.375 3.125V11.25L7.5 9.8877L10.625 11.25V3.125H4.375Z" fill="black"/>
+        </svg>
+      </span>
+      <span class="o2-nav-icon">
+        <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M9.12798 3.8392L9.09549 5.05737V5.08985L8.8681 12.139H10.9958L10.5411 3.8392H9.12798ZM9.09549 2.58854V3.23823H11.0933L11.6131 12.7238H0.210938L0.730692 3.23823H2.25747V2.58854C2.25747 0.801879 4.12534 -0.3026 5.66836 0.428305C7.22762 -0.3026 9.09549 0.801879 9.09549 2.58854ZM8.51077 5.08985V3.8392H7.04896V5.08985H6.44799V3.8392H4.88873V5.08985H4.28776V3.8392H2.8422V5.08985H2.24123V3.8392H1.26669L0.811904 12.139H8.25089L8.51077 5.08985ZM8.49453 3.25447V2.60478C8.49453 1.43533 7.39005 0.590729 6.28557 0.850606C6.7566 1.27291 7.04896 1.90636 7.04896 2.58854V3.23823H8.49453V3.25447ZM5.6846 1.11048C5.21358 1.43533 4.90497 1.98757 4.90497 2.58854V3.23823H6.46424V2.58854C6.46424 1.98757 6.15563 1.43533 5.6846 1.11048ZM4.30401 3.25447V2.60478C4.30401 1.9226 4.59637 1.28915 5.06739 0.850606C3.96292 0.574486 2.85844 1.43533 2.85844 2.58854V3.23823H4.30401V3.25447Z" fill="black" stroke="black" stroke-width="0.4"/>
+        </svg>
+      </span>
+    </div>
+  </nav>
+</div>
+
+<!-- OPTION 2 DROPDOWNS -->
+<!-- FEATURED -->
+<div class="o2-dd" id="o2-dd-featured"
+     onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
+  <div class="o2-dd-inner">
+    <div class="o2-dd-left">
+      <a class="o2-dd-cat" onclick="show('page-o2-featured-trailblazer')">Fall 2026 Trailblazer</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-featured-all')">All New</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-clothing-dresses')">New — Dresses</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-accessories-all')">New — Bags</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-accessories-all')">New — Accessories</a>
+    </div>
+    <div class="o2-dd-photos">
+      <div class="o2-photo eq2" onclick="show('page-o2-clothing-dresses')">
+        <img src="readytowear.png" alt="New Dresses">
+        <span class="o2-photo-lbl">New — Dresses &#9658;</span>
+      </div>
+      <div class="o2-photo eq2-lg" onclick="show('page-o2-featured-trailblazer')">
+        <img src="Option 2/route 2 images/collections.png" alt="Fall 2026 Trailblazers">
+        <span class="o2-photo-lbl">Fall 2026 Trailblazers &#9658;</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COLLECTIONS -->
+<div class="o2-dd" id="o2-dd-collections"
+     onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
+  <div class="o2-dd-inner">
+    <div class="o2-dd-left">
+      <a class="o2-dd-cat" onclick="show('page-o2-collections-rtw')">Ready-to-Wear</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-collections-swim')">Swim &amp; Resort</a>
+      <div class="o1-dd-gap"></div>
+      <div class="o2-dd-sublabel">The Edits</div>
+      <a class="o2-dd-cat" onclick="show('page-o2-featured-trailblazer')">Nights to be remembered</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-featured-trailblazer')">Runway</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-featured-trailblazer')">Set for the season</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-featured-trailblazer')">The new denim</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-featured-trailblazer')">Modern utility</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-featured-trailblazer')">Fall RTW 25</a>
+    </div>
+    <div class="o2-dd-photos">
+      <div class="o2-photo eq2" onclick="show('page-o2-collections-swim')">
+        <img src="Option 2/route 2 images/image 3740.png" alt="Swim and Resort">
+        <span class="o2-photo-lbl">Swim &amp; Resort &#9658;</span>
+      </div>
+      <div class="o2-photo eq2-lg" onclick="show('page-o2-collections-rtw')">
+        <img src="Option 2/route 2 images/collections-1.png" alt="Ready-to-Wear">
+        <span class="o2-photo-lbl">Ready-to-Wear &#9658;</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CLOTHING -->
+<div class="o2-dd" id="o2-dd-clothing"
+     onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
+  <div class="o2-dd-inner">
+    <div class="o2-dd-left">
+      <a class="o2-dd-cat" onclick="show('page-o2-clothing-dresses')">Dresses</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-collections-rtw')">Tops</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-collections-rtw')">Bottoms</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-collections-rtw')">Skirts</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-collections-rtw')">Tailoring</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-collections-rtw')">Denim</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-collections-rtw')">Knitwear</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-collections-rtw')">Jackets &amp; Coats</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-collections-rtw')">Jumpsuits &amp; Playsuits</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-collections-swim')">Swimwear</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-collections-rtw')">Kids</a>
+      <a class="o2-dd-viewall" onclick="show('page-o2-featured-all')">View all</a>
+    </div>
+    <div class="o2-dd-photos">
+      <div class="o2-photo eq3" onclick="show('page-o2-clothing-dresses')">
+        <img src="Option 2/route 2 images/image 60.png" alt="Dresses">
+        <span class="o2-photo-lbl">Dresses &#9658;</span>
+      </div>
+      <div class="o2-photo eq3" onclick="show('page-o2-collections-rtw')">
+        <img src="Option 2/route 2 images/clothing option 2.png" alt="Tailoring">
+        <span class="o2-photo-lbl">Tailoring &#9658;</span>
+      </div>
+      <div class="o2-photo eq3" onclick="show('page-o2-collections-swim')">
+        <img src="Option 2/route 2 images/Mask group.png" alt="Swimwear">
+        <span class="o2-photo-lbl">Swimwear &#9658;</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ACCESSORIES -->
+<div class="o2-dd" id="o2-dd-accessories"
+     onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
+  <div class="o2-dd-inner">
+    <div class="o2-dd-left">
+      <a class="o2-dd-cat" onclick="show('page-o2-accessories-all')">Bags</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-accessories-shoes')">Shoes</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-accessories-all')">Jewellery</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-accessories-all')">Belts</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-accessories-all')">Sunglasses</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-accessories-all')">Scarves</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-accessories-all')">Hats</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-accessories-all')">Towels &amp; Pareos</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-accessories-all')">Hair Accessories</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-accessories-all')">Bag Charms</a>
+      <a class="o2-dd-viewall" onclick="show('page-o2-accessories-all')">View all</a>
+    </div>
+    <div class="o2-dd-photos">
+      <div class="o2-photo eq3" onclick="show('page-o2-accessories-all')">
+        <img src="Option 2/route 2 images/Lady.png" alt="Jewellery">
+        <span class="o2-photo-lbl">Jewellery &#9658;</span>
+      </div>
+      <div class="o2-photo eq3" onclick="show('page-o2-accessories-all')">
+        <img src="Option 2/route 2 images/Accessories.png" alt="Bags">
+        <span class="o2-photo-lbl">Bags &#9658;</span>
+      </div>
+      <div class="o2-photo eq3" onclick="show('page-o2-accessories-shoes')">
+        <img src="Option 2/route 2 images/shoes.png" alt="Shoes">
+        <span class="o2-photo-lbl">Shoes &#9658;</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DISCOVER -->
+<div class="o2-dd" id="o2-dd-discover"
+     onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
+  <div class="o2-dd-inner">
+    <div class="o2-dd-left o2-dd-wide-left">
+      <div class="o2-dd-cols">
+        <div class="o2-dd-col">
+          <a class="o2-dd-cat" onclick="show('page-o2-discover')">Campaigns</a>
+          <a class="o2-dd-cat" onclick="show('page-o2-discover')">Moments</a>
+          <a class="o2-dd-cat" onclick="show('page-o2-discover')">Collaborations</a>
+        </div>
+        <div class="o2-dd-col">
+          <a class="o2-dd-cat" onclick="show('page-o2-discover')">Our story</a>
+          <a class="o2-dd-cat" onclick="show('page-o2-discover')">Our boutiques</a>
+          <a class="o2-dd-cat" onclick="show('page-o2-discover')">Z.Gallery</a>
+          <a class="o2-dd-cat" onclick="show('page-o2-discover')">Sustainability</a>
+          <a class="o2-dd-cat" onclick="show('page-o2-discover')">Zimm Archive</a>
+        </div>
+      </div>
+    </div>
+    <div class="o2-dd-photos">
+      <div class="o2-photo wide" onclick="show('page-o2-discover')">
+        <img src="Option 2/route 2 images/Discoverphoto.png" alt="Spring RTW 2026, Kindred Spirit">
+        <span class="o2-photo-lbl">Spring RTW 2026, Kindred Spirit &#9658;</span>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ============================================================
      HUB
@@ -375,338 +765,23 @@
      OPTION 1 — Route 1: Anchored
      ============================================================ -->
 <div id="opt1" class="screen">
-
-  <nav class="o1-nav">
-    <div class="o1-nav-left">
-      <span class="o1-nav-item" id="o1-ni-new"
-            onmouseenter="o1Open('new')" onmouseleave="o1Sched()">New</span>
-      <span class="o1-nav-item" id="o1-ni-shop"
-            onmouseenter="o1Open('shop')" onmouseleave="o1Sched()">Shop</span>
-      <span class="o1-nav-item" id="o1-ni-edits"
-            onmouseenter="o1Open('edits')" onmouseleave="o1Sched()">Edits</span>
-      <span class="o1-nav-item" id="o1-ni-zimmerse"
-            onmouseenter="o1Open('zimmerse')" onmouseleave="o1Sched()">Z.immerse</span>
-    </div>
-    <div class="o1-nav-right">
-      <span class="o1-nav-icon">
-        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10.4222 10.4899L12.5602 12.5582M11.8707 7.04279C11.8707 9.70811 9.71006 11.8688 7.04474 11.8688C4.37942 11.8688 2.21875 9.70811 2.21875 7.04279C2.21875 4.37747 4.37942 2.2168 7.04474 2.2168C9.71006 2.2168 11.8707 4.37747 11.8707 7.04279Z" stroke="black" stroke-width="1.23112" stroke-linecap="round"/>
-        </svg>
-      </span>
-      <span class="o1-nav-text">Login</span>
-      <span class="o1-nav-text">Bag (0)</span>
-    </div>
-  </nav>
-
-  <!-- NEW -->
-  <div class="o1-dd" id="o1-dd-new"
-       onmouseenter="o1Cancel()" onmouseleave="o1Sched()">
-    <div class="o1-dd-inner">
-      <div class="o1-dd-left">
-        <a class="o1-dd-cat">Fall 2026 Trailblazer</a>
-        <a class="o1-dd-cat">New In</a>
-        <a class="o1-dd-cat">Dresses</a>
-        <a class="o1-dd-cat">Bags</a>
-        <a class="o1-dd-cat">Shoes</a>
-      </div>
-      <div class="o1-dd-photos">
-        <div class="o1-photo sm">
-          <img src="Option 1/Mask group.png" alt="Bags">
-          <span class="o1-photo-lbl">Bags &#9658;</span>
-        </div>
-        <div class="o1-photo lg">
-          <img src="Option 1/collections.png" alt="Fall 2026 Trailblazer">
-          <span class="o1-photo-lbl">Fall 2026 Trailblazer &#9658;</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SHOP -->
-  <div class="o1-dd" id="o1-dd-shop"
-       onmouseenter="o1Cancel()" onmouseleave="o1Sched()">
-    <div class="o1-dd-inner">
-      <div class="o1-dd-left">
-        <a class="o1-dd-cat">Ready to Wear</a>
-        <a class="o1-dd-cat">Swim &amp; Resort</a>
-        <div class="o1-dd-gap"></div>
-        <a class="o1-dd-cat">Dresses</a>
-        <a class="o1-dd-cat">Accessories</a>
-        <a class="o1-dd-cat">Tops</a>
-        <a class="o1-dd-cat">Bottoms</a>
-        <a class="o1-dd-cat">Skirts</a>
-        <a class="o1-dd-cat">Tailoring</a>
-        <a class="o1-dd-cat">Denim</a>
-        <a class="o1-dd-cat">Knitwear</a>
-        <a class="o1-dd-cat">Jackets &amp; Coats</a>
-        <a class="o1-dd-cat">Jumpsuits &amp; Playsuits</a>
-        <a class="o1-dd-cat">Swimwear</a>
-        <a class="o1-dd-cat">Kids</a>
-      </div>
-      <div class="o1-dd-photos">
-        <div class="o1-photo eq3">
-          <img src="Option 1/zimmermann.com/new_Jew.png" alt="Jewellery">
-          <span class="o1-photo-lbl">Jewellery &#9658;</span>
-        </div>
-        <div class="o1-photo eq3">
-          <img src="Option 1/Mask group.png" alt="Bags">
-          <span class="o1-photo-lbl">Bags &#9658;</span>
-        </div>
-        <div class="o1-photo eq3">
-          <img src="Option 1/Mask group-1.png" alt="Swim and Resort">
-          <span class="o1-photo-lbl">Swim &amp; Resort &#9658;</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- EDITS -->
-  <div class="o1-dd" id="o1-dd-edits"
-       onmouseenter="o1Cancel()" onmouseleave="o1Sched()">
-    <div class="o1-dd-inner">
-      <div class="o1-dd-left">
-        <a class="o1-dd-cat">Fall 2026 Trailblazer</a>
-        <a class="o1-dd-cat">Spring RTW 2026</a>
-        <div class="o1-dd-gap"></div>
-        <a class="o1-dd-cat">Volume In Motion</a>
-        <a class="o1-dd-cat">Cruise RTW 2026</a>
-        <a class="o1-dd-cat">Swim 2026</a>
-        <a class="o1-dd-cat">Liquid Silhouettes</a>
-      </div>
-      <div class="o1-dd-photos">
-        <div class="o1-photo half">
-          <img src="Option 2/images/collections-2.png" alt="Spring RTW 2026">
-          <span class="o1-photo-lbl">Spring RTW 2026 &#9658;</span>
-        </div>
-        <div class="o1-photo half">
-          <img src="Option 1/collections.png" alt="Fall 2026 Trailblazer">
-          <span class="o1-photo-lbl">Fall 2026 Trailblazer &#9658;</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Z.IMMERSE -->
-  <div class="o1-dd" id="o1-dd-zimmerse"
-       onmouseenter="o1Cancel()" onmouseleave="o1Sched()">
-    <div class="o1-dd-inner">
-      <div class="o1-dd-left">
-        <a class="o1-dd-cat" onclick="show('o1-our-story')" style="cursor:pointer;">Our story</a>
-        <a class="o1-dd-cat">Moments</a>
-        <div class="o1-dd-gap"></div>
-        <a class="o1-dd-cat">Our boutiques</a>
-        <a class="o1-dd-cat">Z.Gallery</a>
-        <a class="o1-dd-cat">Sustainability</a>
-        <a class="o1-dd-cat">Collaboration</a>
-        <a class="o1-dd-cat">Zimm Archive</a>
-      </div>
-      <div class="o1-dd-photos">
-        <div class="o1-photo sm">
-          <img src="Option 1/zimmermann.com/Outstory-image.png" alt="Our story">
-          <span class="o1-photo-lbl">Our story &#9658;</span>
-        </div>
-        <div class="o1-photo lg">
-          <img src="Option 1/collections-1.png" alt="Our boutiques">
-          <span class="o1-photo-lbl">Our boutiques &#9658;</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="o1-body"></div>
 </div>
 
 <!-- ============================================================
      OPTION 2 — Route 2: Expanded
      ============================================================ -->
-<div id="opt2" class="screen">
-
-  <nav class="o2-nav">
-    <div class="o2-nav-left">
-      <span class="o2-nav-item" id="o2-ni-featured"
-            onmouseenter="o2Open('featured')" onmouseleave="o2Sched()">Featured</span>
-      <span class="o2-nav-item" id="o2-ni-collections"
-            onmouseenter="o2Open('collections')" onmouseleave="o2Sched()">Collections</span>
-      <span class="o2-nav-item" id="o2-ni-clothing"
-            onmouseenter="o2Open('clothing')" onmouseleave="o2Sched()">Clothing</span>
-      <span class="o2-nav-item" id="o2-ni-accessories"
-            onmouseenter="o2Open('accessories')" onmouseleave="o2Sched()">Accessories</span>
-      <span class="o2-nav-item" id="o2-ni-inspiration"
-            onmouseenter="o2Open('inspiration')" onmouseleave="o2Sched()">Inspiration</span>
-    </div>
-    <div class="o2-nav-right">
-      <span class="o2-nav-icon">
-        <svg width="14" height="14" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10.4222 10.4899L12.5602 12.5582M11.8707 7.04279C11.8707 9.70811 9.71006 11.8688 7.04474 11.8688C4.37942 11.8688 2.21875 9.70811 2.21875 7.04279C2.21875 4.37747 4.37942 2.2168 7.04474 2.2168C9.71006 2.2168 11.8707 4.37747 11.8707 7.04279Z" stroke="black" stroke-width="1.23112" stroke-linecap="round"/>
-        </svg>
-      </span>
-      <span class="o2-nav-text">Login</span>
-      <span class="o2-nav-text">Bag (0)</span>
-    </div>
-  </nav>
-
-  <!-- FEATURED -->
-  <div class="o2-dd" id="o2-dd-featured"
-       onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
-    <div class="o2-dd-inner">
-      <div class="o2-dd-left">
-        <div class="o2-dd-heading">Fall 2026 Trailblazer</div>
-        <a class="o2-dd-cat">All New</a>
-        <a class="o2-dd-cat">New — Dresses</a>
-        <a class="o2-dd-cat">New — Bags</a>
-        <a class="o2-dd-cat">New — Accessories</a>
-      </div>
-      <div class="o2-dd-photos">
-        <div class="o2-photo eq2">
-          <img src="readytowear.png" alt="New Dresses">
-          <span class="o2-photo-lbl">New — Dresses &#9658;</span>
-        </div>
-        <div class="o2-photo eq2-lg">
-          <img src="Option 2/images/collections.png" alt="Fall 2026 Trailblazers">
-          <span class="o2-photo-lbl">Fall 2026 Trailblazers &#9658;</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- COLLECTIONS -->
-  <div class="o2-dd" id="o2-dd-collections"
-       onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
-    <div class="o2-dd-inner">
-      <div class="o2-dd-left">
-        <a class="o2-dd-cat">Ready-to-Wear</a>
-        <a class="o2-dd-cat">Swim &amp; Resort</a>
-      </div>
-      <div class="o2-dd-photos">
-        <div class="o2-photo eq2">
-          <img src="Option 2/images/collections/zimmermann.com/image 3740.png" alt="Swim and Resort">
-          <span class="o2-photo-lbl">Swim &amp; Resort &#9658;</span>
-        </div>
-        <div class="o2-photo eq2-lg">
-          <img src="Option 2/images/collections-1.png" alt="Ready-to-Wear">
-          <span class="o2-photo-lbl">Ready-to-Wear &#9658;</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CLOTHING -->
-  <div class="o2-dd" id="o2-dd-clothing"
-       onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
-    <div class="o2-dd-inner">
-      <div class="o2-dd-left">
-        <a class="o2-dd-cat">Dresses</a>
-        <a class="o2-dd-cat">Tops</a>
-        <a class="o2-dd-cat">Bottoms</a>
-        <a class="o2-dd-cat">Skirts</a>
-        <a class="o2-dd-cat">Tailoring</a>
-        <a class="o2-dd-cat">Denim</a>
-        <a class="o2-dd-cat">Knitwear</a>
-        <a class="o2-dd-cat">Jackets &amp; Coats</a>
-        <a class="o2-dd-cat">Jumpsuits &amp; Playsuits</a>
-        <a class="o2-dd-cat">Swimwear</a>
-        <a class="o2-dd-cat">Kids</a>
-        <a class="o2-dd-viewall">View all</a>
-      </div>
-      <div class="o2-dd-photos">
-        <div class="o2-photo eq3">
-          <img src="Option 2/images/zimmermann.com/zimmermann.com/image 60.png" alt="Dresses">
-          <span class="o2-photo-lbl">Dresses &#9658;</span>
-        </div>
-        <div class="o2-photo eq3">
-          <img src="Option 2/images/zimmermann.com/clothing option 2.png" alt="Tailoring">
-          <span class="o2-photo-lbl">Tailoring &#9658;</span>
-        </div>
-        <div class="o2-photo eq3">
-          <img src="Option 2/images/zimmermann.com/Mask group.png" alt="Swimwear">
-          <span class="o2-photo-lbl">Swimwear &#9658;</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ACCESSORIES -->
-  <div class="o2-dd" id="o2-dd-accessories"
-       onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
-    <div class="o2-dd-inner">
-      <div class="o2-dd-left">
-        <a class="o2-dd-cat">Bags</a>
-        <a class="o2-dd-cat">Shoes</a>
-        <a class="o2-dd-cat">Jewellery</a>
-        <a class="o2-dd-cat">Belts</a>
-        <a class="o2-dd-cat">Sunglasses</a>
-        <a class="o2-dd-cat">Scarves</a>
-        <a class="o2-dd-cat">Hats</a>
-        <a class="o2-dd-cat">Towels &amp; Pareos</a>
-        <a class="o2-dd-cat">Hair Accessories</a>
-        <a class="o2-dd-cat">Bag Charms</a>
-        <a class="o2-dd-viewall">View all</a>
-      </div>
-      <div class="o2-dd-photos">
-        <div class="o2-photo eq3">
-          <img src="Option 2/images/accessories/Lady.png" alt="Jewellery">
-          <span class="o2-photo-lbl">Jewellery &#9658;</span>
-        </div>
-        <div class="o2-photo eq3">
-          <img src="Option 2/images/accessories/Accessories.png" alt="Bags">
-          <span class="o2-photo-lbl">Bags &#9658;</span>
-        </div>
-        <div class="o2-photo eq3">
-          <img src="Option 2/images/accessories/shoes.png" alt="Shoes">
-          <span class="o2-photo-lbl">Shoes &#9658;</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- INSPIRATION -->
-  <div class="o2-dd" id="o2-dd-inspiration"
-       onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
-    <div class="o2-dd-inner">
-      <div class="o2-dd-left">
-        <a class="o2-dd-cat">Edits</a>
-        <a class="o2-dd-cat">Campaigns</a>
-        <a class="o2-dd-cat">Moments</a>
-      </div>
-      <div class="o2-dd-photos">
-        <div class="o2-photo wide">
-          <img src="Option 2/images/collections-1.png" alt="Inspiration">
-          <span class="o2-photo-lbl">Ready-to-Wear &#9658;</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="o2-body">
-    <div class="o2-brand">ZIMMERMANN</div>
-  </div>
+<div id="opt2" class="screen page-screen">
+  <img src="Option 2/zimmermann.com.png" alt="Zimmermann">
 </div>
 
 <!-- ============================================================
      OUR STORY — Z.immerse inner page
      ============================================================ -->
-<div id="o1-our-story" class="screen">
-  <nav class="o1-inner-nav">
-    <div class="o1-nav-left">
-      <span class="o1-nav-item">New</span>
-      <span class="o1-nav-item">Shop</span>
-      <span class="o1-nav-item">Edits</span>
-      <span class="o1-nav-item active">Z.immerse</span>
-    </div>
-    <div class="o1-inner-nav-center">ZIMMERMANN</div>
-    <div class="o1-inner-nav-right">
-      <span class="o1-nav-icon">
-        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10.4222 10.4899L12.5602 12.5582M11.8707 7.04279C11.8707 9.70811 9.71006 11.8688 7.04474 11.8688C4.37942 11.8688 2.21875 9.70811 2.21875 7.04279C2.21875 4.37747 4.37942 2.2168 7.04474 2.2168C9.71006 2.2168 11.8707 4.37747 11.8707 7.04279Z" stroke="black" stroke-width="1.23112" stroke-linecap="round"/>
-        </svg>
-      </span>
-      <span class="o1-nav-text">Login</span>
-      <span class="o1-nav-text">Bag (0)</span>
-    </div>
-  </nav>
+<div id="o1-our-story" class="screen" style="padding-top: 102px;">
   <div class="our-story-body">
     <div class="our-story-photo">
-      <img src="Option 1/zimmermann.com/Outstory-image.png" alt="Our Story">
+      <img src="zimmermann.com/Outstory-image.png" alt="Our Story">
     </div>
     <div class="our-story-text">
       <h2 class="our-story-heading">Our Story</h2>
@@ -716,8 +791,208 @@
   </div>
 </div>
 
+<!-- ============================================================
+     PAGE SCREENS — shared by both options
+     ============================================================ -->
+<div id="page-new-all" class="screen page-screen page-listing">
+  <div class="page-sub-nav">
+    <a class="psnav-item psnav-active">All New</a>
+    <a class="psnav-item" onclick="show('page-shop-dresses')">Dresses</a>
+    <a class="psnav-item" onclick="show('page-shop-swim')">Swim &amp; Resort</a>
+    <a class="psnav-item">Tops</a>
+    <a class="psnav-item">Bottoms</a>
+    <a class="psnav-item">Accessories</a>
+    <a class="psnav-item">Bags</a>
+    <a class="psnav-item">Shoes</a>
+  </div>
+  <img src="zimmermann.com/new/new-in/All.png" alt="New In">
+</div>
+
+<div id="page-new-trailblazer" class="screen page-screen">
+  <img src="zimmermann.com/new/fall-2026-trailblazer.png" alt="Fall 2026 Trailblazer">
+</div>
+
+<div id="page-shop-rtw" class="screen page-screen page-listing">
+  <div class="page-sub-nav">
+    <a class="psnav-item psnav-active" onclick="show('page-shop-rtw')">All RTW</a>
+    <a class="psnav-item" onclick="show('page-shop-dresses')">Dresses</a>
+    <a class="psnav-item" onclick="show('page-shop-swim')">Swim &amp; Resort</a>
+    <a class="psnav-item">Tops</a>
+    <a class="psnav-item">Bottoms</a>
+    <a class="psnav-item">Skirts</a>
+    <a class="psnav-item">Tailoring</a>
+    <a class="psnav-item">Denim</a>
+    <a class="psnav-item">Knitwear</a>
+    <a class="psnav-item">Jackets &amp; Coats</a>
+    <a class="psnav-item">Jumpsuits &amp; Playsuits</a>
+  </div>
+  <img src="zimmermann.com/shop/ready-to-wear/All.png" alt="Ready to Wear">
+</div>
+
+<div id="page-shop-dresses" class="screen page-screen page-listing">
+  <div class="page-sub-nav">
+    <a class="psnav-item" onclick="show('page-shop-rtw')">All RTW</a>
+    <a class="psnav-item psnav-active" onclick="show('page-shop-dresses')">Dresses</a>
+    <a class="psnav-item" onclick="show('page-shop-swim')">Swim &amp; Resort</a>
+    <a class="psnav-item">Tops</a>
+    <a class="psnav-item">Bottoms</a>
+    <a class="psnav-item">Skirts</a>
+    <a class="psnav-item">Tailoring</a>
+    <a class="psnav-item">Denim</a>
+    <a class="psnav-item">Knitwear</a>
+    <a class="psnav-item">Jackets &amp; Coats</a>
+    <a class="psnav-item">Jumpsuits &amp; Playsuits</a>
+  </div>
+  <img src="zimmermann.com/shop/dresses/All.png" alt="Dresses">
+</div>
+
+<div id="page-shop-swim" class="screen page-screen page-listing">
+  <div class="page-sub-nav">
+    <a class="psnav-item" onclick="show('page-shop-rtw')">All RTW</a>
+    <a class="psnav-item" onclick="show('page-shop-dresses')">Dresses</a>
+    <a class="psnav-item psnav-active" onclick="show('page-shop-swim')">Swim &amp; Resort</a>
+    <a class="psnav-item">Tops</a>
+    <a class="psnav-item">Bottoms</a>
+    <a class="psnav-item">Skirts</a>
+    <a class="psnav-item">Tailoring</a>
+    <a class="psnav-item">Denim</a>
+    <a class="psnav-item">Knitwear</a>
+    <a class="psnav-item">Jackets &amp; Coats</a>
+    <a class="psnav-item">Jumpsuits &amp; Playsuits</a>
+  </div>
+  <img src="zimmermann.com/shop/swim-and-resort/All.png" alt="Swim and Resort">
+</div>
+
+<div id="page-edits-trailblazer" class="screen page-screen">
+  <img src="zimmermann.com/edits/fall-2026-trailblazer.png" alt="Edits Fall 2026 Trailblazer">
+</div>
+
+<!-- ============================================================
+     ROUTE 2 PAGE SCREENS
+     ============================================================ -->
+<div id="page-o2-featured" class="screen page-screen">
+  <img src="Option 2/Route 2 Featured.png" alt="Featured">
+</div>
+
+<div id="page-o2-collections" class="screen page-screen">
+  <img src="Option 2/Route 2 Collections.png" alt="Collections">
+</div>
+
+<div id="page-o2-clothing" class="screen page-screen">
+  <img src="Option 2/Route 2 clothing.png" alt="Clothing">
+</div>
+
+<div id="page-o2-accessories" class="screen page-screen">
+  <img src="Option 2/Route 2 accessories.png" alt="Accessories">
+</div>
+
+<div id="page-o2-discover" class="screen page-screen">
+  <img src="Option 2/Route 2 discover.png" alt="Discover">
+</div>
+
+<!-- ============================================================
+     OPTION 2 SUB-PAGE SCREENS
+     ============================================================ -->
+
+<div id="page-o2-featured-all" class="screen page-screen page-listing">
+  <div class="page-sub-nav">
+    <a class="psnav-item psnav-active">All New</a>
+    <a class="psnav-item" onclick="show('page-o2-clothing-dresses')">Dresses</a>
+    <a class="psnav-item" onclick="show('page-o2-accessories-all')">Bags</a>
+    <a class="psnav-item" onclick="show('page-o2-accessories-shoes')">Shoes</a>
+    <a class="psnav-item" onclick="show('page-o2-accessories-all')">Accessories</a>
+  </div>
+  <img src="Option 2/Route2-NEW copy/featured-all-new-in.png" alt="All New In">
+</div>
+
+<div id="page-o2-featured-trailblazer" class="screen page-screen">
+  <img src="Option 2/Route2-NEW copy/featured-fall-2026-trailblazer.png" alt="Fall 2026 Trailblazer">
+</div>
+
+<div id="page-o2-collections-rtw" class="screen page-screen page-listing">
+  <div class="page-sub-nav">
+    <a class="psnav-item psnav-active">All RTW</a>
+    <a class="psnav-item" onclick="show('page-o2-clothing-dresses')">Dresses</a>
+    <a class="psnav-item">Tops</a>
+    <a class="psnav-item">Bottoms</a>
+    <a class="psnav-item">Skirts</a>
+    <a class="psnav-item">Tailoring</a>
+    <a class="psnav-item">Denim</a>
+    <a class="psnav-item">Knitwear</a>
+    <a class="psnav-item">Jackets &amp; Coats</a>
+    <a class="psnav-item">Jumpsuits &amp; Playsuits</a>
+  </div>
+  <img src="Option 2/Route2-NEW copy/collection:ready-to-wear.png" alt="Ready to Wear">
+</div>
+
+<div id="page-o2-collections-swim" class="screen page-screen page-listing">
+  <div class="page-sub-nav">
+    <a class="psnav-item psnav-active">All</a>
+    <a class="psnav-item">Swimwear</a>
+    <a class="psnav-item">Cover-Ups</a>
+    <a class="psnav-item">Resort Wear</a>
+  </div>
+  <img src="Option 2/Route2-NEW copy/collection:resort-and-swim-All.png" alt="Resort and Swim">
+</div>
+
+<div id="page-o2-clothing-dresses" class="screen page-screen page-listing">
+  <div class="page-sub-nav">
+    <a class="psnav-item psnav-active">All Dresses</a>
+    <a class="psnav-item" onclick="show('page-o2-clothing-mini-dresses')">Mini Dresses</a>
+    <a class="psnav-item">Midi Dresses</a>
+    <a class="psnav-item">Maxi Dresses</a>
+    <a class="psnav-item">Slip Dresses</a>
+    <a class="psnav-item">Party</a>
+  </div>
+  <img src="Option 2/Route2-NEW copy/clothing:dresses:All.png" alt="All Dresses">
+</div>
+
+<div id="page-o2-clothing-mini-dresses" class="screen page-screen page-listing">
+  <div class="page-sub-nav">
+    <a class="psnav-item" onclick="show('page-o2-clothing-dresses')">All Dresses</a>
+    <a class="psnav-item psnav-active">Mini Dresses</a>
+    <a class="psnav-item">Midi Dresses</a>
+    <a class="psnav-item">Maxi Dresses</a>
+    <a class="psnav-item">Slip Dresses</a>
+    <a class="psnav-item">Party</a>
+  </div>
+  <img src="Option 2/Route2-NEW copy/clothing:dresses:mini-dresses.png" alt="Mini Dresses" onclick="show('page-o2-product-mini-dress')" style="cursor:pointer;">
+</div>
+
+<div id="page-o2-product-mini-dress" class="screen page-screen">
+  <img src="Option 2/Route2-NEW copy/clothing:dresses:mini-dresses:alchemy-ruffle-mini-dress-blue-poppy.png" alt="Alchemy Ruffle Mini Dress">
+</div>
+
+<div id="page-o2-accessories-all" class="screen page-screen page-listing">
+  <div class="page-sub-nav">
+    <a class="psnav-item psnav-active">All</a>
+    <a class="psnav-item">Bags</a>
+    <a class="psnav-item" onclick="show('page-o2-accessories-shoes')">Shoes</a>
+    <a class="psnav-item">Jewellery</a>
+    <a class="psnav-item">Belts</a>
+    <a class="psnav-item">Sunglasses</a>
+    <a class="psnav-item">Hats</a>
+  </div>
+  <img src="Option 2/Route2-NEW copy/accessories:all.png" alt="All Accessories">
+</div>
+
+<div id="page-o2-accessories-shoes" class="screen page-screen page-listing">
+  <div class="page-sub-nav">
+    <a class="psnav-item" onclick="show('page-o2-accessories-all')">All</a>
+    <a class="psnav-item">Bags</a>
+    <a class="psnav-item psnav-active">Shoes</a>
+    <a class="psnav-item">Jewellery</a>
+    <a class="psnav-item">Belts</a>
+    <a class="psnav-item">Sunglasses</a>
+    <a class="psnav-item">Hats</a>
+  </div>
+  <img src="Option 2/Route2-NEW copy/accessories:all:shoes.png" alt="Shoes">
+</div>
+
 <script>
   /* ---- ROUTING ---- */
+  var lastOption = 'opt1';
+
   function show(id) {
     document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
     document.getElementById(id).classList.add('active');
@@ -725,6 +1000,31 @@
     document.getElementById('back-bar').classList.toggle('visible', id !== 'hub');
     o1CloseAll();
     o2CloseAll();
+
+    var nav1 = document.getElementById('nav-o1');
+    var nav2 = document.getElementById('nav-o2');
+
+    if (id === 'hub') {
+      nav1.classList.remove('visible');
+      nav2.classList.remove('visible');
+    } else if (id === 'opt1') {
+      lastOption = 'opt1';
+      nav1.classList.add('visible');
+      nav2.classList.remove('visible');
+    } else if (id === 'opt2') {
+      lastOption = 'opt2';
+      nav2.classList.add('visible');
+      nav1.classList.remove('visible');
+    } else {
+      // page screens — show whichever option the user came from
+      if (lastOption === 'opt2') {
+        nav2.classList.add('visible');
+        nav1.classList.remove('visible');
+      } else {
+        nav1.classList.add('visible');
+        nav2.classList.remove('visible');
+      }
+    }
   }
 
   /* ---- OPTION 1 ---- */
@@ -748,6 +1048,7 @@
     o1Cur = null;
   }
 
+  function o1Toggle(key) { if (o1Cur === key) { o1CloseAll(); } else { o1Open(key); } }
   function o1Sched() { o1Timer = setTimeout(o1CloseAll, 200); }
   function o1Cancel() { clearTimeout(o1Timer); }
 
@@ -772,6 +1073,7 @@
     o2Cur = null;
   }
 
+  function o2Toggle(key) { if (o2Cur === key) { o2CloseAll(); } else { o2Open(key); } }
   function o2Sched() { o2Timer = setTimeout(o2CloseAll, 200); }
   function o2Cancel() { clearTimeout(o2Timer); }
 </script>
