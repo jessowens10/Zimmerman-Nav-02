@@ -1,1511 +1,775 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zim Nav Exploration</title>
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; }
-body { font-family: 'Futura', 'Century Gothic', 'Trebuchet MS', sans-serif; color: #1a1a1a; }
-button { outline: none; border: none; background: none; padding: 0; font-family: inherit; cursor: pointer; color: inherit; }
-input { font-family: inherit; outline: none; border: none; background: none; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zim Nav Exploration</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── Screens ── */
-.screen { display: none; min-height: 100vh; }
-.screen.active { display: block; }
-#hub.active { display: block; }
+    body {
+      font-family: 'Futura', 'Century Gothic', 'Trebuchet MS', Arial, sans-serif;
+      background: #fff;
+      color: #1a1a1a;
+    }
 
-/* ── Back bar ── */
-.back-bar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
-  height: 38px; background: #1a1a1a; color: #fff;
-  display: none; align-items: center; justify-content: center;
-  font-family: 'Futura', 'Century Gothic', 'Trebuchet MS', sans-serif;
-  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
-  cursor: pointer;
-}
-.back-bar.visible { display: flex; }
-.back-bar:hover { background: #333; }
+    /* ========== ROUTING ========== */
+    .screen { display: none; }
+    .screen.active { display: block; }
 
-/* ══════════════════════════════════════════
-   HUB
-══════════════════════════════════════════ */
-#hub { background: #F8F7F6; min-height: 100vh; }
-#hub.active { display: block; }
+    /* ========== BACK BAR ========== */
+    .back-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+      height: 38px; background: #1a1a1a; color: #fff;
+      display: none; align-items: center; justify-content: center;
+      font-family: 'Futura', 'Century Gothic', 'Trebuchet MS', Arial, sans-serif;
+      font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer;
+    }
+    .back-bar.visible { display: flex; }
 
-.hub-wrap { padding: 48px 48px 0; max-width: 920px; }
-.hub-brand { font-size: 10px; letter-spacing: 0.12em; font-weight: 400; margin-bottom: 14px; color: #1a1a1a; }
-.hub-headline { font-size: 26px; letter-spacing: 0.01em; font-weight: 400; margin-bottom: 56px; line-height: 1.2; color: #1a1a1a; }
+    /* ========================================================
+       HUB
+       ======================================================== */
+    #hub { background: #fff; min-height: 100vh; }
 
-.hub-cards { display: flex; gap: 12px; margin-bottom: 56px; }
-.hub-card {
-  flex: 1; background: #fff; border: 1px solid #e0deda; border-radius: 8px;
-  padding: 28px 24px 24px; cursor: pointer; transition: border-color 0.2s;
-  display: flex; flex-direction: column;
-}
-.hub-card:hover { border-color: #aaa; }
-.hub-card-title { font-size: 12px; font-weight: 600; letter-spacing: 0.01em; text-decoration: underline; margin-bottom: 18px; color: #1a1a1a; }
-.hub-card-desc { font-size: 11.5px; letter-spacing: 0.01em; line-height: 1.65; color: #333; flex: 1; margin-bottom: 28px; }
-.hub-card-arrow { font-size: 18px; color: #333; line-height: 1; }
+    .hub-wordmark {
+      font-size: clamp(72px, 11.5vw, 158px);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      line-height: 1;
+      padding: 44px 48px 72px;
+    }
 
-/* Tab bar */
-.hub-tabs-bar { display: flex; gap: 4px; }
-.hub-tab {
-  font-size: 11px; letter-spacing: 0.02em; padding: 13px 22px;
-  cursor: pointer; background: #dedad5; color: #666; border: none;
-  font-family: inherit; border-radius: 6px 6px 0 0; transition: background 0.15s;
-}
-.hub-tab.active { background: #fff; color: #1a1a1a; font-weight: 600; }
-.hub-tab:hover:not(.active) { background: #cdc9c4; }
+    .hub-body {
+      display: flex;
+      padding: 0 48px 100px;
+      gap: 80px;
+    }
 
-/* Tab content */
-.hub-tab-content { background: #fff; padding: 60px 48px 80px; }
-.hub-tab-panel { display: none; max-width: 580px; }
-.hub-tab-panel.active { display: block; }
+    .hub-left { flex: 0 0 320px; }
 
-.hub-body { font-size: 14px; letter-spacing: 0.005em; line-height: 1.75; color: #1a1a1a; margin-bottom: 22px; }
-.hub-ul { list-style: none; padding: 0; margin-bottom: 48px; }
-.hub-ul li { font-size: 14px; line-height: 1.7; color: #1a1a1a; padding-left: 18px; position: relative; margin-bottom: 18px; }
-.hub-ul li::before { content: '•'; position: absolute; left: 0; }
-.hub-ul li em { font-style: italic; }
-.hub-ux-label { font-size: 11.5px; font-weight: 700; letter-spacing: 0.02em; margin-bottom: 14px; color: #1a1a1a; }
-.hub-ux-ul { list-style: none; padding: 0; }
-.hub-ux-ul li { font-size: 11.5px; line-height: 1.65; color: #1a1a1a; padding-left: 16px; position: relative; margin-bottom: 10px; }
-.hub-ux-ul li::before { content: '•'; position: absolute; left: 0; }
-.hub-ux-ul li em { font-style: italic; }
+    .hub-left p {
+      font-size: 13px;
+      line-height: 1.75;
+      color: #1a1a1a;
+      margin-bottom: 22px;
+      text-align: justify;
+    }
 
-/* ══════════════════════════════════════════
-   SHARED OVERLAYS (account, basket, search)
-══════════════════════════════════════════ */
+    .hub-right { flex: 1; max-width: 480px; }
 
-/* Side panel (account / basket) */
-.side-panel { position: fixed; inset: 0; z-index: 500; display: none; }
-.side-panel.open { display: block; }
-.sp-dim { position: absolute; inset: 0; background: rgba(185,183,179,0.55); }
-.sp-content {
-  position: absolute; right: 0; top: 0; bottom: 0;
-  width: 390px; background: #fff; overflow-y: auto;
-}
-.sp-close {
-  position: absolute; top: 22px; right: 28px;
-  font-size: 20px; cursor: pointer; z-index: 10;
-  font-weight: 300; line-height: 1;
-}
+    .hub-route { margin-bottom: 56px; }
 
-/* Account panel */
-.sp-inner { padding: 80px 44px 44px; }
-.sp-title { font-size: 24px; letter-spacing: 0.01em; font-weight: 400; margin-bottom: 10px; }
-.sp-sub { font-size: 10.5px; letter-spacing: 0.03em; color: #666; line-height: 1.65; margin-bottom: 36px; }
-.sp-email {
-  width: 100%; height: 52px; background: #F8F7F6;
-  text-align: center; font-size: 10.5px; letter-spacing: 0.06em; color: #aaa;
-  padding: 0 16px; margin-bottom: 8px; border: none;
-}
-.sp-continue {
-  width: 100%; height: 52px; background: #1a1a1a; color: #fff;
-  font-family: inherit; font-size: 9.5px; letter-spacing: 0.14em;
-  text-transform: uppercase; cursor: pointer; margin-bottom: 32px;
-}
-.sp-link { display: block; font-size: 10.5px; letter-spacing: 0.04em; padding: 10px 0; color: #1a1a1a; }
+    .hub-route-title {
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      margin-bottom: 14px;
+      letter-spacing: 0.01em;
+    }
 
-/* Basket panel */
-.basket-title { font-size: 24px; letter-spacing: 0.01em; font-weight: 400; margin-bottom: 8px; }
-.basket-sub { font-size: 10.5px; letter-spacing: 0.03em; color: #888; margin-bottom: 40px; }
-.basket-cta {
-  width: 100%; height: 52px; background: #1a1a1a; color: #fff;
-  font-family: inherit; font-size: 9.5px; letter-spacing: 0.14em;
-  text-transform: uppercase; cursor: pointer; margin-bottom: 44px;
-}
-.basket-love { font-size: 10px; letter-spacing: 0.04em; color: #888; margin-bottom: 14px; }
-.basket-imgs { display: flex; gap: 8px; margin-bottom: 44px; }
-.basket-img { flex: 1; background: #F8F7F6; aspect-ratio: 3/4; }
-.basket-help { font-size: 10.5px; letter-spacing: 0.04em; color: #888; }
+    .hub-route-desc {
+      font-size: 13px;
+      line-height: 1.75;
+      color: #1a1a1a;
+      margin-bottom: 24px;
+      text-align: justify;
+    }
 
-/* Search overlay */
-.search-overlay {
-  position: fixed; inset: 0; background: #fff;
-  z-index: 600; display: none; padding: 44px 36px 36px; overflow-y: auto;
-}
-.search-overlay.open { display: block; }
-.so-close { position: absolute; top: 22px; right: 28px; font-size: 20px; cursor: pointer; font-weight: 300; }
-.so-input-wrap { border-bottom: 1px solid #bbb; margin-bottom: 56px; max-width: 740px; padding-bottom: 6px; }
-.so-input {
-  font-family: 'Futura', 'Century Gothic', 'Trebuchet MS', sans-serif;
-  font-size: 44px; letter-spacing: -0.01em; color: #ccc; width: 100%; font-weight: 400;
-}
-.so-input::placeholder { color: #ccc; }
-.so-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-.so-cell { background: #F8F7F6; aspect-ratio: 3/4; }
+    .hub-view-btn {
+      display: inline-block;
+      border: 1px solid #1a1a1a;
+      padding: 11px 52px;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: #fff;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .hub-view-btn:hover { background: #f5f5f5; }
 
-/* ══════════════════════════════════════════
-   OPTION 1 — ANCHORED DROPDOWN
-══════════════════════════════════════════ */
-#opt1 { background: #F8F7F6; position: relative; padding-top: 38px; }
+    /* ========================================================
+       OPTION 1 — Route 1: Anchored
+       ======================================================== */
+    #opt1 { padding-top: 38px; min-height: 100vh; background: #fff; }
 
-.o1-nav-wrap { position: relative; z-index: 200; }
+    .o1-nav {
+      position: sticky; top: 38px; z-index: 100;
+      background: #fff;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px;
+      height: 64px;
+      border-bottom: 1px solid #dedad5;
+    }
 
-.o1-nav {
-  background: #fff; height: 64px;
-  display: flex; align-items: center;
-  border-bottom: 1px solid #e6e4e0;
-  padding: 0 32px;
-}
-.o1-nav-l { display: flex; gap: 28px; }
-.o1-ni {
-  font-size: 10px; letter-spacing: 0.05em; cursor: pointer;
-  padding-bottom: 3px; border-bottom: 1px solid transparent;
-  user-select: none;
-}
-.o1-ni.active { border-bottom-color: #1a1a1a; }
-.o1-logo {
-  position: absolute; left: 50%; transform: translateX(-50%);
-  font-size: 19px; letter-spacing: 0.18em; font-weight: 400;
-}
-.o1-nav-r { margin-left: auto; display: flex; align-items: center; gap: 18px; }
-.o1-search-wrap { display: flex; align-items: center; border-bottom: 1px solid #999; padding-bottom: 2px; }
-.o1-search-inp { font-size: 9.5px; letter-spacing: 0.07em; color: #999; width: 118px; }
-.o1-search-inp::placeholder { color: #999; }
+    .o1-nav-left { display: flex; gap: 36px; align-items: center; }
 
-/* Icon buttons */
-.o1-icon-btn { cursor: pointer; display: flex; align-items: center; justify-content: center; background: none; border: none; padding: 0; }
-.o1-search-btn { cursor: pointer; display: flex; align-items: center; background: none; border: none; padding: 0; }
+    .o1-nav-item {
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      color: #1a1a1a;
+      position: relative;
+      padding-bottom: 3px;
+      user-select: none;
+    }
 
-/* Dropdowns */
-.o1-dd-wrap {
-  position: absolute; top: 64px; left: 0; right: 0;
-  background: #fff; border-bottom: 1px solid #e6e4e0;
-  display: none;
-}
-.o1-dd-wrap.open { display: block; }
-.o1-dd { display: none; padding: 28px 32px 40px; align-items: flex-start; }
-.o1-dd.active { display: flex; }
+    .o1-nav-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0; right: 0;
+      height: 1.5px;
+      background: #1a1a1a;
+    }
 
-.o1-see-all { font-size: 10px; letter-spacing: 0.05em; min-width: 76px; cursor: pointer; }
-.o1-sub-col { display: flex; flex-direction: column; gap: 20px; min-width: 160px; }
-.o1-sub-col2 { display: flex; flex-direction: column; gap: 20px; min-width: 180px; margin-left: 56px; }
-.o1-sub-item { font-size: 10.5px; letter-spacing: 0.03em; cursor: pointer; }
-.o1-sub-item:hover { text-decoration: underline; text-underline-offset: 3px; }
-.o1-dd-photo { position: relative; margin-left: auto; width: 240px; height: 300px; flex-shrink: 0; overflow: hidden; }
-.o1-dd-photo.wide { width: 480px; }
-.o1-dd-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-.o1-dd-photo .o1-hover-img { opacity: 0; transition: opacity 0.4s ease; }
-.o1-dd-photo .o1-hover-img.active { opacity: 1; }
+    .o1-nav-right { display: flex; gap: 24px; align-items: center; }
+    .o1-nav-icon { display: flex; align-items: center; cursor: pointer; }
+    .o1-nav-text { font-size: 12px; font-weight: 300; letter-spacing: 0.01em; cursor: pointer; color: #1a1a1a; }
 
-.o1-body { min-height: calc(100vh - 64px); background: #F8F7F6; }
+    /* Option 1 dropdowns */
+    .o1-dd {
+      position: fixed; top: 102px; left: 0; right: 0; z-index: 90;
+      background: #fff;
+      border-bottom: 1px solid #dedad5;
+      padding: 36px 48px 48px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+    }
+    .o1-dd.open { opacity: 1; pointer-events: auto; }
 
-/* ══════════════════════════════════════════
-   OPTION 1 — INNER PAGES
-══════════════════════════════════════════ */
-.o1-sub { display: none; }
-.o1-sub.active { display: block; }
+    .o1-dd-inner { display: flex; align-items: flex-start; gap: 48px; }
 
-/* Shared inner-page nav */
-.o1-inner-nav {
-  background: #fff; height: 64px; display: flex; align-items: center;
-  border-bottom: 1px solid #e6e4e0; padding: 0 32px;
-  position: sticky; top: 38px; z-index: 100;
-}
-.o1-inner-nav-l { display: flex; gap: 28px; }
-.o1-inner-ni { font-size: 10px; letter-spacing: 0.05em; cursor: pointer; }
-.o1-inner-logo {
-  position: absolute; left: 50%; transform: translateX(-50%);
-  font-size: 19px; letter-spacing: 0.18em; font-weight: 400;
-}
-.o1-inner-nav-r { margin-left: auto; display: flex; align-items: center; gap: 18px; }
+    .o1-dd-left { flex: 0 0 210px; }
 
-/* Filter bar */
-.o1-filter-bar {
-  background: #fff; border-bottom: 1px solid #e6e4e0;
-  display: flex; align-items: center; padding: 0 32px; height: 44px; gap: 0;
-}
-.o1-ftab {
-  font-size: 10px; letter-spacing: 0.05em; cursor: pointer;
-  padding: 0 16px 0 0; white-space: nowrap; color: #1a1a1a;
-  border-bottom: 1px solid transparent; height: 44px; display: flex; align-items: center;
-}
-.o1-ftab:first-child { padding-left: 0; }
-.o1-ftab.active { border-bottom: 1.5px solid #1a1a1a; }
-.o1-filter-sort { margin-left: auto; font-size: 10px; letter-spacing: 0.05em; cursor: pointer; display: flex; align-items: center; gap: 4px; color: #1a1a1a; }
+    .o1-dd-heading {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 20px;
+    }
 
-/* Breadcrumb */
-.o1-breadcrumb { font-size: 9px; letter-spacing: 0.04em; padding: 14px 32px; color: #888; background: #fff; border-bottom: 1px solid #e6e4e0; }
-.o1-breadcrumb span { cursor: pointer; text-decoration: underline; }
-.o1-breadcrumb span:hover { color: #1a1a1a; }
-.o1-breadcrumb-sep { margin: 0 6px; }
+    .o1-dd-cat {
+      font-size: 13px;
+      font-weight: 300;
+      color: #1a1a1a;
+      cursor: pointer;
+      display: block;
+      padding: 3.5px 0;
+      letter-spacing: 0.01em;
+    }
+    .o1-dd-cat:hover { text-decoration: underline; }
+    .o1-dd-cat.bold { font-weight: 500; }
 
-/* Product grids */
-.o1-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 3px; }
-.o1-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; padding: 3px; }
-.o1-tile { background: #F8F7F6; aspect-ratio: 3/4; cursor: pointer; }
-.o1-tile-tall { background: #F8F7F6; aspect-ratio: 2/3; cursor: pointer; }
-.o1-tile-wide { background: #F8F7F6; aspect-ratio: 2/3; grid-row: span 2; cursor: pointer; }
+    .o1-dd-gap { height: 16px; }
 
-/* Collections All page */
-.o1-col-all-wrap { display: flex; min-height: calc(100vh - 64px); }
-.o1-col-sidebar { width: 300px; flex-shrink: 0; padding: 32px; background: #fff; }
-.o1-col-list-item { font-size: 10px; letter-spacing: 0.04em; padding: 7px 0; cursor: pointer; }
-.o1-col-list-item:hover { text-decoration: underline; }
-.o1-col-list-item.italic { font-style: italic; text-decoration: underline; }
-.o1-col-divider { border: none; border-top: 1px solid #e6e4e0; margin: 12px 0; }
-.o1-col-main { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 3px; padding: 3px; }
-.o1-col-img { background: #F8F7F6; }
+    .o1-dd-photos { flex: 1; display: flex; gap: 10px; justify-content: flex-end; }
 
-/* Trailblazer page */
-.o1-trailblazer-hero { text-align: center; padding: 80px 32px 40px; }
-.o1-trailblazer-season { font-size: 12px; letter-spacing: 0.06em; }
-.o1-trailblazer-title { font-size: 28px; letter-spacing: 0.12em; font-weight: 700; margin-top: 4px; }
-.o1-trailblazer-img { background: #F8F7F6; height: 500px; margin: 0 3px 3px; }
+    /* Photo base */
+    .o1-photo { position: relative; overflow: hidden; flex-shrink: 0; }
+    .o1-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .o1-photo-lbl {
+      position: absolute; bottom: 12px; left: 14px;
+      color: #fff; font-size: 10.5px; letter-spacing: 0.06em; pointer-events: none;
+    }
 
-/* PDP */
-.o1-pdp-wrap { display: flex; min-height: calc(100vh - 64px); background: #F8F7F6; }
-.o1-pdp-sidebar { width: 280px; flex-shrink: 0; padding: 32px; }
-.o1-pdp-close { font-size: 9px; letter-spacing: 0.1em; cursor: pointer; margin-bottom: 40px; display: block; }
-.o1-pdp-close:hover { text-decoration: underline; }
-.o1-pdp-name { font-size: 14px; letter-spacing: 0.03em; margin-bottom: 8px; }
-.o1-pdp-price { font-size: 12px; color: #888; margin-bottom: 20px; }
-.o1-pdp-desc { font-size: 10px; letter-spacing: 0.02em; line-height: 1.7; color: #555; }
-.o1-pdp-main { flex: 1; display: flex; gap: 3px; padding: 3px; }
-.o1-pdp-hero { flex: 1; background: #F8F7F6; }
-.o1-pdp-thumbs-col { width: 140px; display: flex; flex-direction: column; gap: 3px; }
-.o1-pdp-thumb { background: #F8F7F6; height: 130px; }
+    /* New + Z.immerse: small left, large right */
+    .o1-photo.sm { width: 220px; height: 255px; }
+    .o1-photo.lg { width: 430px; height: 255px; }
 
-/* Sub-page show/hide for opt2 & opt3 */
-.o2-sub { display: none; }
-.o2-sub.active { display: block; }
-.o3-sub { display: none; }
-.o3-sub.active { display: block; }
+    /* Shop: three equal — tall */
+    .o1-photo.eq3 { width: 240px; height: 395px; }
 
-/* Z.IMMERSE editorial page */
-.o3-zim-block { text-align: center; padding: 60px 32px 32px; background: #fff; }
-.o3-zim-block + .o3-zim-block { padding-top: 48px; }
-.o3-zim-season { font-size: 12px; letter-spacing: 0.06em; }
-.o3-zim-title { font-size: 28px; letter-spacing: 0.12em; font-weight: 700; margin-top: 4px; }
-.o3-zim-img { background: #F8F7F6; height: 440px; margin: 0 3px 3px; }
+    /* Edits: two equal halves */
+    .o1-photo.half { flex: 1; height: 255px; }
 
-/* ══════════════════════════════════════════
-   OPTION 2 — MEGA MENU
-══════════════════════════════════════════ */
-#opt2 { background: #F8F7F6; position: relative; padding-top: 38px; }
+    /* Option 1 body */
+    .o1-body { background: #F8F7F6; padding: 80px 48px; min-height: 60vh; }
 
-.o2-nav-wrap { position: relative; z-index: 200; }
-.o2-nav {
-  background: #fff; height: 64px;
-  display: flex; align-items: center;
-  border-bottom: 1px solid #e6e4e0; padding: 0 32px;
-}
-.o2-nav-l { display: flex; gap: 28px; }
-.o2-ni {
-  font-size: 10px; letter-spacing: 0.05em; cursor: pointer;
-  padding-bottom: 3px; border-bottom: 1px solid transparent;
-}
-.o2-ni.active { border-bottom-color: #1a1a1a; }
-.o2-logo {
-  position: absolute; left: 50%; transform: translateX(-50%);
-  font-size: 19px; letter-spacing: 0.18em; font-weight: 400;
-}
-.o2-nav-r { margin-left: auto; display: flex; align-items: center; gap: 28px; }
-.o2-nav-btn { font-size: 10px; letter-spacing: 0.05em; cursor: pointer; }
+    /* ========== OUR STORY INNER PAGE ========== */
+    #o1-our-story { padding-top: 38px; min-height: 100vh; background: #fff; }
 
-.o2-dd-wrap {
-  position: absolute; top: 64px; left: 0; right: 0;
-  background: #fff; border-bottom: 1px solid #e6e4e0; display: none;
-}
-.o2-dd-wrap.open { display: block; }
-.o2-dd { display: none; padding: 32px 32px 44px; align-items: flex-start; }
-.o2-dd.active { display: flex; gap: 0; }
+    .o1-inner-nav {
+      position: sticky; top: 38px; z-index: 100;
+      background: #fff;
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0 48px;
+      height: 64px;
+      border-bottom: 1px solid #dedad5;
+    }
+    .o1-inner-nav-center {
+      font-size: 20px; font-weight: 300; letter-spacing: 0.08em; text-align: center;
+    }
+    .o1-inner-nav-right { display: flex; gap: 24px; align-items: center; justify-content: flex-end; }
 
-/* Women — 4 col mega */
-.o2-mega-cols { display: flex; gap: 52px; flex: 1; }
-.o2-mega-col { display: flex; flex-direction: column; }
-.o2-mega-head { font-size: 10px; letter-spacing: 0.04em; font-style: italic; color: #888; margin-bottom: 20px; cursor: pointer; }
-.o2-mega-item { font-size: 10.5px; letter-spacing: 0.03em; color: #1a1a1a; margin-bottom: 18px; cursor: pointer; }
-.o2-mega-item:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .our-story-body {
+      display: flex;
+      align-items: flex-start;
+      padding: 60px 0 80px 48px;
+    }
+    .our-story-photo {
+      flex: 0 0 42%;
+      overflow: hidden;
+    }
+    .our-story-photo img {
+      width: 100%; height: auto; display: block;
+    }
+    .our-story-text {
+      flex: 1; padding: 220px 80px 60px;
+    }
+    .our-story-heading {
+      font-size: 13px; font-weight: 400; letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 28px;
+    }
+    .our-story-text p {
+      font-size: 13px; line-height: 1.8; color: #1a1a1a; margin-bottom: 24px; max-width: 360px;
+    }
 
-/* Collections — large list */
-.o2-coll-list { flex: 1; margin-right: 40px; }
-.o2-coll-item {
-  font-size: 20px; letter-spacing: 0.01em; font-weight: 400;
-  padding: 14px 0; border-bottom: 1px solid #d5d3cf; cursor: pointer;
-}
-.o2-coll-item:first-child { border-top: 1px solid #d5d3cf; }
-.o2-coll-item:hover { font-style: italic; }
+    /* ========================================================
+       OPTION 2 — Route 2: Expanded
+       ======================================================== */
+    #opt2 { padding-top: 38px; min-height: 100vh; background: #F8F7F6; }
 
-/* Kids */
-.o2-kids-wrap { display: flex; align-items: flex-start; flex: 1; }
-.o2-kids-see { font-size: 10px; letter-spacing: 0.04em; font-style: italic; color: #888; min-width: 70px; }
-.o2-kids-col { display: flex; flex-direction: column; gap: 18px; margin-left: 80px; }
-.o2-kids-item { font-size: 10.5px; letter-spacing: 0.03em; font-weight: 500; cursor: pointer; }
-.o2-kids-item:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .o2-nav {
+      position: sticky; top: 38px; z-index: 100;
+      background: #fff;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px;
+      height: 64px;
+      border-bottom: 1px solid #dedad5;
+    }
 
-.o2-dd-photo { position: relative; margin-left: auto; width: 240px; height: 300px; flex-shrink: 0; overflow: hidden; }
-.o2-dd-photo.tall { width: 340px; height: 300px; }
-.o2-dd-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
-.o2-dd-photo .o2-hover-img { opacity: 0; transition: opacity 0.4s ease; }
-.o2-dd-photo .o2-hover-img.active { opacity: 1; }
+    .o2-nav-left { display: flex; gap: 36px; align-items: center; }
 
-.o2-body { min-height: calc(100vh - 64px); background: #F8F7F6; }
+    .o2-nav-item {
+      font-size: 10.5px;
+      font-weight: 400;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      cursor: pointer;
+      color: #1a1a1a;
+      position: relative;
+      padding-bottom: 3px;
+      user-select: none;
+    }
 
-/* ══════════════════════════════════════════
-   OPTION 3 — NEW / WOMEN / KIDS / ACCESSORIES
-══════════════════════════════════════════ */
-#opt3 { background: #F8F7F6; position: relative; padding-top: 38px; }
+    .o2-nav-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0; right: 0;
+      height: 1.5px; background: #1a1a1a;
+    }
 
-.o3-nav-wrap { position: relative; z-index: 200; }
-.o3-nav {
-  background: #F8F7F6; height: 64px;
-  display: flex; align-items: center;
-  position: relative; padding: 0 32px;
-}
-.o3-nav-l { display: flex; gap: 28px; }
-.o3-ni {
-  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
-  cursor: pointer; padding-bottom: 3px;
-  border-bottom: 2px solid transparent;
-}
-.o3-ni.active { border-bottom-color: #1a1a1a; }
-.o3-logo {
-  position: absolute; left: 50%; transform: translateX(-50%);
-  font-size: 19px; letter-spacing: 0.18em; font-weight: 400;
-}
-.o3-nav-r { margin-left: auto; display: flex; align-items: center; gap: 24px; }
-.o3-nav-btn { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; }
-.o3-q { font-size: 15px; cursor: pointer; font-weight: 300; }
+    .o2-nav-right { display: flex; gap: 20px; align-items: center; }
+    .o2-nav-icon { display: flex; align-items: center; cursor: pointer; }
+    .o2-nav-text { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; color: #1a1a1a; }
 
-/* Dropdowns */
-.o3-dd-wrap {
-  position: absolute; top: 64px; left: 0; right: 0;
-  background: #F8F7F6; display: none;
-}
-.o3-dd-wrap.open { display: block; }
-.o3-dd { display: none; padding: 28px 32px 44px; }
-.o3-dd.active { display: flex; align-items: flex-start; }
-.o3-dd-new { min-height: 60px; }
+    /* Option 2 dropdowns */
+    .o2-dd {
+      position: fixed; top: 102px; left: 0; right: 0; z-index: 90;
+      background: #F8F7F6;
+      border-bottom: 1px solid #dedad5;
+      padding: 36px 48px 48px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+    }
+    .o2-dd.open { opacity: 1; pointer-events: auto; }
 
-.o3-see-all { font-size: 10px; letter-spacing: 0.04em; font-style: italic; color: #888; min-width: 115px; }
-.o3-sub-col { display: flex; flex-direction: column; gap: 18px; margin-left: 36px; }
-.o3-sub-item { font-size: 10.5px; letter-spacing: 0.03em; font-weight: 500; cursor: pointer; }
-.o3-sub-item:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .o2-dd-inner { display: flex; align-items: flex-start; gap: 48px; }
 
-.o3-body { min-height: calc(100vh - 64px); background: #F8F7F6; }
-</style>
+    .o2-dd-left { flex: 0 0 200px; }
+
+    .o2-dd-heading {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 20px;
+    }
+
+    .o2-dd-cat {
+      font-size: 13px;
+      color: #1a1a1a;
+      cursor: pointer;
+      display: block;
+      padding: 3.5px 0;
+    }
+    .o2-dd-cat:hover { text-decoration: underline; }
+
+    .o2-dd-viewall {
+      font-size: 12px;
+      color: #1a1a1a;
+      cursor: pointer;
+      display: block;
+      padding: 14px 0 3px;
+    }
+    .o2-dd-viewall:hover { text-decoration: underline; }
+
+    .o2-dd-photos { flex: 1; display: flex; gap: 10px; justify-content: flex-end; }
+
+    /* Photo base */
+    .o2-photo { position: relative; overflow: hidden; flex-shrink: 0; }
+    .o2-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .o2-photo-lbl {
+      position: absolute; bottom: 12px; left: 14px;
+      color: #fff; font-size: 10.5px; letter-spacing: 0.06em; pointer-events: none;
+    }
+
+    /* Featured + Collections: two equal */
+    .o2-photo.eq2 { width: 280px; height: 335px; }
+
+    /* Clothing + Accessories: three equal */
+    .o2-photo.eq3 { width: 218px; height: 290px; }
+
+    /* Inspiration: one wide */
+    .o2-photo.wide { width: 530px; height: 310px; }
+
+    /* Option 2 body */
+    .o2-body { padding: 80px 48px; }
+    .o2-brand { font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; }
+  </style>
 </head>
 <body>
+
+<!-- BACK BAR -->
 <div class="back-bar" id="back-bar" onclick="show('hub')">← Back to All</div>
 
-<!-- ══════════════════════════════════════════
+<!-- ============================================================
      HUB
-══════════════════════════════════════════ -->
+     ============================================================ -->
 <div id="hub" class="screen active">
-  <div class="hub-wrap">
-    <div class="hub-brand">ZIMMERMANN</div>
-    <div class="hub-headline">New website Navigation approaches.</div>
-
-    <div class="hub-cards">
-      <div class="hub-card" onclick="show('opt1')">
-        <div class="hub-card-title">Route 1: Anchored</div>
-        <p class="hub-card-desc">A clean, focused navigation built around four clear product categories.</p>
-        <div class="hub-card-arrow">→</div>
+  <div class="hub-wordmark">ZIMMERMANN</div>
+  <div class="hub-body">
+    <div class="hub-left">
+      <p>These prototypes have been set up to explore approaches to the redesign of the Zimmermann website navigation.</p>
+      <p>Both have been developed in response to the same brief; to create a navigation system that is clearer, faster, and more reflective of how the Zimmermann customer shops and engages with the brand today, but each arrives at a different answer about where to place the emphasis.</p>
+      <p>Please note that these prototypes are not representing final visual design. Their purpose is to test site structure, category labelling, and the grouping of items for clear user discovery and findability.</p>
+    </div>
+    <div class="hub-right">
+      <div class="hub-route">
+        <div class="hub-route-title">Route 1: Anchored</div>
+        <p class="hub-route-desc">A clean, intuitive structure built around four distinct modes: what's new, what to shop, what to explore, and the world of Zimmermann; each with a clear and separate purpose.</p>
+        <button class="hub-view-btn" onclick="show('opt1')">VIEW</button>
       </div>
-      <div class="hub-card" onclick="show('opt2')">
-        <div class="hub-card-title">Route 2: Expanded</div>
-        <p class="hub-card-desc">Full catalogue visibility in a single interaction, with key products pillars given equal prominence.</p>
-        <div class="hub-card-arrow">→</div>
-      </div>
-      <div class="hub-card" onclick="show('opt3')">
-        <div class="hub-card-title">Route 3: Editorial</div>
-        <p class="hub-card-desc">Shopping and brand space have distinct, purposeful spaces. Only route to have 'New' as a category page as opposed to a filter.</p>
-        <div class="hub-card-arrow">→</div>
+      <div class="hub-route">
+        <div class="hub-route-title">Route 2: Expanded</div>
+        <p class="hub-route-desc">Collections and commerce sit side by side but stay clearly distinct; Ready-to-Wear and Swim &amp; Resort are elevated as protected brand pillars, while Clothing and Accessories give the customer a direct, no-friction route to product.</p>
+        <button class="hub-view-btn" onclick="show('opt2')">VIEW</button>
       </div>
     </div>
-
-    <!-- Tab bar -->
-    <div class="hub-tabs-bar">
-      <button class="hub-tab active" onclick="hubTab('overview')">Overview/Rationale</button>
-      <button class="hub-tab" onclick="hubTab('r1')">Route 1: Anchored</button>
-      <button class="hub-tab" onclick="hubTab('r2')">Route 2: Expanded</button>
-      <button class="hub-tab" onclick="hubTab('r3')">Route 3: Editorial</button>
-    </div>
-  </div>
-
-  <!-- Tab content (full bleed white) -->
-  <div class="hub-tab-content">
-
-    <!-- OVERVIEW -->
-    <div id="hub-panel-overview" class="hub-tab-panel active">
-      <p class="hub-body">These prototypes have been set up to explore <strong>three distinct approaches</strong> to the redesign of the Zimmermann website navigation.</p>
-      <p class="hub-body">Each route has been developed in response to the same brief; to create <em>a navigation system that is clearer, faster, and more reflective of how the Zimmermann customer shops and engages with the brand today</em>, but each arrives at a different answer about where to place the emphasis.</p>
-      <p class="hub-body">Please note that these prototypes are <strong><em>intentionally unstyled</em></strong>, they are not a representation of the final visual design. Their purpose is solely to test site structure, category labelling, and the grouping of items for clear user discovery and findability.</p>
-      <p class="hub-body">We invite you to explore each route in full before drawing comparisons.</p>
-    </div>
-
-    <!-- ROUTE 1 -->
-    <div id="hub-panel-r1" class="hub-tab-panel">
-      <p class="hub-body">Route 1 is structured around the Zimmermann customer's dual motivation to <strong>browse product and to engage with brand stories,</strong> presenting both with equal clarity through a focused set of four primary navigation items.</p>
-      <p class="hub-body">The architecture prioritises simplicity and speed, removing duplication and editorial labels from the nav in favour of a clean, product-led hierarchy. Utility functions are positioned top right, where the customer expects them on desktop.</p>
-      <ul class="hub-ul">
-        <li>4 primary navigation items<br><em>with no dropdown sensitivity or glitching</em></li>
-        <li>Collections surfaces editorial and seasonal content at the top level, while the footer houses secondary links</li>
-        <li>New Arrivals removed from the nav in favour of filtering and sorting at the PLP level, reducing structural duplication. 'New' can also be an arbitrary lens; what's new for one customer may be less so for another.</li>
-      </ul>
-      <div class="hub-ux-label">User experience gains:</div>
-      <ul class="hub-ux-ul">
-        <li>No confusion about where things live or why they appear twice; the customer gets a single, consistent path to every category</li>
-        <li>Intuitive labelling with no insider language; <em>Ready to Wear, Accessories, Collections</em> and <em>Kids</em></li>
-        <li><em>Collections</em> sits within the navigation as an equal pillar, making editorial and seasonal content as easy to find as product</li>
-        <li>Utility functions (Search, Account, Wishlist, Basket) are where the customer expects them, reducing friction for returning visitors</li>
-        <li>Mobile-first logic applies: two taps maximum to reach any product, and a clean panel structure on smaller screens</li>
-      </ul>
-    </div>
-
-    <!-- ROUTE 2 -->
-    <div id="hub-panel-r2" class="hub-tab-panel">
-      <p class="hub-body">Route 2 is structured around maximum product visibility; the Women dropdown opens a wide, multi-column panel that exposes the full catalogue in a single interaction. <strong>Ready to Wear, Bags, Accessories,</strong> and <strong>Swim &amp; Resort</strong> are each given their own column, reflecting both the commercial weight of the accessories offer and the heritage significance of Swim &amp; Resort as the category the brand was founded on. The result is a navigation that does the merchandising work upfront, without requiring the customer to dig.</p>
-      <ul class="hub-ul">
-        <li>Women mega-menu presents all four product pillars as equal column headers, accessible in one hover</li>
-        <li>Bags and Accessories elevated to standalone columns, reflecting the brand's significant investment in these categories</li>
-        <li>Swim &amp; Resort given independent column status, honouring its place in the brand's history rather than sitting beneath Ready to Wear</li>
-      </ul>
-      <div class="hub-ux-label">User experience gains:</div>
-      <ul class="hub-ux-ul">
-        <li>Extensive product catalogue visible in one interaction; no second hover or click required to discover a category</li>
-        <li>Column-header structure <em>(All Ready To Wear / All Bags / All Accessories / All Swim &amp; Resort)</em> provides clear wayfinding and allows the customer to jump to a broad category or go straight to a sub-category</li>
-        <li><em>Collections</em> are reinforcing brand storytelling without cluttering the product navigation</li>
-        <li>Cleaner label hierarchy, <strong>Women, Kids, Collections,</strong> reflects how customers naturally think about the site, rather than mirroring internal product taxonomy</li>
-        <li>Mobile-first logic applies: two taps maximum to reach any product, and a clean panel structure on smaller screens</li>
-      </ul>
-    </div>
-
-    <!-- ROUTE 3 -->
-    <div id="hub-panel-r3" class="hub-tab-panel">
-      <p class="hub-body">Route 3 draws more of a distinction between shopping and storytelling, giving the latter a dedicated space. The primary navigation is kept lean and product-focused, while <strong>Z.Immerse</strong>, positioned in the utility nav as a live link, becomes the permanent home for all brand world content including boutiques, sustainability, behind-the-scenes footage, collections, and editorial stories.</p>
-      <p class="hub-body">This consolidation removes the fragmentation of brand content seen across the current site and gives the customer a clear, consistent destination for exploring the brand beyond product.</p>
-      <ul class="hub-ul">
-        <li>NEW functions as a direct link to the New Arrivals PLP</li>
-        <li>Accessories sits as a standalone primary nav item, ensuring high-value non-clothing categories are immediately visible</li>
-        <li>Z.Immerse houses editorial and cultural content, keeping the shopping navigation focused and uncluttered. Editorial content will also live through the whole website (as we want storytelling to weave along the product pages).</li>
-      </ul>
-      <div class="hub-ux-label">User experience gains:</div>
-      <ul class="hub-ux-ul">
-        <li>Fastest route to New Arrivals of all three routes</li>
-        <li>Cleaner primary nav with no editorial or storytelling content mixing with product categories</li>
-        <li><em>Z.Immerse</em> gives brand world content a permanent, premium home rather than distributing it across multiple locations</li>
-        <li>Accessories at top level ensures high-value non-clothing categories are immediately visible</li>
-        <li>Single-column Women dropdown reduces decision fatigue on hover, with Swim &amp; Resort prominent at the top of the list</li>
-        <li>Collections live within a richer editorial context in Z.Immerse, rather than as a flat nav</li>
-      </ul>
-    </div>
-
   </div>
 </div>
 
-
-<!-- ══════════════════════════════════════════
-     OPTION 1 — ANCHORED DROPDOWN
-══════════════════════════════════════════ -->
+<!-- ============================================================
+     OPTION 1 — Route 1: Anchored
+     ============================================================ -->
 <div id="opt1" class="screen">
 
-  <div class="o1-nav-wrap">
-    <nav class="o1-nav">
-      <div class="o1-nav-l">
-        <span class="o1-ni" id="o1-ni-rtw"
-          onmouseenter="o1Open('rtw',this)" onmouseleave="o1Sched()">Ready to wear</span>
-        <span class="o1-ni" id="o1-ni-acc"
-          onmouseenter="o1Open('acc',this)" onmouseleave="o1Sched()">Accessories</span>
-        <span class="o1-ni" id="o1-ni-coll"
-          onmouseenter="o1Open('coll',this)" onmouseleave="o1Sched()">Collections</span>
-        <span class="o1-ni" id="o1-ni-kids"
-          onmouseenter="o1Open('kids',this)" onmouseleave="o1Sched()">Kids</span>
-      </div>
-      <span class="o1-logo">ZIMMERMANN</span>
-      <div class="o1-nav-r">
-        <!-- Search text SVG -->
-        <button class="o1-search-btn" onclick="openSearch()">
-          <svg width="161" height="20" viewBox="0 0 161 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.40625 5.30078L5.29883 5.95703C5.0918 5.59766 4.89453 5.36328 4.70703 5.25391C4.51172 5.12891 4.25977 5.06641 3.95117 5.06641C3.57227 5.06641 3.25781 5.17383 3.00781 5.38867C2.75781 5.59961 2.63281 5.86523 2.63281 6.18555C2.63281 6.62695 2.96094 6.98242 3.61719 7.25195L4.51953 7.62109C5.25391 7.91797 5.79102 8.28125 6.13086 8.71094C6.4707 9.13672 6.64062 9.66016 6.64062 10.2812C6.64062 11.1133 6.36328 11.8008 5.80859 12.3438C5.25 12.8906 4.55664 13.1641 3.72852 13.1641C2.94336 13.1641 2.29492 12.9316 1.7832 12.4668C1.2793 12.002 0.964844 11.3477 0.839844 10.5039L2.22266 10.1992C2.28516 10.7305 2.39453 11.0977 2.55078 11.3008C2.83203 11.6914 3.24219 11.8867 3.78125 11.8867C4.20703 11.8867 4.56055 11.7441 4.8418 11.459C5.12305 11.1738 5.26367 10.8125 5.26367 10.375C5.26367 10.1992 5.23828 10.0391 5.1875 9.89453C5.14062 9.74609 5.06445 9.61133 4.95898 9.49023C4.85742 9.36523 4.72461 9.25 4.56055 9.14453C4.39648 9.03516 4.20117 8.93164 3.97461 8.83398L3.10156 8.4707C1.86328 7.94727 1.24414 7.18164 1.24414 6.17383C1.24414 5.49414 1.50391 4.92578 2.02344 4.46875C2.54297 4.00781 3.18945 3.77734 3.96289 3.77734C5.00586 3.77734 5.82031 4.28516 6.40625 5.30078ZM13.2324 10.457H9.14258C9.17773 10.9258 9.33008 11.2988 9.59961 11.5762C9.86914 11.8496 10.2148 11.9863 10.6367 11.9863C10.9648 11.9863 11.2363 11.9082 11.4512 11.752C11.6621 11.5957 11.9023 11.3066 12.1719 10.8848L13.2852 11.5059C13.1133 11.7988 12.9316 12.0508 12.7402 12.2617C12.5488 12.4688 12.3438 12.6406 12.125 12.7773C11.9062 12.9102 11.6699 13.0078 11.416 13.0703C11.1621 13.1328 10.8867 13.1641 10.5898 13.1641C9.73828 13.1641 9.05469 12.8906 8.53906 12.3438C8.02344 11.793 7.76562 11.0625 7.76562 10.1523C7.76562 9.25 8.01562 8.51953 8.51562 7.96094C9.01953 7.41016 9.6875 7.13477 10.5195 7.13477C11.3594 7.13477 12.0234 7.40234 12.5117 7.9375C12.9961 8.46875 13.2383 9.20508 13.2383 10.1465L13.2324 10.457ZM11.8789 9.37891C11.6953 8.67578 11.252 8.32422 10.5488 8.32422C10.3887 8.32422 10.2383 8.34961 10.0977 8.40039C9.95703 8.44727 9.82812 8.51758 9.71094 8.61133C9.59766 8.70117 9.5 8.81055 9.41797 8.93945C9.33594 9.06836 9.27344 9.21484 9.23047 9.37891H11.8789ZM18.8867 7.29297H20.2109V13H18.8867V12.4023C18.3438 12.9102 17.7598 13.1641 17.1348 13.1641C16.3457 13.1641 15.6934 12.8789 15.1777 12.3086C14.666 11.7266 14.4102 11 14.4102 10.1289C14.4102 9.27344 14.666 8.56055 15.1777 7.99023C15.6895 7.41992 16.3301 7.13477 17.0996 7.13477C17.7637 7.13477 18.3594 7.4082 18.8867 7.95508V7.29297ZM15.7578 10.1289C15.7578 10.6758 15.9043 11.1211 16.1973 11.4648C16.498 11.8125 16.877 11.9863 17.334 11.9863C17.8223 11.9863 18.2168 11.8184 18.5176 11.4824C18.8184 11.1348 18.9688 10.6934 18.9688 10.1582C18.9688 9.62305 18.8184 9.18164 18.5176 8.83398C18.2168 8.49414 17.8262 8.32422 17.3457 8.32422C16.8926 8.32422 16.5137 8.49609 16.209 8.83984C15.9082 9.1875 15.7578 9.61719 15.7578 10.1289ZM21.875 7.29297H23.1934V7.80273C23.4355 7.54883 23.6504 7.375 23.8379 7.28125C24.0293 7.18359 24.2559 7.13477 24.5176 7.13477C24.8652 7.13477 25.2285 7.24805 25.6074 7.47461L25.0039 8.68164C24.7539 8.50195 24.5098 8.41211 24.2715 8.41211C23.5527 8.41211 23.1934 8.95508 23.1934 10.041V13H21.875V7.29297ZM30.6992 7.53906V9.29102C30.3984 8.92383 30.1289 8.67188 29.8906 8.53516C29.6562 8.39453 29.3809 8.32422 29.0645 8.32422C28.5684 8.32422 28.1562 8.49805 27.8281 8.8457C27.5 9.19336 27.3359 9.62891 27.3359 10.1523C27.3359 10.6875 27.4941 11.127 27.8105 11.4707C28.1309 11.8145 28.5391 11.9863 29.0352 11.9863C29.3516 11.9863 29.6309 11.918 29.873 11.7812C30.1074 11.6484 30.3828 11.3906 30.6992 11.0078V12.748C30.1641 13.0254 29.6289 13.1641 29.0938 13.1641C28.2109 13.1641 27.4727 12.8789 26.8789 12.3086C26.2852 11.7344 25.9883 11.0215 25.9883 10.1699C25.9883 9.31836 26.2891 8.59961 26.8906 8.01367C27.4922 7.42773 28.2305 7.13477 29.1055 7.13477C29.668 7.13477 30.1992 7.26953 30.6992 7.53906ZM32.293 3.10352H33.6113V7.76758C34.0801 7.3457 34.5977 7.13477 35.1641 7.13477C35.8086 7.13477 36.3242 7.34375 36.7109 7.76172C37.0391 8.125 37.2031 8.70508 37.2031 9.50195V13H35.8848V9.625C35.8848 9.16797 35.8027 8.83789 35.6387 8.63477C35.4785 8.42773 35.2188 8.32422 34.8594 8.32422C34.3984 8.32422 34.0742 8.4668 33.8867 8.75195C33.7031 9.04102 33.6113 9.53711 33.6113 10.2402V13H32.293V3.10352Z" fill="black"/><line y1="19.2539" x2="160.41" y2="19.2539" stroke="black"/></svg>
-        </button>
-        <!-- Monogram icon -->
-        <button class="o1-icon-btn" onclick="openAccount()">
-          <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26.6156 23.248C30.2053 17.7977 28.697 10.4695 23.2467 6.8798C17.7965 3.29014 10.4682 4.79843 6.87856 10.2487C3.2889 15.6989 4.79719 23.0272 10.2474 26.6168C15.6977 30.2065 23.0259 28.6982 26.6156 23.248Z" fill="white" stroke="black" stroke-width="0.7"/><path d="M24.5417 21.8828C27.3767 17.5783 26.1855 11.7905 21.881 8.95546C17.5765 6.1204 11.7887 7.31163 8.95365 11.6161C6.11858 15.9207 7.30981 21.7084 11.6143 24.5435C15.9188 27.3786 21.7066 26.1873 24.5417 21.8828Z" fill="white" stroke="black" stroke-width="0.7"/><path d="M22.3918 20.4654C24.4438 17.3499 23.5816 13.161 20.4662 11.1091C17.3507 9.05717 13.1617 9.91933 11.1098 13.0348C9.05793 16.1502 9.9201 20.3392 13.0355 22.3911C16.151 24.443 20.3399 23.5808 22.3918 20.4654Z" fill="white" stroke="black" stroke-width="0.7"/><path d="M7.78516 24.5572L17.3176 10.084" stroke="black" stroke-width="0.7"/><path d="M10.832 23.9311L19.543 10.7051" stroke="black" stroke-width="0.7"/><path d="M14.1758 22.8507L22.9226 9.57031" stroke="black" stroke-width="0.7"/><path d="M16.3008 23.5752L25.6869 9.32422" stroke="black" stroke-width="0.7"/><path d="M15.3136 13.7641L8.39062 24.2754L9.6394 25.0979L16.5624 14.5866L15.3136 13.7641Z" fill="white"/><path d="M21.115 8.96253L14.0898 19.6289L15.345 20.4556L22.3701 9.78919L21.115 8.96253Z" fill="white"/><path d="M23.4798 9.37739L16.4141 20.1055L17.6336 20.9087L24.6994 10.1806L23.4798 9.37739Z" fill="white"/></svg>
-        </button>
-        <!-- Save/Bookmark icon -->
-        <button class="o1-icon-btn" onclick="openAccount()">
-          <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.055 0.547037L0.506987 0.501953L0.5 14.6163L5.77748 11.1819L11.1055 14.5604L11.055 0.547037Z" stroke="black"/></svg>
-        </button>
-        <!-- Bag icon -->
-        <button class="o1-icon-btn" onclick="openBasket()">
-          <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.12109 14.719L0.621094 5.7502C5.54147 2.85741 12.8479 4.21537 16.1743 5.32939L12.3907 14.7184L4.12109 14.719Z" stroke="black"/><path d="M11.916 4.01855C11.916 2.07531 10.3407 0.5 8.39746 0.5C6.45422 0.5 4.87891 2.07531 4.87891 4.01855" stroke="black"/></svg>
-        </button>
-      </div>
-    </nav>
+  <nav class="o1-nav">
+    <div class="o1-nav-left">
+      <span class="o1-nav-item" id="o1-ni-new"
+            onmouseenter="o1Open('new')" onmouseleave="o1Sched()">New</span>
+      <span class="o1-nav-item" id="o1-ni-shop"
+            onmouseenter="o1Open('shop')" onmouseleave="o1Sched()">Shop</span>
+      <span class="o1-nav-item" id="o1-ni-edits"
+            onmouseenter="o1Open('edits')" onmouseleave="o1Sched()">Edits</span>
+      <span class="o1-nav-item" id="o1-ni-zimmerse"
+            onmouseenter="o1Open('zimmerse')" onmouseleave="o1Sched()">Z.immerse</span>
+    </div>
+    <div class="o1-nav-right">
+      <span class="o1-nav-icon">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.4222 10.4899L12.5602 12.5582M11.8707 7.04279C11.8707 9.70811 9.71006 11.8688 7.04474 11.8688C4.37942 11.8688 2.21875 9.70811 2.21875 7.04279C2.21875 4.37747 4.37942 2.2168 7.04474 2.2168C9.71006 2.2168 11.8707 4.37747 11.8707 7.04279Z" stroke="black" stroke-width="1.23112" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="o1-nav-text">Login</span>
+      <span class="o1-nav-text">Bag (0)</span>
+    </div>
+  </nav>
 
-    <!-- Dropdowns -->
-    <div class="o1-dd-wrap" id="o1-dd-wrap"
-      onmouseenter="o1Cancel()" onmouseleave="o1Sched()">
-
-      <!-- READY TO WEAR -->
-      <div class="o1-dd" id="o1-dd-rtw">
-        <span class="o1-see-all" onclick="o1Nav('o1-rtw-all')">See all</span>
-        <div class="o1-sub-col">
-          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-dresses')">Dresses</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Swim &amp; Resort</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Tops</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Bottoms</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Skirts</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Tailoring</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Denim</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Knitwear</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Jackets &amp; Coats</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-rtw-all')">Jumpsuits &amp; Playsuits</span>
+  <!-- NEW -->
+  <div class="o1-dd" id="o1-dd-new"
+       onmouseenter="o1Cancel()" onmouseleave="o1Sched()">
+    <div class="o1-dd-inner">
+      <div class="o1-dd-left">
+        <a class="o1-dd-cat">Fall 2026 Trailblazer</a>
+        <a class="o1-dd-cat">New In</a>
+        <a class="o1-dd-cat">Dresses</a>
+        <a class="o1-dd-cat">Bags</a>
+        <a class="o1-dd-cat">Shoes</a>
+      </div>
+      <div class="o1-dd-photos">
+        <div class="o1-photo sm">
+          <img src="Option 1/Mask group.png" alt="Bags">
+          <span class="o1-photo-lbl">Bags &#9658;</span>
         </div>
-        <div class="o1-dd-photo"><img src="readytowear.png" alt="Ready to Wear"></div>
-      </div>
-
-      <!-- ACCESSORIES -->
-      <div class="o1-dd" id="o1-dd-acc">
-        <span class="o1-see-all" onclick="o1Nav('o1-acc-all')">See all</span>
-        <div class="o1-sub-col">
-          <span class="o1-sub-item" onclick="o1Nav('o1-acc-bags')">Bags</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-acc-shoes')">Shoes</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-acc-all')">Jewellery</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-acc-all')">Belts</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-acc-all')">Sunglasses</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-acc-all')">Scarves</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-acc-all')">Hats</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-acc-all')">Towels &amp; Pareos</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-acc-all')">Hair Accessories</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-acc-all')">Bag Charms</span>
-        </div>
-        <div class="o1-dd-photo"><img src="accessories.png" alt="Accessories"></div>
-      </div>
-
-      <!-- COLLECTIONS -->
-      <div class="o1-dd" id="o1-dd-coll">
-        <span class="o1-see-all" onclick="o1Nav('o1-col-all')">See all</span>
-        <div class="o1-sub-col">
-          <span class="o1-sub-item" onclick="o1Nav('o1-col-trailblazer')">Fall 2026, Trailblazer</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')"
-            onmouseenter="o1SwapImg('kindred')">Spring 2026, Kindred Spirit</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')"
-            onmouseenter="o1SwapImg('summerswim')">Summer Swim 2026</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')">Resort Swim 2026</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')">Cruise 2026</span>
-        </div>
-        <div class="o1-sub-col2">
-          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')">Runway</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')">The New Denim</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')">Volume in Motion</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')">Sculpted Silhouettes</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')">Modern Utility</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-col-all')">Archive</span>
-        </div>
-        <div class="o1-dd-photo wide" id="o1-coll-photo">
-          <img src="collections.png" alt="Collections">
-          <img src="Option%202%20-%20Mega%20Menu/2nd_item_kinderedspirit.jpg" alt="Kindred Spirit" class="o1-hover-img" data-hover="kindred">
-          <img src="Option%202%20-%20Mega%20Menu/option3-summerswim2026.jpg" alt="Summer Swim" class="o1-hover-img" data-hover="summerswim">
-        </div>
-      </div>
-
-      <!-- KIDS -->
-      <div class="o1-dd" id="o1-dd-kids">
-        <span class="o1-see-all" onclick="o1Nav('o1-kids-all')">See all</span>
-        <div class="o1-sub-col">
-          <span class="o1-sub-item" onclick="o1Nav('o1-kids-all')">Dresses</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-kids-all')">Swim &amp; Resort</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-kids-all')">Tops</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-kids-all')">Bottoms</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-kids-all')">Skirts</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-kids-all')">Denim</span>
-          <span class="o1-sub-item" onclick="o1Nav('o1-kids-all')">Hats</span>
-        </div>
-        <div class="o1-dd-photo wide"><img src="kids.png" alt="Kids"></div>
-      </div>
-
-    </div><!-- /o1-dd-wrap -->
-  </div><!-- /o1-nav-wrap -->
-
-  <!-- ── HOME ── -->
-  <div id="o1-home" class="o1-sub active">
-    <div class="o1-body"></div>
-  </div>
-
-  <!-- ── RTW ALL ── -->
-  <div id="o1-rtw-all" class="o1-sub">
-    <div class="o1-filter-bar">
-      <span class="o1-ftab active" onclick="o1Nav('o1-rtw-all')">All RTW</span>
-      <span class="o1-ftab" onclick="o1Nav('o1-rtw-dresses')">Dresses</span>
-      <span class="o1-ftab">Swim &amp; Resort</span>
-      <span class="o1-ftab">Tops</span>
-      <span class="o1-ftab">Bottoms</span>
-      <span class="o1-ftab">Skirts</span>
-      <span class="o1-ftab">Tailoring</span>
-      <span class="o1-ftab">Denim</span>
-      <span class="o1-ftab">Knitwear</span>
-      <span class="o1-ftab">Jackets &amp; Coats</span>
-      <span class="o1-ftab">Jumpsuits &amp; Playsuits</span>
-      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
-    </div>
-    <div class="o1-grid-3">
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-    </div>
-  </div>
-
-  <!-- ── ACCESSORIES ALL ── -->
-  <div id="o1-acc-all" class="o1-sub">
-    <div class="o1-filter-bar">
-      <span class="o1-ftab active">All Accessories</span>
-      <span class="o1-ftab" onclick="o1Nav('o1-acc-bags')">Bags</span>
-      <span class="o1-ftab" onclick="o1Nav('o1-acc-shoes')">Shoes</span>
-      <span class="o1-ftab">Jewellery</span>
-      <span class="o1-ftab">Belts</span>
-      <span class="o1-ftab">Sunglasses</span>
-      <span class="o1-ftab">Scarves</span>
-      <span class="o1-ftab">Hats</span>
-      <span class="o1-ftab">Towels &amp; Pareos</span>
-      <span class="o1-ftab">Hair Accessories</span>
-      <span class="o1-ftab">Bag Charms</span>
-      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
-    </div>
-    <div class="o1-grid-3">
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-    </div>
-  </div>
-
-  <!-- ── COLLECTIONS ALL ── -->
-  <div id="o1-col-all" class="o1-sub">
-    <div class="o1-col-all-wrap">
-      <div class="o1-col-sidebar">
-        <div class="o1-col-list-item italic">All Collections</div>
-        <div class="o1-col-list-item" onclick="o1Nav('o1-col-trailblazer')">Fall 2026, Trailblazer</div>
-        <div class="o1-col-list-item">Sprint 2026, Kindred Spirit</div>
-        <div class="o1-col-list-item">Summer Swim 2026</div>
-        <div class="o1-col-list-item">Resort Swim 2026</div>
-        <div class="o1-col-list-item">Cruise 2026</div>
-        <hr class="o1-col-divider">
-        <div class="o1-col-list-item">Explore Runway</div>
-        <div class="o1-col-list-item">The New Denim</div>
-        <div class="o1-col-list-item">Volume in Motion</div>
-        <div class="o1-col-list-item">Sculpted Silhouettes</div>
-        <div class="o1-col-list-item">Modern Utility</div>
-        <div class="o1-col-list-item">Archive</div>
-      </div>
-      <div class="o1-col-main">
-        <div class="o1-col-img" style="aspect-ratio:3/4"></div>
-        <div class="o1-col-img" style="aspect-ratio:3/4"></div>
-        <div class="o1-col-img" style="aspect-ratio:3/4"></div>
-        <div class="o1-col-img" style="aspect-ratio:3/4"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── KIDS ALL ── -->
-  <div id="o1-kids-all" class="o1-sub">
-    <div class="o1-filter-bar">
-      <span class="o1-ftab active">All Kids</span>
-      <span class="o1-ftab">Dresses</span>
-      <span class="o1-ftab">Swimwear</span>
-      <span class="o1-ftab">Tops</span>
-      <span class="o1-ftab">Bottoms</span>
-      <span class="o1-ftab">Skirts</span>
-      <span class="o1-ftab">Denim</span>
-      <span class="o1-ftab">Hats</span>
-      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
-    </div>
-    <div class="o1-grid-3">
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-    </div>
-  </div>
-
-  <!-- ── RTW DRESSES ── -->
-  <div id="o1-rtw-dresses" class="o1-sub">
-    <div class="o1-breadcrumb">
-      <span onclick="o1Nav('o1-rtw-all')">All RTW</span>
-      <span class="o1-breadcrumb-sep">/</span>
-      Dresses
-    </div>
-    <div class="o1-filter-bar">
-      <span class="o1-ftab active">All Dresses</span>
-      <span class="o1-ftab" onclick="o1Nav('o1-rtw-mini')">Mini Dresses</span>
-      <span class="o1-ftab">Midi Dresses</span>
-      <span class="o1-ftab">Maxi Dresses</span>
-      <span class="o1-ftab">Wrap Dresses</span>
-      <span class="o1-ftab">Evening Dresses</span>
-      <span class="o1-ftab">Day Dresses</span>
-      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
-    </div>
-    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:3px;padding:3px">
-      <div class="o1-tile" style="grid-row:span 2"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div>
-    </div>
-  </div>
-
-  <!-- ── RTW MINI DRESSES ── -->
-  <div id="o1-rtw-mini" class="o1-sub">
-    <div class="o1-breadcrumb">
-      <span onclick="o1Nav('o1-rtw-all')">All RTW</span>
-      <span class="o1-breadcrumb-sep">/</span>
-      <span onclick="o1Nav('o1-rtw-dresses')">Dresses</span>
-    </div>
-    <div class="o1-filter-bar">
-      <span class="o1-ftab" onclick="o1Nav('o1-rtw-dresses')">All Dresses</span>
-      <span class="o1-ftab active">Mini Dresses</span>
-      <span class="o1-ftab">Midi Dresses</span>
-      <span class="o1-ftab">Maxi Dresses</span>
-      <span class="o1-ftab">Wrap Dresses</span>
-      <span class="o1-ftab">Evening Dresses</span>
-      <span class="o1-ftab">Day Dresses</span>
-      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
-    </div>
-    <div class="o1-grid-4">
-      <div class="o1-tile" onclick="o1Nav('o1-pdp')"></div>
-      <div class="o1-tile" onclick="o1Nav('o1-pdp')"></div>
-      <div class="o1-tile" onclick="o1Nav('o1-pdp')"></div>
-      <div class="o1-tile" onclick="o1Nav('o1-pdp')"></div>
-      <div class="o1-tile" onclick="o1Nav('o1-pdp')"></div>
-      <div class="o1-tile" onclick="o1Nav('o1-pdp')"></div>
-      <div class="o1-tile" onclick="o1Nav('o1-pdp')"></div>
-      <div class="o1-tile" onclick="o1Nav('o1-pdp')"></div>
-    </div>
-  </div>
-
-  <!-- ── ACCESSORIES BAGS ── -->
-  <div id="o1-acc-bags" class="o1-sub">
-    <div class="o1-breadcrumb">
-      <span onclick="o1Nav('o1-acc-all')">Accessories</span>
-      <span class="o1-breadcrumb-sep">/</span>
-      Bags
-    </div>
-    <div class="o1-filter-bar">
-      <span class="o1-ftab active">All Bags</span>
-      <span class="o1-ftab">Baskets &amp; Summer Bags</span>
-      <span class="o1-ftab">Shoulder Bags</span>
-      <span class="o1-ftab">Crossbody &amp; Top Handle Bags</span>
-      <span class="o1-ftab">Clutches</span>
-      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
-    </div>
-    <div class="o1-grid-4">
-      <div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div>
-    </div>
-  </div>
-
-  <!-- ── ACCESSORIES SHOES ── -->
-  <div id="o1-acc-shoes" class="o1-sub">
-    <div class="o1-breadcrumb">
-      <span onclick="o1Nav('o1-acc-all')">Accessories</span>
-      <span class="o1-breadcrumb-sep">/</span>
-      Shoes
-    </div>
-    <div class="o1-filter-bar">
-      <span class="o1-ftab active">All Shoes</span>
-      <span class="o1-ftab">Sandals &amp; Espadrilles</span>
-      <span class="o1-ftab">Pumps &amp; Mules</span>
-      <span class="o1-ftab">Flats &amp; Sneakers</span>
-      <span class="o1-ftab">Boots</span>
-      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
-    </div>
-    <div class="o1-grid-4">
-      <div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div>
-    </div>
-  </div>
-
-  <!-- ── COLLECTIONS TRAILBLAZER ── -->
-  <div id="o1-col-trailblazer" class="o1-sub" style="background:#fff">
-    <div class="o1-trailblazer-hero">
-      <div class="o1-trailblazer-season">Fall 2026</div>
-      <div class="o1-trailblazer-title">TRAILBLAZER</div>
-    </div>
-    <div class="o1-trailblazer-img"></div>
-    <div style="background:#F8F7F6;height:300px;margin:3px 3px 0"></div>
-  </div>
-
-  <!-- ── PDP ── -->
-  <div id="o1-pdp" class="o1-sub">
-    <div class="o1-pdp-wrap">
-      <div class="o1-pdp-sidebar">
-        <span class="o1-pdp-close" onclick="o1Nav('o1-rtw-mini')">CLOSE</span>
-        <div class="o1-pdp-name">Alchemy Ruffle Mini Dress</div>
-        <div class="o1-pdp-price">$2,200</div>
-        <div class="o1-pdp-desc">The Alchemy Ruffle Mini Dress in Blue Poppy from our Spring 2026 Collection, Kindred Spirit. A silk mini dress featuring a straight neckline, flared silhouette and tiered frills throughout.</div>
-      </div>
-      <div class="o1-pdp-main">
-        <div class="o1-pdp-hero"></div>
-        <div class="o1-pdp-thumbs-col">
-          <div class="o1-pdp-thumb"></div>
-          <div class="o1-pdp-thumb"></div>
-          <div class="o1-pdp-thumb"></div>
+        <div class="o1-photo lg">
+          <img src="Option 1/collections.png" alt="Fall 2026 Trailblazer">
+          <span class="o1-photo-lbl">Fall 2026 Trailblazer &#9658;</span>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- SHOP -->
+  <div class="o1-dd" id="o1-dd-shop"
+       onmouseenter="o1Cancel()" onmouseleave="o1Sched()">
+    <div class="o1-dd-inner">
+      <div class="o1-dd-left">
+        <a class="o1-dd-cat">Ready to Wear</a>
+        <a class="o1-dd-cat">Swim &amp; Resort</a>
+        <div class="o1-dd-gap"></div>
+        <a class="o1-dd-cat">Dresses</a>
+        <a class="o1-dd-cat">Accessories</a>
+        <a class="o1-dd-cat">Tops</a>
+        <a class="o1-dd-cat">Bottoms</a>
+        <a class="o1-dd-cat">Skirts</a>
+        <a class="o1-dd-cat">Tailoring</a>
+        <a class="o1-dd-cat">Denim</a>
+        <a class="o1-dd-cat">Knitwear</a>
+        <a class="o1-dd-cat">Jackets &amp; Coats</a>
+        <a class="o1-dd-cat">Jumpsuits &amp; Playsuits</a>
+        <a class="o1-dd-cat">Swimwear</a>
+        <a class="o1-dd-cat">Kids</a>
+      </div>
+      <div class="o1-dd-photos">
+        <div class="o1-photo eq3">
+          <img src="Option 1/Group 1312321013.png" alt="Jewellery">
+          <span class="o1-photo-lbl">Jewellery &#9658;</span>
+        </div>
+        <div class="o1-photo eq3">
+          <img src="Option 1/Mask group.png" alt="Bags">
+          <span class="o1-photo-lbl">Bags &#9658;</span>
+        </div>
+        <div class="o1-photo eq3">
+          <img src="Option 1/Mask group-1.png" alt="Swim and Resort">
+          <span class="o1-photo-lbl">Swim &amp; Resort &#9658;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDITS -->
+  <div class="o1-dd" id="o1-dd-edits"
+       onmouseenter="o1Cancel()" onmouseleave="o1Sched()">
+    <div class="o1-dd-inner">
+      <div class="o1-dd-left">
+        <a class="o1-dd-cat">Fall 2026 Trailblazer</a>
+        <a class="o1-dd-cat">Spring RTW 2026</a>
+        <div class="o1-dd-gap"></div>
+        <a class="o1-dd-cat">Volume In Motion</a>
+        <a class="o1-dd-cat">Cruise RTW 2026</a>
+        <a class="o1-dd-cat">Swim 2026</a>
+        <a class="o1-dd-cat">Liquid Silhouettes</a>
+      </div>
+      <div class="o1-dd-photos">
+        <div class="o1-photo half">
+          <img src="Option 2/images/collections-2.png" alt="Spring RTW 2026">
+          <span class="o1-photo-lbl">Spring RTW 2026 &#9658;</span>
+        </div>
+        <div class="o1-photo half">
+          <img src="Option 1/collections.png" alt="Fall 2026 Trailblazer">
+          <span class="o1-photo-lbl">Fall 2026 Trailblazer &#9658;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Z.IMMERSE -->
+  <div class="o1-dd" id="o1-dd-zimmerse"
+       onmouseenter="o1Cancel()" onmouseleave="o1Sched()">
+    <div class="o1-dd-inner">
+      <div class="o1-dd-left">
+        <a class="o1-dd-cat" onclick="show('o1-our-story')" style="cursor:pointer;">Our story</a>
+        <a class="o1-dd-cat">Moments</a>
+        <div class="o1-dd-gap"></div>
+        <a class="o1-dd-cat">Our boutiques</a>
+        <a class="o1-dd-cat">Z.Gallery</a>
+        <a class="o1-dd-cat">Sustainability</a>
+        <a class="o1-dd-cat">Collaboration</a>
+        <a class="o1-dd-cat">Zimm Archive</a>
+      </div>
+      <div class="o1-dd-photos">
+        <div class="o1-photo sm">
+          <img src="Option 1/zimmermann.com/Outstory-image.png" alt="Our story">
+          <span class="o1-photo-lbl">Our story &#9658;</span>
+        </div>
+        <div class="o1-photo lg">
+          <img src="Option 1/collections-1.png" alt="Our boutiques">
+          <span class="o1-photo-lbl">Our boutiques &#9658;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="o1-body"></div>
 </div>
 
-
-<!-- ══════════════════════════════════════════
-     OPTION 2 — MEGA MENU
-══════════════════════════════════════════ -->
+<!-- ============================================================
+     OPTION 2 — Route 2: Expanded
+     ============================================================ -->
 <div id="opt2" class="screen">
 
-  <div class="o2-nav-wrap">
-    <nav class="o2-nav">
-      <div class="o2-nav-l">
-        <span class="o2-ni" id="o2-ni-women"
-          onmouseenter="o2Open('women',this)" onmouseleave="o2Sched()">Women</span>
-        <span class="o2-ni" id="o2-ni-kids"
-          onmouseenter="o2Open('kids',this)" onmouseleave="o2Sched()">Kids</span>
-        <span class="o2-ni" id="o2-ni-coll"
-          onmouseenter="o2Open('coll',this)" onmouseleave="o2Sched()">Collections</span>
-      </div>
-      <span class="o2-logo">ZIMMERMANN</span>
-      <div class="o2-nav-r">
-        <button class="o2-nav-btn" onclick="openSearch()">Search</button>
-        <button class="o2-nav-btn" onclick="openAccount()">Login</button>
-        <button class="o2-nav-btn" onclick="openBasket()">Shopping Bag (0)</button>
-      </div>
-    </nav>
+  <nav class="o2-nav">
+    <div class="o2-nav-left">
+      <span class="o2-nav-item" id="o2-ni-featured"
+            onmouseenter="o2Open('featured')" onmouseleave="o2Sched()">Featured</span>
+      <span class="o2-nav-item" id="o2-ni-collections"
+            onmouseenter="o2Open('collections')" onmouseleave="o2Sched()">Collections</span>
+      <span class="o2-nav-item" id="o2-ni-clothing"
+            onmouseenter="o2Open('clothing')" onmouseleave="o2Sched()">Clothing</span>
+      <span class="o2-nav-item" id="o2-ni-accessories"
+            onmouseenter="o2Open('accessories')" onmouseleave="o2Sched()">Accessories</span>
+      <span class="o2-nav-item" id="o2-ni-inspiration"
+            onmouseenter="o2Open('inspiration')" onmouseleave="o2Sched()">Inspiration</span>
+    </div>
+    <div class="o2-nav-right">
+      <span class="o2-nav-icon">
+        <svg width="14" height="14" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.4222 10.4899L12.5602 12.5582M11.8707 7.04279C11.8707 9.70811 9.71006 11.8688 7.04474 11.8688C4.37942 11.8688 2.21875 9.70811 2.21875 7.04279C2.21875 4.37747 4.37942 2.2168 7.04474 2.2168C9.71006 2.2168 11.8707 4.37747 11.8707 7.04279Z" stroke="black" stroke-width="1.23112" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="o2-nav-text">Login</span>
+      <span class="o2-nav-text">Bag (0)</span>
+    </div>
+  </nav>
 
-    <!-- Dropdowns -->
-    <div class="o2-dd-wrap" id="o2-dd-wrap"
-      onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
-
-      <!-- WOMEN -->
-      <div class="o2-dd" id="o2-dd-women">
-        <div class="o2-mega-cols">
-          <div class="o2-mega-col">
-            <span class="o2-mega-head" onclick="o2Nav('o2-women-all')">All Ready To Wear</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-rtw-dresses')">Dresses</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Tops</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Shorts &amp; Pants</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Tailoring</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Denim</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Skirts</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Knitwear</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Jackets &amp; Coats</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Jumpsuits &amp; Playsuits</span>
-          </div>
-          <div class="o2-mega-col">
-            <span class="o2-mega-head" onclick="o2Nav('o2-women-all')">All Bags</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Basket</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Summer Bags</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Shoulder Bags</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Crossbody</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Handle Bags</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Clutches</span>
-          </div>
-          <div class="o2-mega-col">
-            <span class="o2-mega-head" onclick="o2Nav('o2-women-all')">All Accessories</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Shoes</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Jewellery</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Belts</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Sunglasses</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Scarves</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Hats</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Towels &amp; Pareos</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Hair Accessories</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Bag Charms</span>
-          </div>
-          <div class="o2-mega-col">
-            <span class="o2-mega-head" onclick="o2Nav('o2-women-all')">All Swim &amp; Resort</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Bikinis</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">One Pieces</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Separates</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Towels &amp; Pareos</span>
-            <span class="o2-mega-item" onclick="o2Nav('o2-women-all')">Boardshorts</span>
-          </div>
+  <!-- FEATURED -->
+  <div class="o2-dd" id="o2-dd-featured"
+       onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
+    <div class="o2-dd-inner">
+      <div class="o2-dd-left">
+        <div class="o2-dd-heading">Fall 2026 Trailblazer</div>
+        <a class="o2-dd-cat">All New</a>
+        <a class="o2-dd-cat">New — Dresses</a>
+        <a class="o2-dd-cat">New — Bags</a>
+        <a class="o2-dd-cat">New — Accessories</a>
+      </div>
+      <div class="o2-dd-photos">
+        <div class="o2-photo eq2">
+          <img src="Option 2/images/collections-2.png" alt="New Dresses">
+          <span class="o2-photo-lbl">New — Dresses &#9658;</span>
         </div>
-        <div class="o2-dd-photo"><img src="readytowear.png" alt="Women"></div>
-      </div>
-
-      <!-- KIDS -->
-      <div class="o2-dd" id="o2-dd-kids">
-        <div class="o2-kids-wrap">
-          <span class="o2-kids-see" onclick="o2Nav('o2-kids-all')">See All</span>
-          <div class="o2-kids-col">
-            <span class="o2-kids-item" onclick="o2Nav('o2-kids-all')">Dresses</span>
-            <span class="o2-kids-item" onclick="o2Nav('o2-kids-all')">Swimwear</span>
-            <span class="o2-kids-item" onclick="o2Nav('o2-kids-all')">Tops</span>
-            <span class="o2-kids-item" onclick="o2Nav('o2-kids-all')">Bottoms</span>
-            <span class="o2-kids-item" onclick="o2Nav('o2-kids-all')">Denim</span>
-            <span class="o2-kids-item" onclick="o2Nav('o2-kids-all')">Skirts</span>
-            <span class="o2-kids-item" onclick="o2Nav('o2-kids-all')">Hats</span>
-          </div>
-        </div>
-        <div class="o2-dd-photo tall"><img src="kids.png" alt="Kids"></div>
-      </div>
-
-      <!-- COLLECTIONS -->
-      <div class="o2-dd" id="o2-dd-coll">
-        <div class="o2-coll-list">
-          <div class="o2-coll-item" onclick="o2Nav('o2-col-trailblazer')">Fall 2026, Trailblazer</div>
-          <div class="o2-coll-item" onmouseenter="o2SwapImg('kindred')">Sprint 2026, Kindred Spirit</div>
-          <div class="o2-coll-item" onmouseenter="o2SwapImg('summerswim')">Summer Swim 2026</div>
-          <div class="o2-coll-item" onmouseenter="o2SwapImg(null)">Resort Swim 2026</div>
-          <div class="o2-coll-item" onmouseenter="o2SwapImg(null)">Cruise 2026</div>
-          <div class="o2-coll-item" onmouseenter="o2SwapImg(null)">Runway</div>
-          <div class="o2-coll-item" onmouseenter="o2SwapImg(null)">The New Denim</div>
-          <div class="o2-coll-item" onmouseenter="o2SwapImg(null)">Archive</div>
-        </div>
-        <div class="o2-dd-photo tall" id="o2-coll-photo">
-          <img src="collections.png" alt="Collections">
-          <img src="Option%202%20-%20Mega%20Menu/2nd_item_kinderedspirit.jpg" alt="Kindred Spirit" class="o2-hover-img" data-hover="kindred">
-          <img src="Option%202%20-%20Mega%20Menu/option3-summerswim2026.jpg" alt="Summer Swim" class="o2-hover-img" data-hover="summerswim">
-        </div>
-      </div>
-
-    </div><!-- /o2-dd-wrap -->
-  </div><!-- /o2-nav-wrap -->
-
-  <!-- ── HOME ── -->
-  <div id="o2-home" class="o2-sub active">
-    <div class="o2-body"></div>
-  </div>
-
-  <!-- ── WOMEN ALL RTW ── -->
-  <div id="o2-women-all" class="o2-sub">
-    <div class="o1-filter-bar">
-      <span class="o1-ftab active" onclick="o2Nav('o2-women-all')">All Ready To Wear</span>
-      <span class="o1-ftab" onclick="o2Nav('o2-rtw-dresses')">Dresses</span>
-      <span class="o1-ftab">Swim &amp; Resort</span>
-      <span class="o1-ftab">Tops</span>
-      <span class="o1-ftab">Bottoms</span>
-      <span class="o1-ftab">Skirts</span>
-      <span class="o1-ftab">Tailoring</span>
-      <span class="o1-ftab">Denim</span>
-      <span class="o1-ftab">Knitwear</span>
-      <span class="o1-ftab">Jackets &amp; Coats</span>
-      <span class="o1-ftab">Jumpsuits &amp; Playsuits</span>
-      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
-    </div>
-    <div class="o1-grid-3">
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-    </div>
-  </div>
-
-  <!-- ── RTW DRESSES ── -->
-  <div id="o2-rtw-dresses" class="o2-sub">
-    <div class="o1-breadcrumb">
-      <span onclick="o2Nav('o2-women-all')">Ready To Wear</span>
-    </div>
-    <div class="o1-filter-bar">
-      <span class="o1-ftab active">All Dresses</span>
-      <span class="o1-ftab" onclick="o2Nav('o2-rtw-mini')">Mini Dresses</span>
-      <span class="o1-ftab">Midi Dresses</span>
-      <span class="o1-ftab">Maxi Dresses</span>
-      <span class="o1-ftab">Wrap Dresses</span>
-      <span class="o1-ftab">Evening Dresses</span>
-      <span class="o1-ftab">Day Dresses</span>
-      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
-    </div>
-    <div class="o1-grid-3">
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-    </div>
-  </div>
-
-  <!-- ── RTW MINI DRESSES ── -->
-  <div id="o2-rtw-mini" class="o2-sub">
-    <div class="o1-breadcrumb">
-      <span onclick="o2Nav('o2-women-all')">Ready To Wear</span>
-      <span class="o1-breadcrumb-sep">/</span>
-      <span onclick="o2Nav('o2-rtw-dresses')">Dresses</span>
-    </div>
-    <div class="o1-filter-bar">
-      <span class="o1-ftab" onclick="o2Nav('o2-rtw-dresses')">All Dresses</span>
-      <span class="o1-ftab active">Mini Dresses</span>
-      <span class="o1-ftab">Midi Dresses</span>
-      <span class="o1-ftab">Maxi Dresses</span>
-      <span class="o1-ftab">Wrap Dresses</span>
-      <span class="o1-ftab">Evening Dresses</span>
-      <span class="o1-ftab">Day Dresses</span>
-      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
-    </div>
-    <div class="o1-grid-4">
-      <div class="o1-tile" onclick="o2Nav('o2-pdp')"></div>
-      <div class="o1-tile" onclick="o2Nav('o2-pdp')"></div>
-      <div class="o1-tile" onclick="o2Nav('o2-pdp')"></div>
-      <div class="o1-tile" onclick="o2Nav('o2-pdp')"></div>
-      <div class="o1-tile" onclick="o2Nav('o2-pdp')"></div>
-      <div class="o1-tile" onclick="o2Nav('o2-pdp')"></div>
-      <div class="o1-tile" onclick="o2Nav('o2-pdp')"></div>
-      <div class="o1-tile" onclick="o2Nav('o2-pdp')"></div>
-    </div>
-  </div>
-
-  <!-- ── KIDS ALL ── -->
-  <div id="o2-kids-all" class="o2-sub">
-    <div class="o1-filter-bar">
-      <span class="o1-ftab active">All Kids</span>
-      <span class="o1-ftab">Dresses</span>
-      <span class="o1-ftab">Swimwear</span>
-      <span class="o1-ftab">Tops</span>
-      <span class="o1-ftab">Bottoms</span>
-      <span class="o1-ftab">Skirts</span>
-      <span class="o1-ftab">Denim</span>
-      <span class="o1-ftab">Hats</span>
-      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
-    </div>
-    <div class="o1-grid-3">
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-    </div>
-  </div>
-
-  <!-- ── COLLECTIONS TRAILBLAZER ── -->
-  <div id="o2-col-trailblazer" class="o2-sub" style="background:#fff">
-    <div class="o1-trailblazer-hero">
-      <div class="o1-trailblazer-season">Fall 2026</div>
-      <div class="o1-trailblazer-title">TRAILBLAZER</div>
-    </div>
-    <div class="o1-trailblazer-img"></div>
-    <div style="background:#F8F7F6;height:300px;margin:3px 3px 0"></div>
-  </div>
-
-  <!-- ── PDP ── -->
-  <div id="o2-pdp" class="o2-sub">
-    <div class="o1-pdp-wrap">
-      <div class="o1-pdp-sidebar">
-        <span class="o1-pdp-close" onclick="o2Nav('o2-rtw-mini')">CLOSE</span>
-        <div class="o1-pdp-name">Alchemy Ruffle Mini Dress</div>
-        <div class="o1-pdp-price">$2,200</div>
-        <div class="o1-pdp-desc">The Alchemy Ruffle Mini Dress in Blue Poppy from our Spring 2026 Collection, Kindred Spirit. A silk mini dress featuring a straight neckline, flared silhouette and tiered frills throughout.</div>
-      </div>
-      <div class="o1-pdp-main">
-        <div class="o1-pdp-hero"></div>
-        <div class="o1-pdp-thumbs-col">
-          <div class="o1-pdp-thumb"></div>
-          <div class="o1-pdp-thumb"></div>
-          <div class="o1-pdp-thumb"></div>
+        <div class="o2-photo eq2">
+          <img src="Option 2/images/collections.png" alt="Fall 2026 Trailblazers">
+          <span class="o2-photo-lbl">Fall 2026 Trailblazers &#9658;</span>
         </div>
       </div>
     </div>
   </div>
 
-</div>
-
-
-<!-- ══════════════════════════════════════════
-     OPTION 3 — CONDENSED NAV
-══════════════════════════════════════════ -->
-<div id="opt3" class="screen">
-
-  <div class="o3-nav-wrap">
-    <nav class="o3-nav">
-      <div class="o3-nav-l">
-        <span class="o3-ni" id="o3-ni-new"
-          onclick="o3Nav('o3-new-all')">NEW</span>
-        <span class="o3-ni" id="o3-ni-women"
-          onmouseenter="o3Open('women',this)" onmouseleave="o3Sched()">WOMEN</span>
-        <span class="o3-ni" id="o3-ni-kids"
-          onmouseenter="o3Open('kids',this)" onmouseleave="o3Sched()">KIDS</span>
-        <span class="o3-ni" id="o3-ni-acc"
-          onmouseenter="o3Open('acc',this)" onmouseleave="o3Sched()">ACCESSORIES</span>
+  <!-- COLLECTIONS -->
+  <div class="o2-dd" id="o2-dd-collections"
+       onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
+    <div class="o2-dd-inner">
+      <div class="o2-dd-left">
+        <a class="o2-dd-cat">Ready-to-Wear</a>
+        <a class="o2-dd-cat">Swim &amp; Resort</a>
       </div>
-      <span class="o3-logo">ZIMMERMANN</span>
-      <div class="o3-nav-r">
-        <button class="o3-nav-btn" onclick="o3Nav('o3-zimmerse')">Z.IMMERSE</button>
-        <button class="o3-q" onclick="openSearch()"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.4222 10.4899L12.5602 12.5582M11.8707 7.04279C11.8707 9.70811 9.71006 11.8688 7.04474 11.8688C4.37942 11.8688 2.21875 9.70811 2.21875 7.04279C2.21875 4.37747 4.37942 2.2168 7.04474 2.2168C9.71006 2.2168 11.8707 4.37747 11.8707 7.04279Z" stroke="black" stroke-width="1.23112" stroke-linecap="round"/></svg></button>
-        <button class="o3-nav-btn" onclick="openAccount()">LOGIN</button>
-        <button class="o3-nav-btn" onclick="openBasket()">BAG (0)</button>
-      </div>
-    </nav>
-
-    <!-- Dropdowns -->
-    <div class="o3-dd-wrap" id="o3-dd-wrap"
-      onmouseenter="o3Cancel()" onmouseleave="o3Sched()">
-
-      <!-- NEW — minimal -->
-      <div class="o3-dd o3-dd-new" id="o3-dd-new">
-        <span class="o3-see-all" onclick="o3Nav('o3-new-all')">All New</span>
-        <div class="o3-sub-col">
-          <span class="o3-sub-item" onclick="o3Nav('o3-new-rtw')">Clothing</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-new-all')">Shoes</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-new-all')">Bags</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-new-all')">Kids</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-new-all')">Accessories</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-new-all')">Swim &amp; Resort</span>
+      <div class="o2-dd-photos">
+        <div class="o2-photo eq2">
+          <img src="Option 2/images/collections-1.png" alt="Swim and Resort">
+          <span class="o2-photo-lbl">Swim &amp; Resort &#9658;</span>
+        </div>
+        <div class="o2-photo eq2">
+          <img src="Option 2/images/collections-2.png" alt="Ready-to-Wear">
+          <span class="o2-photo-lbl">Ready-to-Wear &#9658;</span>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- WOMEN -->
-      <div class="o3-dd" id="o3-dd-women">
-        <span class="o3-see-all" onclick="o3Nav('o3-women-all')">All Ready To Wear</span>
-        <div class="o3-sub-col">
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Dresses</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Swim &amp; Resort</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Tops</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Bottoms</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Skirts</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Tailoring</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Denim</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Knitwear</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Jackets &amp; Coats</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Jumpsuits &amp; Playsuits</span>
+  <!-- CLOTHING -->
+  <div class="o2-dd" id="o2-dd-clothing"
+       onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
+    <div class="o2-dd-inner">
+      <div class="o2-dd-left">
+        <a class="o2-dd-cat">Dresses</a>
+        <a class="o2-dd-cat">Tops</a>
+        <a class="o2-dd-cat">Bottoms</a>
+        <a class="o2-dd-cat">Skirts</a>
+        <a class="o2-dd-cat">Tailoring</a>
+        <a class="o2-dd-cat">Denim</a>
+        <a class="o2-dd-cat">Knitwear</a>
+        <a class="o2-dd-cat">Jackets &amp; Coats</a>
+        <a class="o2-dd-cat">Jumpsuits &amp; Playsuits</a>
+        <a class="o2-dd-cat">Swimwear</a>
+        <a class="o2-dd-cat">Kids</a>
+        <a class="o2-dd-viewall">View all</a>
+      </div>
+      <div class="o2-dd-photos">
+        <div class="o2-photo eq3">
+          <img src="Option 2/images/collections.png" alt="Dresses">
+          <span class="o2-photo-lbl">Dresses &#9658;</span>
+        </div>
+        <div class="o2-photo eq3">
+          <img src="Option 2/images/collections-1.png" alt="Tailoring">
+          <span class="o2-photo-lbl">Tailoring &#9658;</span>
+        </div>
+        <div class="o2-photo eq3">
+          <img src="Option 2/images/collections-2.png" alt="Swimwear">
+          <span class="o2-photo-lbl">Swimwear &#9658;</span>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- KIDS -->
-      <div class="o3-dd" id="o3-dd-kids">
-        <span class="o3-see-all" onclick="o3Nav('o3-kids-all')">All Kids</span>
-        <div class="o3-sub-col">
-          <span class="o3-sub-item" onclick="o3Nav('o3-kids-all')">Dresses</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-kids-all')">Swimwear</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-kids-all')">Tops</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-kids-all')">Bottoms</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-kids-all')">Skirts</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-kids-all')">Denim</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-kids-all')">Hats</span>
+  <!-- ACCESSORIES -->
+  <div class="o2-dd" id="o2-dd-accessories"
+       onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
+    <div class="o2-dd-inner">
+      <div class="o2-dd-left">
+        <a class="o2-dd-cat">Bags</a>
+        <a class="o2-dd-cat">Shoes</a>
+        <a class="o2-dd-cat">Jewellery</a>
+        <a class="o2-dd-cat">Belts</a>
+        <a class="o2-dd-cat">Sunglasses</a>
+        <a class="o2-dd-cat">Scarves</a>
+        <a class="o2-dd-cat">Hats</a>
+        <a class="o2-dd-cat">Towels &amp; Pareos</a>
+        <a class="o2-dd-cat">Hair Accessories</a>
+        <a class="o2-dd-cat">Bag Charms</a>
+        <a class="o2-dd-viewall">View all</a>
+      </div>
+      <div class="o2-dd-photos">
+        <div class="o2-photo eq3">
+          <img src="Option 1/Group 1312321013.png" alt="Jewellery">
+          <span class="o2-photo-lbl">Jewellery &#9658;</span>
+        </div>
+        <div class="o2-photo eq3">
+          <img src="Option 1/Mask group.png" alt="Bags">
+          <span class="o2-photo-lbl">Bags &#9658;</span>
+        </div>
+        <div class="o2-photo eq3">
+          <img src="Option 1/Mask group-1.png" alt="Shoes">
+          <span class="o2-photo-lbl">Shoes &#9658;</span>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- ACCESSORIES -->
-      <div class="o3-dd" id="o3-dd-acc">
-        <span class="o3-see-all" onclick="o3Nav('o3-women-all')">All Accessories</span>
-        <div class="o3-sub-col">
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Bags</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Shoes</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Jewellery</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Belts</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Sunglasses</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Scarves</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Hats</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Towels &amp; Pareos</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Hair Accessories</span>
-          <span class="o3-sub-item" onclick="o3Nav('o3-women-all')">Bag Charms</span>
+  <!-- INSPIRATION -->
+  <div class="o2-dd" id="o2-dd-inspiration"
+       onmouseenter="o2Cancel()" onmouseleave="o2Sched()">
+    <div class="o2-dd-inner">
+      <div class="o2-dd-left">
+        <a class="o2-dd-cat">Edits</a>
+        <a class="o2-dd-cat">Campaigns</a>
+        <a class="o2-dd-cat">Moments</a>
+      </div>
+      <div class="o2-dd-photos">
+        <div class="o2-photo wide">
+          <img src="Option 2/images/collections-1.png" alt="Inspiration">
+          <span class="o2-photo-lbl">Ready-to-Wear &#9658;</span>
         </div>
       </div>
-
-    </div><!-- /o3-dd-wrap -->
-  </div><!-- /o3-nav-wrap -->
-
-  <!-- ── HOME ── -->
-  <div id="o3-home" class="o3-sub active">
-    <div class="o3-body"></div>
-  </div>
-
-  <!-- ── WOMEN ALL RTW ── -->
-  <div id="o3-women-all" class="o3-sub">
-    <div class="o1-filter-bar" style="background:#F8F7F6">
-      <span class="o1-ftab active">All Ready To Wear</span>
-      <span class="o1-ftab">Dresses</span>
-      <span class="o1-ftab">Swim &amp; Resort</span>
-      <span class="o1-ftab">Tops</span>
-      <span class="o1-ftab">Bottoms</span>
-      <span class="o1-ftab">Skirts</span>
-      <span class="o1-ftab">Tailoring</span>
-      <span class="o1-ftab">Denim</span>
-      <span class="o1-ftab">Knitwear</span>
-      <span class="o1-ftab">Jackets &amp; Coats</span>
-      <span class="o1-ftab">Jumpsuits &amp; Playsuits</span>
-      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
-    </div>
-    <div class="o1-grid-3">
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
     </div>
   </div>
 
-  <!-- ── NEW ALL ── -->
-  <div id="o3-new-all" class="o3-sub">
-    <div class="o1-filter-bar" style="background:#F8F7F6">
-      <span class="o1-ftab active">All New</span>
-      <span class="o1-ftab" onclick="o3Nav('o3-new-rtw')">Clothing</span>
-      <span class="o1-ftab">Shoes</span>
-      <span class="o1-ftab">Bags</span>
-      <span class="o1-ftab">Kids</span>
-      <span class="o1-ftab">Accessories</span>
-      <span class="o1-ftab">Swim &amp; Resort</span>
-      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
-    </div>
-    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:3px;padding:3px">
-      <div class="o1-tile" style="grid-row:span 2"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div>
-    </div>
-  </div>
-
-  <!-- ── NEW CLOTHING (RTW) ── -->
-  <div id="o3-new-rtw" class="o3-sub">
-    <div class="o1-filter-bar" style="background:#F8F7F6">
-      <span class="o1-ftab" onclick="o3Nav('o3-new-all')">All New</span>
-      <span class="o1-ftab active">Clothing</span>
-      <span class="o1-ftab">Shoes</span>
-      <span class="o1-ftab">Bags</span>
-      <span class="o1-ftab">Kids</span>
-      <span class="o1-ftab">Accessories</span>
-      <span class="o1-ftab">Swim &amp; Resort</span>
-      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
-    </div>
-    <div class="o1-grid-3">
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-    </div>
-  </div>
-
-  <!-- ── KIDS ALL ── -->
-  <div id="o3-kids-all" class="o3-sub">
-    <div class="o1-filter-bar" style="background:#F8F7F6">
-      <span class="o1-ftab active">All Kids</span>
-      <span class="o1-ftab">Dresses</span>
-      <span class="o1-ftab">Swimwear</span>
-      <span class="o1-ftab">Tops</span>
-      <span class="o1-ftab">Bottoms</span>
-      <span class="o1-ftab">Skirts</span>
-      <span class="o1-ftab">Denim</span>
-      <span class="o1-ftab">Hats</span>
-      <span class="o1-filter-sort">FILTER &amp; SORT ∨</span>
-    </div>
-    <div class="o1-grid-3">
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-      <div class="o1-tile"></div><div class="o1-tile"></div><div class="o1-tile"></div>
-    </div>
-  </div>
-
-  <!-- ── Z.IMMERSE ── -->
-  <div id="o3-zimmerse" class="o3-sub" style="background:#fff">
-    <div class="o3-zim-block">
-      <div class="o3-zim-season">Fall 2026</div>
-      <div class="o3-zim-title">TRAILBLAZER</div>
-    </div>
-    <div class="o3-zim-img"></div>
-    <div class="o3-zim-block">
-      <div class="o3-zim-season">Summer 2026</div>
-      <div class="o3-zim-title">RESORT SWIM</div>
-    </div>
-    <div class="o3-zim-img"></div>
-  </div>
-
-</div>
-
-
-<!-- ══════════════════════════════════════════
-     SHARED OVERLAYS
-══════════════════════════════════════════ -->
-
-<!-- Account Panel -->
-<div class="side-panel" id="account-panel">
-  <div class="sp-dim" onclick="closeAccount()"></div>
-  <div class="sp-content">
-    <button class="sp-close" onclick="closeAccount()">×</button>
-    <div class="sp-inner">
-      <div class="sp-title">Welcome</div>
-      <p class="sp-sub">Join to unlock exclusive access, benefits and services.</p>
-      <input class="sp-email" placeholder="Email">
-      <button class="sp-continue">Continue</button>
-      <span class="sp-link">Wishlist</span>
-      <span class="sp-link">Benefits &amp; services</span>
-      <span class="sp-link">Track order</span>
-    </div>
+  <div class="o2-body">
+    <div class="o2-brand">ZIMMERMANN</div>
   </div>
 </div>
 
-<!-- Basket Panel -->
-<div class="side-panel" id="basket-panel">
-  <div class="sp-dim" onclick="closeBasket()"></div>
-  <div class="sp-content">
-    <button class="sp-close" onclick="closeBasket()">×</button>
-    <div class="sp-inner">
-      <div class="basket-title">Basket is empty!</div>
-      <p class="basket-sub">No Items in your bag</p>
-      <button class="basket-cta">See whats new</button>
-      <p class="basket-love">We think you'd love these</p>
-      <div class="basket-imgs">
-        <div class="basket-img"></div>
-        <div class="basket-img"></div>
-        <div class="basket-img"></div>
-      </div>
-      <p class="basket-help">Need help?</p>
+<!-- ============================================================
+     OUR STORY — Z.immerse inner page
+     ============================================================ -->
+<div id="o1-our-story" class="screen">
+  <nav class="o1-inner-nav">
+    <div class="o1-nav-left">
+      <span class="o1-nav-item">New</span>
+      <span class="o1-nav-item">Shop</span>
+      <span class="o1-nav-item">Edits</span>
+      <span class="o1-nav-item active">Z.immerse</span>
+    </div>
+    <div class="o1-inner-nav-center">ZIMMERMANN</div>
+    <div class="o1-inner-nav-right">
+      <span class="o1-nav-icon">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.4222 10.4899L12.5602 12.5582M11.8707 7.04279C11.8707 9.70811 9.71006 11.8688 7.04474 11.8688C4.37942 11.8688 2.21875 9.70811 2.21875 7.04279C2.21875 4.37747 4.37942 2.2168 7.04474 2.2168C9.71006 2.2168 11.8707 4.37747 11.8707 7.04279Z" stroke="black" stroke-width="1.23112" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="o1-nav-text">Login</span>
+      <span class="o1-nav-text">Bag (0)</span>
+    </div>
+  </nav>
+  <div class="our-story-body">
+    <div class="our-story-photo">
+      <img src="Option 1/zimmermann.com/Outstory-image.png" alt="Our Story">
+    </div>
+    <div class="our-story-text">
+      <h2 class="our-story-heading">Our Story</h2>
+      <p>While working the markets, I had two pages of editorial in Australian Vogue. That was a significant moment because I suddenly started to receive orders from boutiques around Australia and I could feel some real momentum. Soon after I opened a small boutique in Darlinghurst.</p>
+      <p>In 1991, Nicky's sister Simone joined the growing ZIMMERMANN business. Nicky's relationship with Simone has been the cornerstone to ZIMMERMANN'S longevity and success. "I could never have achieved what we have without Simone. While the business has evolved and fashion has changed, Simone has been a voice of reason and a constant.</p>
     </div>
   </div>
 </div>
-
-<!-- Search Overlay -->
-<div class="search-overlay" id="search-overlay">
-  <button class="so-close" onclick="closeSearch()">×</button>
-  <div class="so-input-wrap">
-    <input class="so-input" placeholder="What are you looking for?">
-  </div>
-  <div class="so-grid">
-    <div class="so-cell"></div><div class="so-cell"></div>
-    <div class="so-cell"></div><div class="so-cell"></div>
-    <div class="so-cell"></div><div class="so-cell"></div>
-    <div class="so-cell"></div><div class="so-cell"></div>
-  </div>
-</div>
-
 
 <script>
-// ── Hub tab switching ────────────────────────────
-function hubTab(key) {
-  document.querySelectorAll('.hub-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.hub-tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelector('.hub-tab[onclick="hubTab(\'' + key + '\')"]').classList.add('active');
-  document.getElementById('hub-panel-' + key).classList.add('active');
-}
-
-// ── Screen routing ──────────────────────────────
-function show(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
-  document.getElementById('back-bar').classList.toggle('visible', id !== 'hub');
-  // Reset sub-pages to home when switching options
-  if (id === 'opt1') {
-    document.querySelectorAll('#opt1 .o1-sub').forEach(s => s.classList.remove('active'));
-    document.getElementById('o1-home').classList.add('active');
+  /* ---- ROUTING ---- */
+  function show(id) {
+    document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+    document.getElementById('back-bar').classList.toggle('visible', id !== 'hub');
+    o1CloseAll();
+    o2CloseAll();
   }
-  if (id === 'opt2') {
-    document.querySelectorAll('#opt2 .o2-sub').forEach(s => s.classList.remove('active'));
-    document.getElementById('o2-home').classList.add('active');
+
+  /* ---- OPTION 1 ---- */
+  var o1Timer = null, o1Cur = null;
+
+  function o1Open(key) {
+    clearTimeout(o1Timer);
+    if (o1Cur === key) return;
+    o1CloseAll();
+    o1Cur = key;
+    var dd = document.getElementById('o1-dd-' + key);
+    if (dd) dd.classList.add('open');
+    document.querySelectorAll('.o1-nav-item').forEach(function(el) { el.classList.remove('active'); });
+    var ni = document.getElementById('o1-ni-' + key);
+    if (ni) ni.classList.add('active');
   }
-  if (id === 'opt3') {
-    document.querySelectorAll('#opt3 .o3-sub').forEach(s => s.classList.remove('active'));
-    document.getElementById('o3-home').classList.add('active');
+
+  function o1CloseAll() {
+    document.querySelectorAll('.o1-dd').forEach(function(d) { d.classList.remove('open'); });
+    document.querySelectorAll('.o1-nav-item').forEach(function(el) { el.classList.remove('active'); });
+    o1Cur = null;
   }
-  o1CloseAll(); o2CloseAll(); o3CloseAll();
-}
 
-// ── Option 1 hover dropdowns ────────────────────
-let o1Timer = null;
-// Collections dropdown hover image swap
-function o1SwapImg(key) {
-  const photo = document.getElementById('o1-coll-photo');
-  if (!photo) return;
-  photo.querySelectorAll('.o1-hover-img').forEach(img => img.classList.remove('active'));
-  if (key) {
-    const target = photo.querySelector('[data-hover="' + key + '"]');
-    if (target) target.classList.add('active');
+  function o1Sched() { o1Timer = setTimeout(o1CloseAll, 200); }
+  function o1Cancel() { clearTimeout(o1Timer); }
+
+  /* ---- OPTION 2 ---- */
+  var o2Timer = null, o2Cur = null;
+
+  function o2Open(key) {
+    clearTimeout(o2Timer);
+    if (o2Cur === key) return;
+    o2CloseAll();
+    o2Cur = key;
+    var dd = document.getElementById('o2-dd-' + key);
+    if (dd) dd.classList.add('open');
+    document.querySelectorAll('.o2-nav-item').forEach(function(el) { el.classList.remove('active'); });
+    var ni = document.getElementById('o2-ni-' + key);
+    if (ni) ni.classList.add('active');
   }
-}
 
-// Sub-page navigation within opt1
-function o1Nav(id) {
-  o1CloseAll();
-  document.querySelectorAll('#opt1 .o1-sub').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
-}
-function o2Nav(id) {
-  o2CloseAll();
-  document.querySelectorAll('#opt2 .o2-sub').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
-}
-function o3Nav(id) {
-  o3CloseAll();
-  document.querySelectorAll('#opt3 .o3-sub').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
-}
-
-let o1Current = null;
-
-function o1Open(key, el) {
-  clearTimeout(o1Timer);
-  // deactivate all nav items
-  document.querySelectorAll('.o1-ni').forEach(n => n.classList.remove('active'));
-  // hide all dropdowns
-  document.querySelectorAll('#opt1 .o1-dd').forEach(d => d.classList.remove('active'));
-  // activate this item
-  el.classList.add('active');
-  // show dropdown
-  const dd = document.getElementById('o1-dd-' + key);
-  if (dd) dd.classList.add('active');
-  document.getElementById('o1-dd-wrap').classList.add('open');
-  o1Current = key;
-}
-function o1Sched() {
-  o1Timer = setTimeout(o1CloseAll, 140);
-}
-function o1Cancel() { clearTimeout(o1Timer); }
-function o1CloseAll() {
-  document.querySelectorAll('.o1-ni').forEach(n => n.classList.remove('active'));
-  document.querySelectorAll('#opt1 .o1-dd').forEach(d => d.classList.remove('active'));
-  document.getElementById('o1-dd-wrap').classList.remove('open');
-  o1Current = null;
-  o1SwapImg(null);
-}
-
-// ── Option 2 hover dropdowns ────────────────────
-let o2Timer = null;
-
-function o2Open(key, el) {
-  clearTimeout(o2Timer);
-  document.querySelectorAll('.o2-ni').forEach(n => n.classList.remove('active'));
-  document.querySelectorAll('#opt2 .o2-dd').forEach(d => d.classList.remove('active'));
-  el.classList.add('active');
-  const dd = document.getElementById('o2-dd-' + key);
-  if (dd) dd.classList.add('active');
-  document.getElementById('o2-dd-wrap').classList.add('open');
-}
-function o2Sched() { o2Timer = setTimeout(o2CloseAll, 140); }
-function o2Cancel() { clearTimeout(o2Timer); }
-function o2CloseAll() {
-  document.querySelectorAll('.o2-ni').forEach(n => n.classList.remove('active'));
-  document.querySelectorAll('#opt2 .o2-dd').forEach(d => d.classList.remove('active'));
-  document.getElementById('o2-dd-wrap').classList.remove('open');
-  o2SwapImg(null);
-}
-function o2SwapImg(key) {
-  const photo = document.getElementById('o2-coll-photo');
-  if (!photo) return;
-  photo.querySelectorAll('.o2-hover-img').forEach(img => img.classList.remove('active'));
-  if (key) {
-    const target = photo.querySelector('[data-hover="' + key + '"]');
-    if (target) target.classList.add('active');
+  function o2CloseAll() {
+    document.querySelectorAll('.o2-dd').forEach(function(d) { d.classList.remove('open'); });
+    document.querySelectorAll('.o2-nav-item').forEach(function(el) { el.classList.remove('active'); });
+    o2Cur = null;
   }
-}
 
-// ── Option 3 hover dropdowns ────────────────────
-let o3Timer = null;
-
-function o3Open(key, el) {
-  clearTimeout(o3Timer);
-  document.querySelectorAll('.o3-ni').forEach(n => n.classList.remove('active'));
-  document.querySelectorAll('#opt3 .o3-dd').forEach(d => d.classList.remove('active'));
-  el.classList.add('active');
-  const dd = document.getElementById('o3-dd-' + key);
-  if (dd) dd.classList.add('active');
-  document.getElementById('o3-dd-wrap').classList.add('open');
-}
-function o3Sched() { o3Timer = setTimeout(o3CloseAll, 140); }
-function o3Cancel() { clearTimeout(o3Timer); }
-function o3CloseAll() {
-  document.querySelectorAll('.o3-ni').forEach(n => n.classList.remove('active'));
-  document.querySelectorAll('#opt3 .o3-dd').forEach(d => d.classList.remove('active'));
-  document.getElementById('o3-dd-wrap').classList.remove('open');
-}
-
-// ── Shared overlays ──────────────────────────────
-function openAccount() { document.getElementById('account-panel').classList.add('open'); }
-function closeAccount() { document.getElementById('account-panel').classList.remove('open'); }
-function openBasket()  { document.getElementById('basket-panel').classList.add('open'); }
-function closeBasket() { document.getElementById('basket-panel').classList.remove('open'); }
-function openSearch()  { document.getElementById('search-overlay').classList.add('open'); }
-function closeSearch() { document.getElementById('search-overlay').classList.remove('open'); }
-
-// Close overlays on Escape
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeAccount(); closeBasket(); closeSearch(); }
-});
+  function o2Sched() { o2Timer = setTimeout(o2CloseAll, 200); }
+  function o2Cancel() { clearTimeout(o2Timer); }
 </script>
 </body>
 </html>
