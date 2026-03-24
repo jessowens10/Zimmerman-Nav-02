@@ -133,7 +133,7 @@
       background: #1a1a1a;
     }
 
-    .o1-nav-right { display: flex; gap: 24px; align-items: center; }
+    .o1-nav-right { display: flex; gap: 24px; align-items: center; margin-right: 200px; }
     .o1-nav-icon { display: flex; align-items: center; cursor: pointer; }
     .o1-nav-text { font-size: 12px; font-weight: 300; letter-spacing: 0.01em; cursor: pointer; color: #1a1a1a; }
 
@@ -162,12 +162,12 @@
     }
 
     .o1-dd-cat {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 300;
       color: #1a1a1a;
       cursor: pointer;
       display: block;
-      padding: 3.5px 0;
+      padding: 8px 0;
       letter-spacing: 0.01em;
     }
     .o1-dd-cat:hover { text-decoration: underline; }
@@ -273,7 +273,7 @@
       height: 1.5px; background: #1a1a1a;
     }
 
-    .o2-nav-right { display: flex; gap: 20px; align-items: center; }
+    .o2-nav-right { display: flex; gap: 20px; align-items: center; margin-right: 200px; }
     .o2-nav-icon { display: flex; align-items: center; cursor: pointer; }
     .o2-nav-text { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; color: #1a1a1a; }
 
@@ -290,6 +290,9 @@
     .o2-dd.open { opacity: 1; pointer-events: auto; }
 
     .o2-dd-inner { display: flex; align-items: flex-start; gap: 48px; }
+    .o2-placeholder-page { background: #fff; display: flex; flex-direction: column; }
+    .o2-placeholder-logo { padding: 28px 48px 24px; font-size: 14px; font-weight: 300; letter-spacing: 0.1em; background: #fff; }
+    .o2-placeholder-body { flex: 1; background: #F7F6EF; min-height: calc(100vh - 160px); }
     .o2-dd-inner-discover { gap: 0; justify-content: space-between; width: 100%; }
     .o2-dd-discover-text { display: flex; gap: 80px; }
     .o2-dd-discover-photo { flex-shrink: 0; width: 400px; }
@@ -308,17 +311,17 @@
     }
 
     .o2-dd-cat {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 300;
       color: #1a1a1a;
       cursor: pointer;
       display: block;
-      padding: 3.5px 0;
+      padding: 8px 0;
     }
     .o2-dd-cat:hover { text-decoration: underline; }
 
     .o2-dd-viewall {
-      font-size: 12px;
+      font-size: 11px;
       color: #1a1a1a;
       cursor: pointer;
       display: block;
@@ -437,6 +440,7 @@
   <div class="o1-dd-inner">
     <div class="o1-dd-left">
       <a class="o1-dd-cat" onclick="show('page-new-trailblazer')">Fall 2026 Trailblazer</a>
+      <div style="height: 32px;"></div>
       <a class="o1-dd-cat" onclick="show('page-new-all')">New In</a>
       <a class="o1-dd-cat" onclick="show('page-shop-dresses')">Dresses</a>
       <a class="o1-dd-cat">Bags</a>
@@ -596,10 +600,11 @@
   <div class="o2-dd-inner">
     <div class="o2-dd-left">
       <a class="o2-dd-cat" onclick="show('page-o2-featured-trailblazer')">Fall 2026 Trailblazer</a>
+      <div style="height: 32px;"></div>
       <a class="o2-dd-cat" onclick="show('page-o2-featured-all')">All New</a>
-      <a class="o2-dd-cat" onclick="show('page-o2-clothing-dresses')">New — Dresses</a>
-      <a class="o2-dd-cat" onclick="show('page-o2-accessories-all')">New — Bags</a>
-      <a class="o2-dd-cat" onclick="show('page-o2-accessories-all')">New — Accessories</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-clothing-dresses')">New &#8212; Dresses</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-accessories-all')">New &#8212; Bags</a>
+      <a class="o2-dd-cat" onclick="show('page-o2-accessories-all')">New &#8212; Accessories</a>
     </div>
     <div class="o2-dd-photos">
       <div class="o2-photo eq2" onclick="show('page-o2-clothing-dresses')">
@@ -874,15 +879,30 @@
 <!-- ============================================================
      ROUTE 2 PAGE SCREENS
      ============================================================ -->
-<div id="page-o2-featured" class="screen page-screen" style="background:#F7F6EF;"></div>
+<div id="page-o2-featured" class="screen page-screen o2-placeholder-page">
+  <div class="o2-placeholder-logo">ZIMMERMANN</div>
+  <div class="o2-placeholder-body"></div>
+</div>
 
-<div id="page-o2-collections" class="screen page-screen" style="background:#F7F6EF;"></div>
+<div id="page-o2-collections" class="screen page-screen o2-placeholder-page">
+  <div class="o2-placeholder-logo">ZIMMERMANN</div>
+  <div class="o2-placeholder-body"></div>
+</div>
 
-<div id="page-o2-clothing" class="screen page-screen" style="background:#F7F6EF;"></div>
+<div id="page-o2-clothing" class="screen page-screen o2-placeholder-page">
+  <div class="o2-placeholder-logo">ZIMMERMANN</div>
+  <div class="o2-placeholder-body"></div>
+</div>
 
-<div id="page-o2-accessories" class="screen page-screen" style="background:#F7F6EF;"></div>
+<div id="page-o2-accessories" class="screen page-screen o2-placeholder-page">
+  <div class="o2-placeholder-logo">ZIMMERMANN</div>
+  <div class="o2-placeholder-body"></div>
+</div>
 
-<div id="page-o2-discover" class="screen page-screen" style="background:#F7F6EF;"></div>
+<div id="page-o2-discover" class="screen page-screen o2-placeholder-page">
+  <div class="o2-placeholder-logo">ZIMMERMANN</div>
+  <div class="o2-placeholder-body"></div>
+</div>
 
 <!-- ============================================================
      OPTION 2 SUB-PAGE SCREENS
