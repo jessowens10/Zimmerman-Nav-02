@@ -386,6 +386,100 @@
       height: calc(100vh - 102px - 48px);
       background: #F8F7F6;
     }
+
+    /* ========== CLOTHING: DRESSES PAGE ========== */
+    .o2-breadcrumb {
+      height: 32px; display: flex; align-items: center;
+      padding: 0 24px; font-size: 11px; font-weight: 300;
+      color: #888; border-bottom: 1px solid #dedad5;
+    }
+    .o2-breadcrumb a { color: #888; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+    .o2-breadcrumb span { color: #1a1a1a; }
+
+    .o2-filter-bar {
+      height: 44px; display: flex; align-items: center;
+      justify-content: space-between; padding: 0 24px;
+      border-bottom: 1px solid #dedad5; background: #fff;
+    }
+    .o2-filter-left { display: flex; gap: 24px; align-items: center; }
+    .o2-filter-item {
+      font-size: 11px; font-weight: 300; color: #1a1a1a;
+      cursor: pointer; white-space: nowrap;
+    }
+    .o2-filter-item:hover { text-decoration: underline; }
+    .o2-filter-item.active { text-decoration: underline; text-underline-offset: 4px; }
+    .o2-filter-right {
+      font-size: 10px; font-weight: 400; letter-spacing: 0.12em;
+      text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 6px;
+    }
+
+    .o2-product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 2px;
+      height: calc(100vh - 102px - 32px - 44px);
+      background: #e8e4df;
+    }
+    .o2-product-card { background: #F8F7F6; }
+    .o2-product-hero {
+      grid-column: 3; grid-row: 1 / 3;
+      overflow: hidden;
+    }
+    .o2-product-hero img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: top center; display: block;
+    }
+
+    /* Image pages — position:relative+overflow:hidden guarantees clip; top:-140px hides full baked nav */
+    .img-crop { position: relative; overflow: hidden; height: calc(100vh - 102px); }
+    .img-crop img { position: absolute; top: -145px; left: 0; width: 100%; display: block; }
+
+    /* Grid without breadcrumb (Option 1 pages) */
+    .o2-product-grid.no-crumb {
+      height: calc(100vh - 102px - 44px);
+    }
+    /* Hero on left (Option 1) */
+    .o2-product-grid.hero-left .o2-product-hero {
+      grid-column: 1; grid-row: 1 / 3;
+    }
+
+    /* ========== PRODUCT LISTING (mini dresses) ========== */
+    .pdl-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: 1fr 1fr;
+      gap: 2px;
+      height: calc(100vh - 102px - 44px);
+      background: #dedad5;
+    }
+    .pdl-card { background: #F8F7F6; position: relative; }
+    .pdl-card.link { cursor: pointer; }
+    .pdl-card-img {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 58px;
+      display: flex; align-items: flex-end; justify-content: center;
+      padding: 20px 20px 0;
+    }
+    .pdl-card-img img { max-width: 80%; max-height: 100%; object-fit: contain; object-position: bottom; display: block; }
+    .pdl-card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 14px 16px; }
+    .pdl-name { font-size: 11px; font-weight: 300; color: #1a1a1a; }
+    .pdl-price { font-size: 11px; font-weight: 300; color: #1a1a1a; margin-top: 3px; }
+
+    /* ========== PRODUCT DETAIL ========== */
+    .pdp-layout { display: flex; height: calc(100vh - 102px); }
+    .pdp-info {
+      flex: 0 0 280px; padding: 36px 28px; background: #fff;
+      border-right: 1px solid #dedad5;
+    }
+    .pdp-name { font-size: 14px; font-weight: 300; letter-spacing: 0.01em; margin-bottom: 8px; }
+    .pdp-price { font-size: 12px; font-weight: 300; margin-bottom: 24px; }
+    .pdp-desc { font-size: 11px; font-weight: 300; line-height: 1.75; color: #666; max-width: 220px; }
+    .pdp-main {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      background: #F5F3EF; border-right: 1px solid #dedad5; padding: 32px;
+    }
+    .pdp-main img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+    .pdp-side { flex: 1; background: #F5F3EF; }
   </style>
 </head>
 <body>
@@ -805,76 +899,133 @@
      PAGE SCREENS — shared by both options
      ============================================================ -->
 <div id="page-new-all" class="screen page-screen">
-  <div class="page-sub-nav">
-    <a class="psnav-item psnav-active">All New</a>
-    <a class="psnav-item" onclick="show('page-shop-dresses')">Dresses</a>
-    <a class="psnav-item" onclick="show('page-shop-swim')">Swim &amp; Resort</a>
-    <a class="psnav-item">Tops</a>
-    <a class="psnav-item">Bottoms</a>
-    <a class="psnav-item">Accessories</a>
-    <a class="psnav-item">Bags</a>
-    <a class="psnav-item">Shoes</a>
+  <div class="img-crop">
+    <img src="zimmermann.com/new/new-in/All.png" alt="All New In">
+    <div class="o2-filter-bar" style="position:absolute;top:0;left:0;right:0;z-index:10;">
+      <div class="o2-filter-left">
+        <a class="o2-filter-item active">All NEW</a>
+        <a class="o2-filter-item" onclick="show('page-shop-dresses')">Dresses</a>
+        <a class="o2-filter-item" onclick="show('page-shop-swim')">Swim &amp; Resort</a>
+        <a class="o2-filter-item">Tops</a>
+        <a class="o2-filter-item">Bottoms</a>
+        <a class="o2-filter-item">Skirts</a>
+        <a class="o2-filter-item">Tailoring</a>
+        <a class="o2-filter-item">Denim</a>
+        <a class="o2-filter-item">Knitwear</a>
+        <a class="o2-filter-item">Jackets &amp; Coats</a>
+        <a class="o2-filter-item">Jumpsuits &amp; Playsuits</a>
+      </div>
+      <div class="o2-filter-right">Filter &amp; Sort &#9662;</div>
+    </div>
   </div>
-  <div class="o2-page-body"></div>
 </div>
 
 <div id="page-new-trailblazer" class="screen page-screen">
-  <div class="o2-page-body"></div>
+  <div class="img-crop"><img src="zimmermann.com/new/fall-2026-trailblazer.png" alt="Fall 2026 Trailblazer"></div>
 </div>
 
 <div id="page-shop-rtw" class="screen page-screen">
-  <div class="page-sub-nav">
-    <a class="psnav-item psnav-active" onclick="show('page-shop-rtw')">All RTW</a>
-    <a class="psnav-item" onclick="show('page-shop-dresses')">Dresses</a>
-    <a class="psnav-item" onclick="show('page-shop-swim')">Swim &amp; Resort</a>
-    <a class="psnav-item">Tops</a>
-    <a class="psnav-item">Bottoms</a>
-    <a class="psnav-item">Skirts</a>
-    <a class="psnav-item">Tailoring</a>
-    <a class="psnav-item">Denim</a>
-    <a class="psnav-item">Knitwear</a>
-    <a class="psnav-item">Jackets &amp; Coats</a>
-    <a class="psnav-item">Jumpsuits &amp; Playsuits</a>
+  <div class="img-crop">
+    <img src="zimmermann.com/shop/ready-to-wear/All.png" alt="Ready to Wear">
+    <div class="o2-filter-bar" style="position:absolute;top:0;left:0;right:0;z-index:10;">
+      <div class="o2-filter-left">
+        <a class="o2-filter-item active">All RTW</a>
+        <a class="o2-filter-item" onclick="show('page-shop-dresses')">Dresses</a>
+        <a class="o2-filter-item" onclick="show('page-shop-swim')">Swim &amp; Resort</a>
+        <a class="o2-filter-item">Tops</a>
+        <a class="o2-filter-item">Bottoms</a>
+        <a class="o2-filter-item">Skirts</a>
+        <a class="o2-filter-item">Tailoring</a>
+        <a class="o2-filter-item">Denim</a>
+        <a class="o2-filter-item">Knitwear</a>
+        <a class="o2-filter-item">Jackets &amp; Coats</a>
+        <a class="o2-filter-item">Jumpsuits &amp; Playsuits</a>
+      </div>
+      <div class="o2-filter-right">Filter &amp; Sort &#9662;</div>
+    </div>
   </div>
-  <div class="o2-page-body"></div>
 </div>
 
 <div id="page-shop-dresses" class="screen page-screen">
-  <div class="page-sub-nav">
-    <a class="psnav-item" onclick="show('page-shop-rtw')">All RTW</a>
-    <a class="psnav-item psnav-active" onclick="show('page-shop-dresses')">Dresses</a>
-    <a class="psnav-item" onclick="show('page-shop-swim')">Swim &amp; Resort</a>
-    <a class="psnav-item">Tops</a>
-    <a class="psnav-item">Bottoms</a>
-    <a class="psnav-item">Skirts</a>
-    <a class="psnav-item">Tailoring</a>
-    <a class="psnav-item">Denim</a>
-    <a class="psnav-item">Knitwear</a>
-    <a class="psnav-item">Jackets &amp; Coats</a>
-    <a class="psnav-item">Jumpsuits &amp; Playsuits</a>
+  <div class="img-crop">
+    <img src="zimmermann.com/shop/dresses/All.png" alt="Dresses">
+    <div class="o2-filter-bar" style="position:absolute;top:0;left:0;right:0;z-index:10;">
+      <div class="o2-filter-left">
+        <a class="o2-filter-item active">All Dresses</a>
+        <a class="o2-filter-item" onclick="show('page-shop-mini-dresses')">Mini Dresses</a>
+        <a class="o2-filter-item">Midi Dresses</a>
+        <a class="o2-filter-item">Maxi Dresses</a>
+        <a class="o2-filter-item">Wrap Dresses</a>
+        <a class="o2-filter-item">Evening Dresses</a>
+        <a class="o2-filter-item">Day Dresses</a>
+      </div>
+      <div class="o2-filter-right">Filter &amp; Sort &#9662;</div>
+    </div>
   </div>
-  <div class="o2-page-body"></div>
 </div>
 
 <div id="page-shop-swim" class="screen page-screen">
-  <div class="page-sub-nav">
-    <a class="psnav-item" onclick="show('page-shop-rtw')">All RTW</a>
-    <a class="psnav-item" onclick="show('page-shop-dresses')">Dresses</a>
-    <a class="psnav-item psnav-active" onclick="show('page-shop-swim')">Swim &amp; Resort</a>
-    <a class="psnav-item">Tops</a>
-    <a class="psnav-item">Bottoms</a>
-    <a class="psnav-item">Skirts</a>
-    <a class="psnav-item">Tailoring</a>
-    <a class="psnav-item">Denim</a>
-    <a class="psnav-item">Knitwear</a>
-    <a class="psnav-item">Jackets &amp; Coats</a>
-    <a class="psnav-item">Jumpsuits &amp; Playsuits</a>
+  <div class="img-crop">
+    <img src="zimmermann.com/Shop, dresses/zimmermann.com/shop/swim-and-resort/All.png" alt="Swim and Resort">
+    <div class="o2-filter-bar" style="position:absolute;top:0;left:0;right:0;z-index:10;">
+      <div class="o2-filter-left">
+        <a class="o2-filter-item active">All Swim &amp; Resort</a>
+        <a class="o2-filter-item">Swimwear</a>
+        <a class="o2-filter-item">Cover Ups</a>
+        <a class="o2-filter-item">Resort Wear</a>
+      </div>
+      <div class="o2-filter-right">Filter &amp; Sort &#9662;</div>
+    </div>
   </div>
-  <div class="o2-page-body"></div>
 </div>
 
 <div id="page-edits-trailblazer" class="screen page-screen">
-  <div class="o2-page-body"></div>
+  <div class="img-crop"><img src="zimmermann.com/edits/fall-2026-trailblazer.png" alt="Edits Fall 2026 Trailblazer"></div>
+</div>
+
+<div id="page-shop-mini-dresses" class="screen page-screen">
+  <div class="o2-filter-bar">
+    <div class="o2-filter-left">
+      <a class="o2-filter-item" onclick="show('page-shop-dresses')">All Dresses</a>
+      <a class="o2-filter-item active">Mini Dresses</a>
+      <a class="o2-filter-item">Midi Dresses</a>
+      <a class="o2-filter-item">Maxi Dresses</a>
+      <a class="o2-filter-item">Wrap Dresses</a>
+      <a class="o2-filter-item">Evening Dresses</a>
+      <a class="o2-filter-item">Day Dresses</a>
+    </div>
+    <div class="o2-filter-right">Filter &amp; Sort &#9662;</div>
+  </div>
+  <div class="pdl-grid">
+    <div class="pdl-card link" onclick="show('page-shop-mini-dress-product')">
+      <div class="pdl-card-img"><img src="DRESSPNG.png" alt="Alchemy Ruffle Mini Dress"></div>
+      <div class="pdl-card-info">
+        <p class="pdl-name">Alchemy Ruffle Mini Dress</p>
+        <p class="pdl-price">$2,200</p>
+      </div>
+    </div>
+    <div class="pdl-card"></div>
+    <div class="pdl-card"></div>
+    <div class="pdl-card"></div>
+    <div class="pdl-card"></div>
+    <div class="pdl-card"></div>
+    <div class="pdl-card"></div>
+    <div class="pdl-card"></div>
+  </div>
+</div>
+
+<div id="page-shop-mini-dress-product" class="screen page-screen">
+  <div class="pdp-layout">
+    <div class="pdp-info">
+      <h2 class="pdp-name">Alchemy Ruffle Mini Dress</h2>
+      <p class="pdp-price">$2,200</p>
+      <p class="pdp-desc">The Alchemy Ruffle Mini Dress in Blue Poppy. Crafted in our signature silk blend with tiered ruffle detailing and adjustable tie straps.</p>
+    </div>
+    <div class="pdp-main">
+      <img src="DRESSPNG.png" alt="Alchemy Ruffle Mini Dress">
+    </div>
+    <div class="pdp-side"></div>
+  </div>
 </div>
 
 <!-- ============================================================
@@ -882,102 +1033,177 @@
      ============================================================ -->
 
 <div id="page-o2-featured-all" class="screen page-screen">
-  <div class="page-sub-nav">
-    <a class="psnav-item psnav-active">All New</a>
-    <a class="psnav-item" onclick="show('page-o2-clothing-dresses')">Dresses</a>
-    <a class="psnav-item" onclick="show('page-o2-accessories-all')">Bags</a>
-    <a class="psnav-item" onclick="show('page-o2-accessories-shoes')">Shoes</a>
-    <a class="psnav-item" onclick="show('page-o2-accessories-all')">Accessories</a>
+  <div class="img-crop">
+    <img src="Option 2/Route2-NEW copy/featured-all-new-in.png" alt="All New In">
+    <div class="o2-filter-bar" style="position:absolute;top:0;left:0;right:0;z-index:10;">
+      <div class="o2-filter-left">
+        <a class="o2-filter-item active">All New</a>
+        <a class="o2-filter-item" onclick="show('page-o2-clothing-dresses')">Dresses</a>
+        <a class="o2-filter-item" onclick="show('page-o2-collections-swim')">Swim &amp; Resort</a>
+        <a class="o2-filter-item">Tops</a>
+        <a class="o2-filter-item">Bottoms</a>
+        <a class="o2-filter-item">Skirts</a>
+        <a class="o2-filter-item">Tailoring</a>
+        <a class="o2-filter-item">Denim</a>
+        <a class="o2-filter-item">Knitwear</a>
+        <a class="o2-filter-item">Jackets &amp; Coats</a>
+        <a class="o2-filter-item">Jumpsuits &amp; Playsuits</a>
+      </div>
+      <div class="o2-filter-right">Filter &amp; Sort &#9662;</div>
+    </div>
   </div>
-  <div class="o2-page-body"></div>
 </div>
 
 <div id="page-o2-featured-trailblazer" class="screen page-screen">
-  <div class="o2-page-body"></div>
+  <div class="img-crop"><img src="Option 2/Route2-NEW copy/featured-fall-2026-trailblazer.png" alt="Fall 2026 Trailblazer"></div>
 </div>
 
 <div id="page-o2-collections-rtw" class="screen page-screen">
-  <div class="page-sub-nav">
-    <a class="psnav-item psnav-active">All RTW</a>
-    <a class="psnav-item" onclick="show('page-o2-clothing-dresses')">Dresses</a>
-    <a class="psnav-item">Tops</a>
-    <a class="psnav-item">Bottoms</a>
-    <a class="psnav-item">Skirts</a>
-    <a class="psnav-item">Tailoring</a>
-    <a class="psnav-item">Denim</a>
-    <a class="psnav-item">Knitwear</a>
-    <a class="psnav-item">Jackets &amp; Coats</a>
-    <a class="psnav-item">Jumpsuits &amp; Playsuits</a>
+  <div class="img-crop">
+    <img src="Option 2/Route2-NEW copy/collection:ready-to-wear.png" alt="Ready to Wear">
+    <div class="o2-filter-bar" style="position:absolute;top:0;left:0;right:0;z-index:10;">
+      <div class="o2-filter-left">
+        <a class="o2-filter-item active">All RTW</a>
+        <a class="o2-filter-item" onclick="show('page-o2-clothing-dresses')">Dresses</a>
+        <a class="o2-filter-item" onclick="show('page-o2-collections-swim')">Swim &amp; Resort</a>
+        <a class="o2-filter-item">Tops</a>
+        <a class="o2-filter-item">Bottoms</a>
+        <a class="o2-filter-item">Skirts</a>
+        <a class="o2-filter-item">Tailoring</a>
+        <a class="o2-filter-item">Denim</a>
+        <a class="o2-filter-item">Knitwear</a>
+        <a class="o2-filter-item">Jackets &amp; Coats</a>
+        <a class="o2-filter-item">Jumpsuits &amp; Playsuits</a>
+      </div>
+      <div class="o2-filter-right">Filter &amp; Sort &#9662;</div>
+    </div>
   </div>
-  <div class="o2-page-body"></div>
 </div>
 
 <div id="page-o2-collections-swim" class="screen page-screen">
-  <div class="page-sub-nav">
-    <a class="psnav-item psnav-active">All</a>
-    <a class="psnav-item">Swimwear</a>
-    <a class="psnav-item">Cover-Ups</a>
-    <a class="psnav-item">Resort Wear</a>
+  <div class="img-crop">
+    <img src="Option 2/Route2-NEW copy/collection:resort-and-swim-All.png" alt="Resort and Swim" style="top:-195px;">
+    <div class="o2-filter-bar" style="position:absolute;top:0;left:0;right:0;z-index:10;">
+      <div class="o2-filter-left">
+        <a class="o2-filter-item active">All Swim &amp; Resort</a>
+        <a class="o2-filter-item" onclick="show('page-o2-clothing-dresses')">Dresses</a>
+        <a class="o2-filter-item">Tops</a>
+        <a class="o2-filter-item">Bottoms</a>
+        <a class="o2-filter-item">Skirts</a>
+        <a class="o2-filter-item">Tailoring</a>
+        <a class="o2-filter-item">Denim</a>
+        <a class="o2-filter-item">Knitwear</a>
+        <a class="o2-filter-item">Jackets &amp; Coats</a>
+        <a class="o2-filter-item">Jumpsuits &amp; Playsuits</a>
+      </div>
+      <div class="o2-filter-right">Filter &amp; Sort &#9662;</div>
+    </div>
   </div>
-  <div class="o2-page-body"></div>
 </div>
 
 <div id="page-o2-clothing-dresses" class="screen page-screen">
-  <div class="page-sub-nav">
-    <a class="psnav-item psnav-active">All Dresses</a>
-    <a class="psnav-item" onclick="show('page-o2-clothing-mini-dresses')">Mini Dresses</a>
-    <a class="psnav-item">Midi Dresses</a>
-    <a class="psnav-item">Maxi Dresses</a>
-    <a class="psnav-item">Slip Dresses</a>
-    <a class="psnav-item">Party</a>
+  <div class="img-crop">
+    <img src="Option 2/Route2-NEW copy/clothing:dresses:All.png" alt="Dresses">
+    <div class="o2-filter-bar" style="position:absolute;top:0;left:0;right:0;z-index:10;">
+      <div class="o2-filter-left">
+        <a class="o2-filter-item active">All Dresses</a>
+        <a class="o2-filter-item" onclick="show('page-o2-clothing-mini-dresses')">Mini Dresses</a>
+        <a class="o2-filter-item">Midi Dresses</a>
+        <a class="o2-filter-item">Maxi Dresses</a>
+        <a class="o2-filter-item">Wrap Dresses</a>
+        <a class="o2-filter-item">Evening Dresses</a>
+        <a class="o2-filter-item">Day Dresses</a>
+      </div>
+      <div class="o2-filter-right">Filter &amp; Sort &#9662;</div>
+    </div>
   </div>
-  <div class="o2-page-body"></div>
 </div>
 
 <div id="page-o2-clothing-mini-dresses" class="screen page-screen">
-  <div class="page-sub-nav">
-    <a class="psnav-item" onclick="show('page-o2-clothing-dresses')">All Dresses</a>
-    <a class="psnav-item psnav-active">Mini Dresses</a>
-    <a class="psnav-item">Midi Dresses</a>
-    <a class="psnav-item">Maxi Dresses</a>
-    <a class="psnav-item">Slip Dresses</a>
-    <a class="psnav-item">Party</a>
+  <div class="o2-filter-bar">
+    <div class="o2-filter-left">
+      <a class="o2-filter-item" onclick="show('page-o2-clothing-dresses')">All Dresses</a>
+      <a class="o2-filter-item active">Mini Dresses</a>
+      <a class="o2-filter-item">Midi Dresses</a>
+      <a class="o2-filter-item">Maxi Dresses</a>
+      <a class="o2-filter-item">Wrap Dresses</a>
+      <a class="o2-filter-item">Evening Dresses</a>
+      <a class="o2-filter-item">Day Dresses</a>
+    </div>
+    <div class="o2-filter-right">Filter &amp; Sort &#9662;</div>
   </div>
-  <div class="o2-page-body"></div>
+  <div class="pdl-grid">
+    <div class="pdl-card link" onclick="show('page-o2-product-mini-dress')">
+      <div class="pdl-card-img"><img src="DRESSPNG.png" alt="Alchemy Ruffle Mini Dress"></div>
+      <div class="pdl-card-info">
+        <p class="pdl-name">Alchemy Ruffle Mini Dress</p>
+        <p class="pdl-price">$2,200</p>
+      </div>
+    </div>
+    <div class="pdl-card"></div>
+    <div class="pdl-card"></div>
+    <div class="pdl-card"></div>
+    <div class="pdl-card"></div>
+    <div class="pdl-card"></div>
+    <div class="pdl-card"></div>
+    <div class="pdl-card"></div>
+  </div>
 </div>
 
 <div id="page-o2-product-mini-dress" class="screen page-screen">
-  <div class="o2-page-body"></div>
+  <div class="pdp-layout">
+    <div class="pdp-info">
+      <h2 class="pdp-name">Alchemy Ruffle Mini Dress</h2>
+      <p class="pdp-price">$2,200</p>
+      <p class="pdp-desc">The Alchemy Ruffle Mini Dress in Blue Poppy. Crafted in our signature silk blend with tiered ruffle detailing and adjustable tie straps.</p>
+    </div>
+    <div class="pdp-main">
+      <img src="DRESSPNG.png" alt="Alchemy Ruffle Mini Dress">
+    </div>
+    <div class="pdp-side"></div>
+  </div>
 </div>
 
 <div id="page-o2-accessories-all" class="screen page-screen">
-  <div class="page-sub-nav">
-    <a class="psnav-item psnav-active">All</a>
-    <a class="psnav-item">Bags</a>
-    <a class="psnav-item" onclick="show('page-o2-accessories-shoes')">Shoes</a>
-    <a class="psnav-item">Jewellery</a>
-    <a class="psnav-item">Belts</a>
-    <a class="psnav-item">Sunglasses</a>
-    <a class="psnav-item">Hats</a>
+  <div class="img-crop">
+    <img src="Option 2/Route2-NEW copy/accessories:all.png" alt="All Accessories">
+    <div class="o2-filter-bar" style="position:absolute;top:0;left:0;right:0;z-index:10;">
+      <div class="o2-filter-left">
+        <a class="o2-filter-item active">All Accessories</a>
+        <a class="o2-filter-item">Bags</a>
+        <a class="o2-filter-item" onclick="show('page-o2-accessories-shoes')">Shoes</a>
+        <a class="o2-filter-item">Jewellery</a>
+        <a class="o2-filter-item">Belts</a>
+        <a class="o2-filter-item">Sunglasses</a>
+        <a class="o2-filter-item">Scarves</a>
+        <a class="o2-filter-item">Hats</a>
+        <a class="o2-filter-item">Towels &amp; Pareos</a>
+        <a class="o2-filter-item">Hair Accessories</a>
+        <a class="o2-filter-item">Bag Charms</a>
+      </div>
+      <div class="o2-filter-right">Filter &amp; Sort &#9662;</div>
+    </div>
   </div>
-  <div class="o2-page-body"></div>
 </div>
 
 <div id="page-o2-accessories-shoes" class="screen page-screen">
-  <div class="page-sub-nav">
-    <a class="psnav-item" onclick="show('page-o2-accessories-all')">All</a>
-    <a class="psnav-item">Bags</a>
-    <a class="psnav-item psnav-active">Shoes</a>
-    <a class="psnav-item">Jewellery</a>
-    <a class="psnav-item">Belts</a>
-    <a class="psnav-item">Sunglasses</a>
-    <a class="psnav-item">Hats</a>
+  <div class="img-crop">
+    <img src="Option 2/Route2-NEW copy/accessories:all:shoes.png" alt="Shoes">
+    <div class="o2-filter-bar" style="position:absolute;top:0;left:0;right:0;z-index:10;">
+      <div class="o2-filter-left">
+        <a class="o2-filter-item active">All Shoes</a>
+        <a class="o2-filter-item">Sandals &amp; Espadrilles</a>
+        <a class="o2-filter-item">Pumps &amp; Mules</a>
+        <a class="o2-filter-item">Flats &amp; Sneakers</a>
+        <a class="o2-filter-item">Boots</a>
+      </div>
+      <div class="o2-filter-right">Filter &amp; Sort &#9662;</div>
+    </div>
   </div>
-  <div class="o2-page-body"></div>
 </div>
 
 <div id="page-o2-discover" class="screen page-screen">
-  <div class="o2-page-body"></div>
+  <div class="img-crop"><img src="Option 2/Route2-NEW copy/zimmermann.com/discover/our-story.png" alt="Our Story"></div>
 </div>
 
 <script>
